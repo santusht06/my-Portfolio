@@ -19,8 +19,10 @@ import Testimonial from "./Testimonial";
 import FAQ from "./FAQ";
 import Contact from "./Contact";
 import Sidemenu from "./Sidemenu";
+import WorkProcess from "./WorkProcess";
 
 import gsap from "gsap";
+import TechStack from "./TechStack";
 gsap.registerPlugin(ScrollTrigger);
 
 const Content = ({ contactRef }) => {
@@ -329,9 +331,18 @@ const Content = ({ contactRef }) => {
       <div ref={sectionRefs.about}>
         <Aboutme />
       </div>
+      <div ref={sectionRefs.about}>
+        <TechStack />
+      </div>
+
       <div ref={sectionRefs.testimonial}>
         <Testimonial />
       </div>
+
+      <div ref={sectionRefs.testimonial}>
+        <WorkProcess />
+      </div>
+
       <div ref={sectionRefs.faq}>
         <FAQ scrollToContact={scrollToContact} />
       </div>
