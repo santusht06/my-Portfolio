@@ -1,5 +1,5 @@
 import React from "react";
-import Work1 from "../assets/Pictures/Work1.webp";
+import Work1 from "../assets/Pictures/work1.webp";
 import { GoArrowUpRight } from "react-icons/go";
 
 const Work = (props) => {
