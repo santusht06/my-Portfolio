@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://santusht.me/sitemap.xml
+Host: https://santusht.me
