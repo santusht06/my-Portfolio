@@ -1,0 +1,280 @@
+import React, { useRef, useEffect, useCallback, useState } from "react";
+import { LuMenu } from "react-icons/lu";
+import Experience from "./Experience";
+import StatsSection from "./StatsSection";
+import SlideBanner from "./SlideBanner";
+import ScrollTextAnimationHome from "./ScrollTextAnimationHome";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import MyServices from "./MyServices";
+import Menu from "./Menu";
+import Aboutme from "./Aboutme";
+import TechStack from "./TechStack";
+import Testimonial from "./Testimonial";
+import WorkProcess from "./WorkProcess";
+import FAQ from "./FAQ";
+import Contact from "./Contact";
+import Sidemenu from "./Sidemenu";
+gsap.registerPlugin(ScrollTrigger);
+
+const Home = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const openMenu = () => {
+    setIsOpen(true);
+    setTimeout(() => setIsVisible(true), 10);
+  };
+
+  const closeMenu = () => {
+    setIsVisible(false);
+    setTimeout(() => setIsOpen(false), 300);
+  };
+  const skillRefs = useRef([]);
+
+  skillRefs.current = [];
+
+  const addToRefs = useCallback((el) => {
+    if (el && !skillRefs.current.includes(el)) {
+      skillRefs.current.push(el);
+    }
+  }, []);
+  const [time, setTime] = useState({ time: "", meridiem: "" });
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      const meridiem = hours >= 12 ? "PM" : "AM";
+
+      hours = hours % 12 || 12;
+
+      setTime({
+        time: `${hours}:${minutes < 10 ? "0" + minutes : minutes}`,
+        meridiem,
+      });
+    };
+
+    updateTime(); // initial call
+    const interval = setInterval(updateTime, 1000);
+
+    return () => clearInterval(interval); // cleanup
+  }, []);
+
+  useEffect(() => {
+    skillRefs.current.forEach((el, index) => {
+      if (!el) return;
+
+      const from = { opacity: 0, y: isMobile ? 25 : 40 };
+
+      const to = {
+        opacity: 1,
+        y: 0,
+        duration: isMobile ? 0.2 : 0.7,
+        ease: "power3.out",
+        delay: isMobile ? index * 0.15 : index * 0.2,
+        scrollTrigger: {
+          trigger: el,
+          start: "top 90%",
+          toggleActions: "play none none none",
+        },
+      };
+
+      gsap.fromTo(el, from, to);
+    });
+  }, [isMobile]);
+
+  const itemRefs = useRef([]);
+
+  useEffect(() => {
+    itemRefs.current.forEach((el) => {
+      if (el) {
+        gsap.set(el, { opacity: 0, x: -100 });
+      }
+    });
+
+    itemRefs.current.forEach((el, index) => {
+      if (!el) return;
+
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top 85%",
+        onUpdate: (self) => {
+          if (self.progress > 0.7 && itemRefs.current[index + 1]) {
+            const nextEl = itemRefs.current[index + 1];
+            if (!nextEl.dataset.animated) {
+              animateElement(nextEl);
+              nextEl.dataset.animated = "true";
+            }
+          }
+        },
+        onEnter: () => {
+          if (!el.dataset.animated) {
+            animateElement(el);
+            el.dataset.animated = "true";
+          }
+        },
+      });
+    });
+
+    function animateElement(el) {
+      gsap.to(el, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: "power2.inOut",
+      });
+    }
+  }, []);
+
+  const timeRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); // run once on mount
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!timeRef.current) return;
+
+    const animationProps = {
+      y: 0,
+      scale: 1,
+      autoAlpha: 1, // shows element with fade + visibility
+      duration: 1.2,
+      ease: "power2.out",
+    };
+
+    if (isMobile) {
+      ScrollTrigger.create({
+        trigger: timeRef.current,
+        once: true,
+        start: "top 90%",
+        onEnter: () => {
+          gsap.fromTo(
+            timeRef.current,
+            { y: 30, autoAlpha: 0, scale: 0.97 },
+            animationProps
+          );
+        },
+      });
+    } else {
+      gsap.fromTo(
+        timeRef.current,
+        { y: 40, autoAlpha: 0, scale: 0.96 },
+        { ...animationProps, delay: 0.4 }
+      );
+    }
+  }, [isMobile]);
+
+  const sectionRefs = {
+    home: useRef(null),
+    experience: useRef(null),
+    selectedWork: useRef(null),
+    services: useRef(null),
+    about: useRef(null),
+    testimonial: useRef(null),
+    faq: useRef(null),
+    contact: useRef(null),
+  };
+
+  const handleSectionClick = (section) => {
+    closeMenu(); // hide menu
+    setTimeout(() => {
+      sectionRefs[section]?.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 300); // wait for menu close animation
+  };
+  return (
+    <>
+      <div className="w-full min-h-screen  ">
+        <div className="mt-24 w-full flex justify-between items-center  ">
+          <h1
+            ref={timeRef}
+            className="text-start text-xl font-MainLight text-[#BBBBBB]"
+          >
+            Indore, India&nbsp;
+            <span>{time.time}</span>
+            <span className="ml-2 tracking-widest uppercase ">
+              {time.meridiem}
+            </span>
+          </h1>
+          <div
+            className={`
+    ${isMobile ? "fixed top-6 right-6 z-50" : "relative"}
+    block md:block
+  `}
+          >
+            <div
+              className="w-[50px] h-[50px] rounded-full bg-white flex justify-center items-center text-2xl cursor-pointer hover:bg-[#F3500F] hover:text-white transition-all ease-in-out duration-300"
+              onClick={openMenu}
+            >
+              <LuMenu />
+            </div>
+
+            {isOpen && (
+              <Menu
+                isVisible={isVisible}
+                onClose={closeMenu}
+                onSectionClick={handleSectionClick}
+              />
+            )}
+          </div>
+        </div>
+        <div className=" h-100 flex flex-col justify-start gap-10      ">
+          <div className="mt-21 flex justify-start items-center gap-3    ">
+            <div className="h-[5px] w-[5px] bg-[#777777]  rounded-full "></div>
+            <div className="text-[#777777] font-MainLight text-[18px]   ">
+              Introduction
+            </div>
+          </div>
+
+          <ScrollTextAnimationHome
+            title={"Making Your World a Pain Free Experience."}
+            scrub={false}
+            textSize={44}
+          />
+
+          <div className="text-[#777777] font-MainLight text-md   tracking-wide  ">
+            <h1>
+              My passion lies in crafting elegant, straightforward digital
+              experiences.
+            </h1>
+
+            <h1>It's a love for simplicity, pure and simple</h1>
+          </div>
+        </div>
+        <div className="w-[50vw] lg:max-w-xl  flex  gap-2 lg:gap-2  mt-10 lg:mt-17  flex-wrap mb-10     ">
+          {[
+            "Frontend Development",
+            "Backend Development",
+            "SEO",
+            "Database Design",
+            "Cloud System Design",
+          ].map((text, idx) => (
+            <div
+              key={text}
+              ref={(el) => addToRefs(el)}
+              className="px-5 py-2 bg-[#111111] backdrop-blur-sm text-[#BBBBBB] w-fit rounded-full font-MainLight hover:bg-white hover:text-[#111111] transition-all ease-in-out duration-300 cursor-pointer"
+            >
+              {text}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Home;
