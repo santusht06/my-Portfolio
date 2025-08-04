@@ -1,6 +1,6 @@
 import React from "react";
 import testimonialbg from "../assets/Pictures/testimonialbg.webp";
-import testimonial1 from "../assets/Pictures/testimonial1.webp";
+import testimonial1 from "../assets/Pictures/Testimonial1.webp";
 
 const Testimonial = () => {
   return (
