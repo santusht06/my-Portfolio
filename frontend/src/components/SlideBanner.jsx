@@ -39,23 +39,21 @@ const SlideBanner = ({ scrollToContact }) => {
     return () => window.removeEventListener("scroll", updateScroll);
   }, []);
   useEffect(() => {
-    if (bannerRef.current) {
-      gsap.fromTo(
-        bannerRef.current,
-        { x: -100, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 1.5,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: bannerRef.current,
-            start: "top 85%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    }
+    if (!bannerRef.current) return;
+
+    let lastX = 0;
+
+    ScrollTrigger.create({
+      trigger: bannerRef.current,
+      start: "top bottom",
+      end: "bottom top",
+      scrub: 1, // smooth follow
+      onUpdate: (self) => {
+        const velocity = self.getVelocity() / 100; // scale speed
+        lastX -= velocity;
+        gsap.set(bannerRef.current, { x: lastX });
+      },
+    });
   }, []);
 
   useEffect(() => {

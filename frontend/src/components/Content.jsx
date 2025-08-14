@@ -150,38 +150,25 @@ const Content = ({ contactRef }) => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   useEffect(() => {
     if (!timeRef.current) return;
 
-    const animationProps = {
-      y: 0,
-      scale: 1,
-      autoAlpha: 1, // shows element with fade + visibility
-      duration: 1.2,
-      ease: "power2.out",
-    };
+    gsap.set(timeRef.current, { autoAlpha: 0, y: 30, scale: 0.97 });
 
-    if (isMobile) {
-      ScrollTrigger.create({
-        trigger: timeRef.current,
-        once: true,
-        start: "top 90%",
-        onEnter: () => {
-          gsap.fromTo(
-            timeRef.current,
-            { y: 30, autoAlpha: 0, scale: 0.97 },
-            animationProps
-          );
-        },
-      });
-    } else {
-      gsap.fromTo(
-        timeRef.current,
-        { y: 40, autoAlpha: 0, scale: 0.96 },
-        { ...animationProps, delay: 0.4 }
-      );
-    }
+    ScrollTrigger.create({
+      trigger: timeRef.current,
+      start: isMobile ? "top 90%" : "top 95%",
+      once: true,
+      onEnter: () => {
+        gsap.to(timeRef.current, {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          ease: "power2.out",
+        });
+      },
+    });
   }, [isMobile]);
 
   const [activeSection, setActiveSection] = useState("home");
