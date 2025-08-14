@@ -35,10 +35,10 @@ const FAQCard = ({ question, answer, isActive, onToggle }) => {
   return (
     <div className="lg:w-full lg:h-fit mt-10 transition-all duration-500 ease-in-out">
       <div
-        className="lg:w-full w-[95vw] pr-5  lg:pr-0  flex justify-between items-start cursor-pointer"
+        className="lg:w-full w-[95vw] pr-5 lg:pr-0 flex justify-between items-start cursor-pointer gap-4"
         onClick={onToggle}
       >
-        <div className="pr-4">
+        <div className="pr-4 flex-1">
           <h1 className="lg:text-xl font-MainLight text-[#ffffffc0]">
             {question}
           </h1>
@@ -52,16 +52,17 @@ const FAQCard = ({ question, answer, isActive, onToggle }) => {
               display: "none",
             }}
           >
-            <p className="text-sm font-MainLight text-[#ffffff6d] lg:max-w-2xl w-[70vw]  ">
+            <p className="text-sm font-MainLight text-[#ffffff6d] lg:max-w-2xl w-[70vw]">
               {answer}
             </p>
           </div>
         </div>
 
-        <div className="h-12 w-12 rounded-full flex justify-center items-center border border-[#ffffff86] text-[#ffffff86] text-2xl transition-all duration-300 ease-in-out">
+        <div className="h-12 w-12 min-w-[3rem] min-h-[3rem] flex-shrink-0 rounded-full flex justify-center items-center border border-[#ffffff86] text-[#ffffff86] text-2xl transition-all duration-300 ease-in-out">
           {isActive ? <FiMinus /> : <GoPlus />}
         </div>
       </div>
+
       <div className="h-[1px] lg:w-full w-[91vw]  bg-[#bbbbbb51] rounded-2xl mt-5" />
     </div>
   );

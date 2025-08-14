@@ -22,42 +22,18 @@ const Footer = () => {
         </div>
 
         {/* Capsule Background */}
-        <div className="bg-[#11111100] lg:w-full mt-30 lg:mt-0  lg:h-[264px] h-[120px] rounded-full flex items-center overflow-hidden relative backdrop-blur-xl shadow-5xl">
-          <marquee
-            behavior="scroll"
-            direction="left"
-            scrollamount="10" // ← Increase for speed
-            className="w-full text-8xl text-[#ffffffc6] font-MainLight"
-          >
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10  ">•</span>
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10">•</span>
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10">•</span>
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10  ">•</span>
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10">•</span>
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10">•</span>
-            <span className="mx-10">Book A Call</span>{" "}
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10  ">•</span>
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10">•</span>
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10">•</span>
-            <span className="mx-10">Book A Call</span>{" "}
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10  ">•</span>
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10">•</span>
-            <span className="mx-10">Book A Call</span>
-            <span className="mx-10">•</span>
-            <span className="mx-10">Book A Call</span>
-          </marquee>
+        <div className="bg-[#11111100] text-white text-5xl lg:text-9xl font-MainLight   lg:w-full mt-30 lg:mt-0 lg:h-[264px] h-[120px] rounded-full flex items-center overflow-hidden relative backdrop-blur-xl sshadow-5xl">
+          <div className="marquee">
+            <div className="marquee-content">
+              {Array(10)
+                .fill("Book A Call •")
+                .map((text, i) => (
+                  <span key={i} className="mx-10">
+                    {text}
+                  </span>
+                ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
