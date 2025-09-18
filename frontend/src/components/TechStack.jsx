@@ -130,8 +130,6 @@ const TechStack = () => {
     pauseOnHover: false,
     pauseOnFocus: false,
 
-    centerPadding: "0px", // Or lower this value further like "20px"
-
     responsive: [
       {
         breakpoint: 1024, // for screens < 1024px

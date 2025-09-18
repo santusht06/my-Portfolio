@@ -172,14 +172,15 @@ const Content = ({ contactRef }) => {
   }, [isMobile]);
 
   const [activeSection, setActiveSection] = useState("home");
-
   const sectionRefs = {
     home: useRef(null),
     experience: useRef(null),
     selectedWork: useRef(null),
     services: useRef(null),
     about: useRef(null),
+    techstack: useRef(null), // ✅ new ref
     testimonial: useRef(null),
+    workprocess: useRef(null), // ✅ also separate this
     faq: useRef(null),
     contact: useRef(null),
   };
@@ -318,7 +319,7 @@ const Content = ({ contactRef }) => {
       <div ref={sectionRefs.about}>
         <Aboutme />
       </div>
-      <div ref={sectionRefs.about}>
+      <div ref={sectionRefs.techstack}>
         <TechStack />
       </div>
 
@@ -326,7 +327,7 @@ const Content = ({ contactRef }) => {
         <Testimonial />
       </div>
 
-      <div ref={sectionRefs.testimonial}>
+      <div ref={sectionRefs.workprocess}>
         <WorkProcess />
       </div>
 
