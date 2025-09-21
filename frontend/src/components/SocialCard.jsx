@@ -1,6 +1,8 @@
 import React from "react";
 import { FaFacebookF, FaLinkedin } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
+import { DiGithubBadge } from "react-icons/di";
+
 import { IoLogoInstagram } from "react-icons/io";
 
 const SocialCard = () => {
@@ -8,8 +10,8 @@ const SocialCard = () => {
     <div>
       <div className="mt-4   md:mt-2 flex gap-2">
         <div className="w-[40px] h-[40px] rounded-full bg-transparent inner-shadow flex items-center justify-center text-white text-xl hover:bg-white hover:text-black transition-all ease-in-out duration-200 cursor-pointer">
-          <a href="https://www.facebook.com/share/1GCtyJYEsW/?mibextid=LQQJ4d">
-            <FaFacebookF />
+          <a href="https://github.com/santusht06">
+            <DiGithubBadge className="text-4xl" />
           </a>
         </div>
         <div className="w-[40px] h-[40px] rounded-full bg-transparent inner-shadow flex items-center justify-center text-white text-3xl hover:bg-white hover:text-black transition-all ease-in-out duration-200 cursor-pointer">

@@ -11,6 +11,9 @@ import {
   FaLinkedin,
   FaThreads,
 } from "react-icons/fa6";
+import { DiGithubBadge } from "react-icons/di";
+import { AiOutlineGithub } from "react-icons/ai";
+
 import { BsBlockquoteRight, BsChatRightText } from "react-icons/bs";
 import { RiGroupLine } from "react-icons/ri";
 import { IoPricetagsOutline } from "react-icons/io5";
@@ -135,8 +138,8 @@ const Menu = ({ onClose, isVisible, onSectionClick }) => {
             <div className="flex gap-3">
               {[
                 {
-                  icon: FaFacebookF,
-                  link: "https://www.facebook.com/share/1GCtyJYEsW/?mibextid=LQQJ4d",
+                  icon: AiOutlineGithub,
+                  link: "https://github.com/santusht06",
                 },
                 {
                   icon: IoLogoInstagram,
