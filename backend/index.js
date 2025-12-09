@@ -9,14 +9,21 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: ["https://santusht.me", "https://my-portfolio-1-svs0.onrender.com"],
-
+    origin: ["http://localhost:5173", "https://santusht.me"],
+    methods: ["GET", "POST", "OPTIONS"],
     credentials: true,
   })
 );
+
 const PORT = process.env.PORT || 3001;
 
 app.use("/api/v1", router);
+
+app.get("/test", (req, res) => {
+  res.status(200).json({
+    success: true,
+  });
+});
 
 const startServer = () => {
   try {
