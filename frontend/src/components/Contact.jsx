@@ -29,7 +29,7 @@ const Contact = forwardRef((props, ref) => {
       setisLoading(true);
 
       const response = await axios.post(
-        "https://my-portfolio-r3ov.onrender.com/api/v1/sendmail",
+        "http://3.7.209.184:3000/api/v1/sendmail",
         data
       );
 
@@ -42,7 +42,9 @@ const Contact = forwardRef((props, ref) => {
         setsuccess(false);
       }
     } catch (error) {
+
       seterror(true);
+      return error;
     } finally {
       setisLoading(false);
     }
