@@ -1,6 +1,7 @@
 import React from "react";
 import Home from "./pages/Home";
 import bg2 from "../src/assets/Pictures/bg2a.mp4";
+import SmoothScroll from "./components/SmoothScroll";
 const App = () => {
   // useLenis();
   return (
@@ -19,6 +20,7 @@ const App = () => {
       <div className="fixed top-0 left-0 w-full h-full bg-black/50 z-[-1]" />
 
       {/* App content */}
+      <SmoothScroll />
       <Home />
     </div>
   );
