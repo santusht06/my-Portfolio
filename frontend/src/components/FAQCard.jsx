@@ -52,7 +52,7 @@ const FAQCard = ({ question, answer, isActive, onToggle }) => {
               display: "none",
             }}
           >
-            <p className="text-sm font-MainLight text-[#ffffff6d] lg:max-w-2xl w-[70vw]">
+            <p className="text-sm font-MainLight text-[#ffffff6d] lg:max-w-xl w-[65vw]">
               {answer}
             </p>
           </div>
