@@ -3,7 +3,7 @@ import Logo from "../assets/Pictures/logo-1.svg";
 import Signature from "../assets/Pictures/Signature.webp";
 
 import { GoArrowUpRight } from "react-icons/go";
-import me2f from "../assets/Pictures/me.jpg";
+import me2f from "../assets/Pictures/me2.PNG";
 
 import SocialCard from "./SocialCard";
 
