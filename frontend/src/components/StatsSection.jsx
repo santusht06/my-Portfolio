@@ -1,14 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import DigitRoll from "./DigitRoll";
+import SmoothOdometer from "./SmoothOdometer";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const StatsSection = () => {
-  const [coffee, setCoffee] = useState(89);
-  const [rate, setRate] = useState(80);
-
   const statBoxRefs = useRef([]);
   const coffeeRef = useRef();
   const rateRef = useRef();
@@ -30,41 +27,7 @@ const StatsSection = () => {
         );
       }
     });
-
-    // Animate number counters once when visible
-    ScrollTrigger.create({
-      trigger: coffeeRef.current,
-      start: "top 80%",
-      once: true,
-      onEnter: () => {
-        gsap.to(
-          { val: 89 },
-          {
-            val: 99,
-            duration: 2,
-            ease: "power2.out",
-            onUpdate: function () {
-              setCoffee(Math.floor(this.targets()[0].val));
-            },
-          }
-        );
-
-        gsap.to(
-          { val: 80 },
-          {
-            val: 98,
-            duration: 2,
-            ease: "power2.out",
-            onUpdate: function () {
-              setRate(Math.floor(this.targets()[0].val));
-            },
-          }
-        );
-      },
-    });
   }, []);
-
-  const splitDigits = (num) => num.toString().split("").map(Number);
 
   return (
     <div className="max-w-2xl h-[217px] flex flex-col lg:flex-row   gap-3 mt-monitor mt-mac mb-10">
@@ -83,9 +46,7 @@ const StatsSection = () => {
           ref={coffeeRef}
           className="w-full flex justify-end items-end mt-6 px-10 "
         >
-          {splitDigits(coffee).map((d, i) => (
-            <DigitRoll key={i} digit={d} />
-          ))}
+          <SmoothOdometer start={89} end={99} duration={2} triggerRef={coffeeRef} />
           <div className="text-white text-8xl font-MainLight leading-[80px]">
             %
           </div>
@@ -107,9 +68,7 @@ const StatsSection = () => {
           ref={rateRef}
           className="w-full flex justify-end items-end mt-6 px-10 "
         >
-          {splitDigits(rate).map((d, i) => (
-            <DigitRoll key={i} digit={d} />
-          ))}
+          <SmoothOdometer start={80} end={98} duration={2} triggerRef={rateRef} />
           <div className="text-white text-8xl font-MainLight leading-[80px]">
             %
           </div>

@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Home from "./pages/Home";
 import bg2 from "../src/assets/Pictures/bg2a.mp4";
 import SmoothScroll from "./components/SmoothScroll";
+import Loader from "./components/Loader";
+
 const App = () => {
-  // useLenis();
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden">
+    <div className={`relative min-h-screen w-full ${isLoaded ? "overflow-x-hidden" : "max-h-screen overflow-hidden pointer-events-none select-none"}`}>
+      {/* App Loader */}
+      {!isLoaded && <Loader onComplete={() => setIsLoaded(true)} />}
+
       {/* Background Video */}
       <video
         className="fixed top-0 left-0 w-full h-full object-cover z-[-2]"
@@ -20,7 +26,7 @@ const App = () => {
       <div className="fixed top-0 left-0 w-full h-full bg-black/50 z-[-1]" />
 
       {/* App content */}
-      <SmoothScroll />
+      {isLoaded && <SmoothScroll />}
       <Home />
     </div>
   );

@@ -7,20 +7,42 @@ const DigitRoll = ({ digit }) => {
   useEffect(() => {
     if (!isNaN(digit)) {
       gsap.to(containerRef.current, {
-        y: `-${digit * 80}px`,
-        duration: 0.8,
-        ease: "power3.out",
+        y: -digit * 80,
+        duration: 0.45,
+        ease: "power2.out",
+        overwrite: "auto", // Auto-kill previous conflicting transitions for buttery smooth ticks
       });
     }
   }, [digit]);
 
   return (
-    <div className="relative h-[80px] w-[60px] overflow-hidden">
-      <div ref={containerRef}>
+    <div
+      style={{
+        height: "80px",
+        width: "60px",
+        overflow: "hidden",
+        position: "relative",
+        display: "inline-block",
+        transform: "translateZ(0)", // WebKit Safari clipping bug fix
+        WebkitTransform: "translateZ(0)",
+      }}
+    >
+      <div
+        ref={containerRef}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {[...Array(10)].map((_, i) => (
           <div
             key={i}
-            className="h-[80px] w-[60px] flex items-center justify-center text-white text-8xl font-MainLight  "
+            className="text-white text-8xl font-MainLight flex items-center justify-center select-none"
+            style={{
+              height: "80px",
+              width: "60px",
+              lineHeight: "80px",
+            }}
           >
             {i}
           </div>
