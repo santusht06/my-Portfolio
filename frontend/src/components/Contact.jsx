@@ -29,7 +29,7 @@ const Contact = forwardRef((props, ref) => {
       setisLoading(true);
 
       const response = await axios.post(
-        "http://3.7.209.184:3000/api/v1/sendmail",
+        "/api/v1/sendmail",
         data
       );
 
