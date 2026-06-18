@@ -1,4 +1,129 @@
+# ============================================================
+# robots.txt for santusht.me
+# Production Optimized & SEO Aligned
+# ============================================================
+
 User-agent: *
+
+# Public pages
 Allow: /
+
+# Static assets
+Allow: /assets/
+Allow: /images/
+Allow: /fonts/
+Allow: /icons/
+Allow: /css/
+Allow: /js/
+
+# System paths
+Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /login/
+Disallow: /logout/
+Disallow: /dashboard/
+Disallow: /private/
+Disallow: /internal/
+Disallow: /tmp/
+Disallow: /dev/
+Disallow: /staging/
+Disallow: /test/
+
+# Sensitive files
+Disallow: /.env
+Disallow: /.git/
+
+# Tracking parameters
+Disallow: /?session=
+Disallow: /?token=
+Disallow: /?utm_
+Disallow: /?ref=
+
+# Search pages
+Disallow: /search/
+
+# Logs and debug
+Disallow: /logs/
+Disallow: /debug/
+
+# ============================================================
+# GOOGLE
+# ============================================================
+
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /.env
+Disallow: /.git/
+
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /assets/
+
+# ============================================================
+# BING
+# ============================================================
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /.env
+Disallow: /.git/
+Crawl-delay: 3
+
+# ============================================================
+# DUCKDUCKGO
+# ============================================================
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Crawl-delay: 5
+
+# ============================================================
+# AI TRAINING CRAWLERS (Opt-out)
+# ============================================================
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+# ============================================================
+# SEO SCRAPERS (Block resource wasting crawlers)
+# ============================================================
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# ============================================================
+# SITEMAP
+# ============================================================
 
 Sitemap: https://santusht.me/sitemap.xml
