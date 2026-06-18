@@ -143,7 +143,7 @@ const Menu = ({ onClose, isVisible, onSectionClick }) => {
                 },
                 {
                   icon: IoLogoInstagram,
-                  link: "https://www.instagram.com/santusht_09?igsh=eDBoMGEwOTFvaHJp&utm_source=qr",
+                  link: "https://www.instagram.com/santusht.me?igsh=eDBoMGEwOTFvaHJp&utm_source=qr",
                 },
                 {
                   icon: FaThreads,

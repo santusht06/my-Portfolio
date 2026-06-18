@@ -69,9 +69,9 @@ const Experience = () => {
                   ref={(el) => (itemRefs.current[idx] = el)}
                   className="w-full flex flex-col justify-start will-change-transform"
                 >
-                  <h1 className="text-[#777777] font-MainLight text-[18px]">
+                  <h3 className="text-[#777777] font-MainLight text-[18px]">
                     {exp.company}
-                  </h1>
+                  </h3>
                   <div className="hover:text-[#F3500F] transition-all ease-in-out duration-280">
                     <div className="flex justify-between text-[24px]">
                       <div>{exp.role}</div>

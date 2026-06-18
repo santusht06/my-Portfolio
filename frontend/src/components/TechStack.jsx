@@ -154,9 +154,9 @@ const TechStack = () => {
 
   return (
     <div className="lg:w-full h-fit lg:max-w-[750px] relative z-0 mb-40 flex flex-col mt-30   ">
-      <h1 className="text-[48px] md:text-[64px] lg:text-[80px] font-MainLight text-white tracking-tight pt-10 mb-10">
+      <div className="pt-10 mb-10">
         <ScrollTextAnimationHome title={"Tech Stack"} stagger={0.05} />
-      </h1>
+      </div>
 
       <Slider {...settings}>
         {data.map((item, idx) => (

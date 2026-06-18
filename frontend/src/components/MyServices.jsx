@@ -81,21 +81,21 @@ const MyServices = ({ scrollToContact }) => {
             <div className="text-[#BBBBBB] text-sm">
               <TfiWorld />
             </div>
-            <h1 className="text-md text-[#BBBBBB] font-MainLight">
+            <p className="text-md text-[#BBBBBB] font-MainLight">
               Available to <span className="text-white ml-1">Worldwide</span>
-            </h1>
+            </p>
           </div>
 
           <div
             className="flex items-center gap-2 cursor-pointer "
             onClick={scrollToContact}
           >
-            <h1 className="text-[#FFFFFF] font-MainLight text-[16px] hover:text-[#F3500F] transition-all ease-in-out duration-280 flex justify-center items-center gap-1">
+            <p className="text-[#FFFFFF] font-MainLight text-[16px] hover:text-[#F3500F] transition-all ease-in-out duration-280 flex justify-center items-center gap-1">
               Contact me{" "}
               <span className="text-xl">
                 <GoArrowUpRight />
               </span>
-            </h1>
+            </p>
           </div>
         </div>
       </div>

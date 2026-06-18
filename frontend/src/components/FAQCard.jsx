@@ -39,9 +39,9 @@ const FAQCard = ({ question, answer, isActive, onToggle }) => {
         onClick={onToggle}
       >
         <div className="pr-4 flex-1">
-          <h1 className="lg:text-xl font-MainLight text-[#ffffffc0]">
+          <h3 className="lg:text-xl font-MainLight text-[#ffffffc0]">
             {question}
-          </h1>
+          </h3>
 
           <div
             ref={contentRef}

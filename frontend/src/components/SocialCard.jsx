@@ -10,22 +10,22 @@ const SocialCard = () => {
     <div>
       <div className="mt-4   md:mt-2 flex gap-2">
         <div className="w-[40px] h-[40px] rounded-full bg-transparent inner-shadow flex items-center justify-center text-white text-xl hover:bg-white hover:text-black transition-all ease-in-out duration-200 cursor-pointer">
-          <a href="https://github.com/santusht06">
+          <a href="https://github.com/santusht06" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
             <DiGithubBadge className="text-4xl" />
           </a>
         </div>
         <div className="w-[40px] h-[40px] rounded-full bg-transparent inner-shadow flex items-center justify-center text-white text-3xl hover:bg-white hover:text-black transition-all ease-in-out duration-200 cursor-pointer">
-          <a href="https://www.instagram.com/santusht_09?igsh=eDBoMGEwOTFvaHJp&utm_source=qr">
+          <a href="https://www.instagram.com/santusht.me?igsh=eDBoMGEwOTFvaHJp&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile">
             <IoLogoInstagram />
           </a>
         </div>
         <div className="w-[40px] h-[40px] rounded-full bg-transparent inner-shadow flex items-center justify-center text-white text-xl hover:bg-white hover:text-black transition-all ease-in-out duration-200 cursor-pointer">
-          <a href="https://www.threads.com/@santusht_09?igshid=NTc4MTIwNjQ2YQ==">
+          <a href="https://www.threads.com/@santusht_09?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener noreferrer" aria-label="Threads Profile">
             <FaThreads />
           </a>
         </div>
         <div className="w-[40px] h-[40px] rounded-full bg-transparent inner-shadow flex items-center justify-center text-white text-xl hover:bg-white hover:text-black transition-all ease-in-out duration-200 cursor-pointer">
-          <a href="https://www.linkedin.com/in/santusht-kotai-8a4454323?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app">
+          <a href="https://www.linkedin.com/in/santusht-kotai-8a4454323?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
             <FaLinkedin />
           </a>
         </div>

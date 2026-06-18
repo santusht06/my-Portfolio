@@ -150,7 +150,7 @@ const MyServicesCard = ({
           </div>
         </div>
 
-        <h1
+        <h3
           ref={titleRef}
           className="font-MainLight text-[28px] cursor-pointer sm:text-[64px] lg:text-[65px] leading-none tracking-tighter text-[#BBBBBB] relative z-20 flex flex-wrap"
         >
@@ -161,7 +161,7 @@ const MyServicesCard = ({
               </span>
             </span>
           ))}
-        </h1>
+        </h3>
       </div>
 
       <div

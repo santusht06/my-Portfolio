@@ -7,9 +7,9 @@ const DesignsAM = () => {
         <div className="w-full p-8 flex flex-col gap-4    ">
           <div className="w-full flex justify-between items-center   ">
             <div className="border-[#6e6e6e] border-[1px] rounded-2xl flex justify-center items-center  h-[36] py-1  ">
-              <h1 className="text-[#888888] font-MainLight px-5  ">
+              <span className="text-[#888888] font-MainLight px-5  ">
                 @santusht.design
-              </h1>
+              </span>
             </div>
             <div></div>
           </div>

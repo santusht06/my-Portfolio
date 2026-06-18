@@ -121,9 +121,9 @@ const FAQ = ({ scrollToContact }) => {
 
   return (
     <div className="w-[750px] mt-30 mb-30">
-      <h1 className="text-start">
+      <div className="text-start">
         <ScrollTextAnimationHome title={"FAQs"} stagger={0.05} />
-      </h1>
+      </div>
 
       <div ref={containerRef}>
         {data.slice(0, visibleCount).map((item, idx) => (
@@ -156,15 +156,15 @@ const FAQ = ({ scrollToContact }) => {
         </button>
 
         <div className="text-left">
-          <h1 className="text-[#BBBBBB] font-MainLight text-sm">
+          <p className="text-[#BBBBBB] font-MainLight text-sm">
             Do you have any other questions?
-          </h1>
-          <h1
+          </p>
+          <p
             onClick={scrollToContact}
             className="text-[#ffffffe0] font-MainLight underline text-sm hover:text-orange-500 transition-all ease-in-out duration-280 cursor-pointer"
           >
             Ask me directly
-          </h1>
+          </p>
         </div>
       </div>
     </div>

@@ -7,17 +7,17 @@ const TechStackCard = (props) => {
         <div className="lg:w-full p-10 lg:p-0  flex justify-center items-center h-full   ">
           <div className="w-full flex flex-col justify-center items-center gap-6  ">
             <div>
-              <h1 className="lg:text-4xl text-2xl  text-white font-MainLight tracking-tight  ">
+              <h3 className="lg:text-4xl text-2xl  text-white font-MainLight tracking-tight  ">
                 {props.title}
-              </h1>
+              </h3>
             </div>
             <div className="h-24 w-24 overflow-hidden    ">
-              <img src={props.image} alt="" />
+              <img src={props.image} alt={`${props.title} icon`} />
             </div>
             <div>
-              <h1 className="text-xs text-[#b1b1b1] font-MainLight tracking-tight   ">
+              <p className="text-xs text-[#b1b1b1] font-MainLight tracking-tight   ">
                 {props.subtitle}
-              </h1>
+              </p>
             </div>
           </div>
         </div>

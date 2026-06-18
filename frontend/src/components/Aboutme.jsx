@@ -67,7 +67,7 @@ const ScrollColorText = () => {
   return (
     <>
       <div className=" lg:max-w-[750px] flex justify-center items-start">
-        <h1
+        <h2
           ref={textRef}
           className="text-[28px] lg:text-[42px] text-start text-[#444] mt-10 leading-relaxed font-MainLight flex flex-wrap"
         >
@@ -80,7 +80,7 @@ const ScrollColorText = () => {
               ))}
             </span>
           ))}
-        </h1>
+        </h2>
       </div>
     </>
   );

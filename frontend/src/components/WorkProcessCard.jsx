@@ -17,9 +17,9 @@ const WorkProcessCard = (props) => {
           </div>
           <div>
             <div>
-              <h1 className="text-white font-MainLight lg:text-[48px] leading-13 ">
+              <h3 className="text-white font-MainLight lg:text-[48px] leading-13 ">
                 {props.title}
-              </h1>
+              </h3>
             </div>
             <div className="text-[#BBBBBB] font-MainLight tracking-tight text-md mt-3   ">
               {props.subtitle}
@@ -31,7 +31,7 @@ const WorkProcessCard = (props) => {
             {/* Background image */}
             <img
               src={backgroudbg}
-              alt=""
+              alt="Decorative background icon pattern"
               className="absolute inset-0 w-full h-full object-cover"
             />
 

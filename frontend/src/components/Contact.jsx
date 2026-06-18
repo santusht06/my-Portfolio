@@ -148,9 +148,9 @@ const Contact = forwardRef((props, ref) => {
           {success ? (
             <>
               <div ref={successRef} className="text-start">
-                <h1 className="text-white font-MainLight text-md">
+                <p className="text-white font-MainLight text-md">
                   Message sent successfully
-                </h1>
+                </p>
               </div>
             </>
           ) : (
@@ -160,9 +160,9 @@ const Contact = forwardRef((props, ref) => {
                 className="lg:w-[29%] w-[84%]  bg-white  text-black mb-10   border-[0.1px] border-[#3e3e3e] font-MainLight text-md  h-[56px] rounded-full bottom-9 lg:bottom-10 bottom-mac  md:bottom-6 absolute"
               >
                 <div className="flex justify-between items-center px-[3px] lg:px-[3px] md:px-[3px]  ">
-                  <h1 className="text-start px-4 text-lg  hover:text-[#F3500F] transition-all duration-300 ease-in-out cursor-pointer">
+                  <span className="text-start px-4 text-lg  hover:text-[#F3500F] transition-all duration-300 ease-in-out cursor-pointer">
                     {isLoading ? "Please wait." : "Get started"}
-                  </h1>
+                  </span>
                   <div className="w-[48px] h-[48px] bg-black rounded-full flex justify-center items-center text-[#ffffffe6] text-2xl hover:text-[#F3500F] transition-all duration-300 ease-in-out cursor-pointer">
                     {isLoading ? (
                       <LuLoader className="animate-spin" />
@@ -173,10 +173,10 @@ const Contact = forwardRef((props, ref) => {
                 </div>
               </button>
               {error && (
-                <h1 className=" text-center font-MainLight text-orange-500 text-md ">
+                <p className=" text-center font-MainLight text-orange-500 text-md ">
                   {" "}
                   {responses?.message || "error in sending message"}{" "}
-                </h1>
+                </p>
               )}
             </div>
           )}

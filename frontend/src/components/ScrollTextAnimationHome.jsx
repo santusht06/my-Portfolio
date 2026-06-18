@@ -32,9 +32,11 @@ const ScrollTextAnimationHome = (props) => {
     ? `w-[${props.width}]`
     : " max-w-[82vw] lg:w-[700px]   ";
 
+  const Tag = props.as || "h2";
+
   return (
     <div className="flex justify-start items-start">
-      <h1
+      <Tag
         ref={textRef}
         className="text-[28px] lg:text-[64px]  text-[#444] mt-10 lg:leading-18 font-MainLight flex flex-wrap   "
       >
@@ -47,7 +49,7 @@ const ScrollTextAnimationHome = (props) => {
             ))}
           </span>
         ))}
-      </h1>
+      </Tag>
     </div>
   );
 };

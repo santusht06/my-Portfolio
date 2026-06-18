@@ -108,9 +108,9 @@ const SlideBanner = ({ scrollToContact }) => {
             {[...Array(50)].map((_, i) => (
               <React.Fragment key={i}>
                 <div className="w-[31px] h-[31px] bg-gradient-to-br from-[#FB7F0E] to-[#fe0101] rounded-full shrink-0"></div>
-                <h1 className="lg:text-[96px] text-[56px] font-MainLight text-white">
+                <p className="lg:text-[96px] text-[56px] font-MainLight text-white">
                   Selected Work
-                </h1>
+                </p>
               </React.Fragment>
             ))}
           </div>

@@ -224,7 +224,7 @@ const Content = ({ contactRef }) => {
   return (
     <div className="w-full min-h-screen  ">
       <div className="mt-24 w-full flex justify-between items-center  ">
-        <h1
+        <p
           ref={timeRef}
           className="text-start text-xl font-MainLight text-[#BBBBBB]"
         >
@@ -233,7 +233,7 @@ const Content = ({ contactRef }) => {
           <span className="ml-2 tracking-widest uppercase ">
             {time.meridiem}
           </span>
-        </h1>
+        </p>
         <div
           className={`
     ${isMobile ? "fixed top-6 right-6 z-50" : "relative"}
@@ -276,14 +276,15 @@ const Content = ({ contactRef }) => {
           title={"Empowering Innovation for Scalable Solutions."}
           scrub={false}
           textSize={44}
+          as="h1"
         />
 
         <div className="text-[#777777] font-MainLight text-md lg:w-[750px]  tracking-tight  ">
-          <h1>
+          <p>
             I design and develop clean, scalable digital interfaces that
             translate complex requirements into intuitive, high-performance user
             experiences—driven by clarity, precision, and usability.
-          </h1>
+          </p>
         </div>
       </div>
 

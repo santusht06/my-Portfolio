@@ -20,8 +20,8 @@ const Testimonial = () => {
               </div>
             </div>
 
-            <div>
-              <h1 className="text-[#ffffffd7] lg:text-3xl text-lg font-MainLight tracking-tight text-start lg:mt-20 mt-6">
+            <div className="lg:mt-20 mt-6">
+              <blockquote className="text-[#ffffffd7] lg:text-3xl text-lg font-MainLight tracking-tight text-start">
                 "I had an amazing experience getting my business
                 website—rideaunestrealty.ca—developed by Santusht! He was
                 professional, listened to my needs, and delivered a beautiful,
@@ -29,7 +29,7 @@ const Testimonial = () => {
                 attention to detail, and great support after launch made
                 everything effortless. I highly recommend Santusht to anyone
                 looking for a top-notch online presence! 👏"
-              </h1>
+              </blockquote>
             </div>
 
             {/* Image section */}
@@ -43,15 +43,15 @@ const Testimonial = () => {
               <div className="relative lg:w-[280px] w-[250px] lg:h-[370px] h-[350px] overflow-hidden rounded-2xl">
                 <img
                   src={testimonial1}
-                  alt=""
+                  alt="Kishan Patel, CEO of Rideau Nest Realty"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10 rounded-2xl" />
                 <div className="absolute bottom-9 left-4 z-20 text-white font-MainLight text-xl tracking-wide px-3">
-                  <h1>Kishan Patel</h1>
-                  <h1 className="text-sm tracking-tight text-[#BBBBBB] mt-1">
+                  <h3 className="font-MainLight text-xl text-white">Kishan Patel</h3>
+                  <p className="text-sm tracking-tight text-[#BBBBBB] mt-1 font-MainLight">
                     CEO Rideau Nest Realty
-                  </h1>
+                  </p>
                 </div>
               </div>
             </div>
