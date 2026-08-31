@@ -31,3 +31,36 @@ A personal portfolio project with a backend built on **Node.js** and **Express**
    npm run start   # or `node index.js` if no start script is defined
    ```
 
+2. **Test the server**
+   - Open a browser or use a tool like `curl`/Postman to hit the test endpoint:
+     ```
+     GET http://localhost:3001/test
+     ```
+   - Expected response:
+     ```json
+     { "success": true }
+     ```
+
+3. **Send an email**
+   - Send a `POST` request to the mail endpoint:
+     ```
+     POST http://localhost:3001/api/v1/sendmail
+     Content-Type: application/json
+     
+     {
+       "name": "John Doe",
+       "email": "john@example.com",
+       "phone": "123-456-7890",
+       "message": "Hello, this is a test message."
+     }
+     ```
+   - The API validates the payload and forwards the email to both the site owner and the sender.
+
+## API Endpoints
+| Method | Path                     | Description                              |
+|--------|--------------------------|------------------------------------------|
+| GET    | `/test`                  | Health check endpoint, returns `{ "success": true }`. |
+| POST   | `/api/v1/sendmail`       | Validates input and sends email via Nodemailer. |
+
+## License
+This project is licensed under the MIT License.
