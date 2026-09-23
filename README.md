@@ -15,6 +15,8 @@ A personal portfolio project with a backend built on **Node.js** and **Express**
 2. **Install backend dependencies**
    ```bash
    cd backend
+   npm install
+   ```
 
 3. **Configure environment variables**
    - Create a `.env` file in the `backend` directory.
@@ -30,8 +32,6 @@ A personal portfolio project with a backend built on **Node.js** and **Express**
    ```bash
    npm run start   # or `node index.js` if no start script is defined
    ```
-
-2. **Test the server**
    - Open a browser or use a tool like `curl`/Postman to hit the test endpoint:
      ```
      GET http://localhost:3001/test
