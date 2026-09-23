@@ -1,20 +1,20 @@
 # my-Portfolio
 
+![AI Maintained](https://img.shields.io/badge/readme-AI%20maintained-blue)
+
 ## Description
 A personal portfolio project with a backend built on **Node.js** and **Express**. The server provides a simple API to send emails via Nodemailer and includes CORS configuration for local development and production.
 
 ## Installation
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/my-Portfolio.git
+   git clone [https://github.com/your-username/my-Portfolio.git](https://github.com/your-username/my-Portfolio.git)
    cd my-Portfolio
    ```
 
 2. **Install backend dependencies**
    ```bash
    cd backend
-   npm install
-   ```
 
 3. **Configure environment variables**
    - Create a `.env` file in the `backend` directory.
