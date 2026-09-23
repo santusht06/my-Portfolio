@@ -49,6 +49,8 @@ A personal portfolio project with a backend built on **Node.js** and **Express**
      POST [http://localhost:3001/api/v1/sendmail](http://localhost:3001/api/v1/sendmail)
      Content-Type: application/json
      
+     {
+       "name": "John Doe",
        "email": "john@example.com",
        "phone": "123-456-7890",
        "message": "Hello, this is a test message."
