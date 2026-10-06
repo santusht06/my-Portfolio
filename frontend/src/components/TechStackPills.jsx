@@ -32,6 +32,7 @@ import figmaSvg from "../assets/tech/figma.svg";
 import cockroachdbSvg from "../assets/tech/cockroachdb.svg";
 import minioSvg from "../assets/tech/minio.svg";
 import langchainSvg from "../assets/tech/langchain.svg";
+import Dock from "./Dock";
 
 import {
   TbNetwork,
@@ -162,21 +163,84 @@ export const TechStackPill = ({ tech, defaultExpanded = false }) => {
 };
 
 /**
- * Container rendering a list of expandable technology capsules
+ * Interactive macOS Dock component for technology icons
  */
-export const TechStackPills = ({
+export const TechDock = ({
   technologies = [],
-  className = "flex flex-wrap gap-2",
+  className = "",
+  panelHeight = 50,
+  baseItemSize = 34,
+  magnification = 54,
+  distance = 120,
 }) => {
   if (!technologies || technologies.length === 0) return null;
 
+  const items = technologies.map((tech) => {
+    const info = getTechInfo(tech);
+    const FallbackIcon = info.icon;
+
+    return {
+      label: tech,
+      icon: info.svg ? (
+        <img
+          src={info.svg}
+          alt={`${tech} logo`}
+          width={22}
+          height={22}
+          loading="lazy"
+          className={`size-full object-contain select-none pointer-events-none ${info.className || ""}`}
+        />
+      ) : (
+        <FallbackIcon className="size-full" style={{ color: info.color }} />
+      ),
+    };
+  });
+
   return (
-    <div className={className}>
-      {technologies.map((tech) => (
-        <TechStackPill key={tech} tech={tech} />
-      ))}
-    </div>
+    <Dock
+      items={items}
+      panelHeight={panelHeight}
+      baseItemSize={baseItemSize}
+      magnification={magnification}
+      distance={distance}
+      className={className}
+    />
   );
 };
 
+/**
+ * Container rendering technology icons with React Bits Dock magnification effect
+ */
+export const TechStackPills = ({
+  technologies = [],
+  className = "",
+  variant = "dock", // "dock" | "capsule"
+  panelHeight = 48,
+  baseItemSize = 34,
+  magnification = 52,
+}) => {
+  if (!technologies || technologies.length === 0) return null;
+
+  if (variant === "capsule") {
+    return (
+      <div className={`flex flex-wrap gap-2 ${className}`}>
+        {technologies.map((tech) => (
+          <TechStackPill key={tech} tech={tech} />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <TechDock
+      technologies={technologies}
+      className={className}
+      panelHeight={panelHeight}
+      baseItemSize={baseItemSize}
+      magnification={magnification}
+    />
+  );
+};
+
+export { Dock };
 export default TechStackPills;

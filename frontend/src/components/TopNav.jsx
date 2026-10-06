@@ -26,7 +26,7 @@ const TopNav = ({ onOpenCommand }) => {
 
   return (
     <header
-      className="fixed top-0 right-0 left-0 lg:left-[430px] xl:left-[460px] z-40 py-2.5 sm:py-3.5 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-black/[0.04] dark:border-white/[0.05] transition-colors pointer-events-none"
+      className="fixed top-0 right-0 left-0 lg:left-[430px] xl:left-[460px] z-40 py-2.5 sm:py-3.5 bg-white/80 dark:bg-black/80 backdrop-blur-md transition-colors pointer-events-none"
       style={{
         WebkitBackdropFilter: "blur(12px)",
       }}
