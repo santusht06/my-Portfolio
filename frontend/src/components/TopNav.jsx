@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiSearch } from "react-icons/fi";
@@ -11,6 +11,7 @@ import {
 import PetController from "./PetController";
 
 const TopNav = ({ onOpenCommand }) => {
+  const [isPetOpen, setIsPetOpen] = useState(false);
   const location = useLocation();
 
   const navLinks = [
@@ -27,7 +28,9 @@ const TopNav = ({ onOpenCommand }) => {
 
   return (
     <header
-      className="fixed top-0 right-0 left-0 lg:left-[430px] xl:left-[460px] z-40 py-2.5 sm:py-3.5 bg-white/45 dark:bg-black/35 backdrop-blur-xl transition-colors pointer-events-none"
+      className={`fixed top-0 right-0 left-0 lg:left-[430px] xl:left-[460px] ${
+        isPetOpen ? "z-50" : "z-40"
+      } py-2.5 sm:py-3.5 bg-white/45 dark:bg-black/35 backdrop-blur-xl transition-all duration-200 pointer-events-none`}
       style={{
         WebkitBackdropFilter: "blur(20px)",
         backdropFilter: "blur(20px)",
@@ -67,7 +70,7 @@ const TopNav = ({ onOpenCommand }) => {
 
         {/* Right tool: Pet Controller, Theme Toggler & Search / Command Palette (Cmd+K) */}
         <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-          <PetController />
+          <PetController onOpenChange={setIsPetOpen} />
 
           <Tooltip delayDuration={60}>
             <TooltipTrigger

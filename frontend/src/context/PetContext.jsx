@@ -47,7 +47,7 @@ export const PetProvider = ({ children }) => {
   const incrementHearts = () => setHeartsCount((prev) => prev + 1);
 
   const spriteSrc =
-    skin === "sakura" ? "/pets/neko-pink.png" : "/pets/neko-default.png";
+    skin === "sakura" ? "/pets/neko-pink.png?v=2" : "/pets/neko-default.png";
 
   return (
     <PetContext.Provider

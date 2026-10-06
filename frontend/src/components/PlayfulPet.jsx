@@ -406,18 +406,18 @@ export const PlayfulPet = () => {
         }}
         className="select-none outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white rounded-md"
       >
-        {/* Hover Tooltip — matches app monochrome theme */}
+        {/* Hover Tooltip — matches app monochrome theme with red heart */}
         {isHovered && (
           <div
             className="absolute -top-7 left-1/2 -translate-x-1/2 pointer-events-none whitespace-nowrap px-2 py-0.5 rounded-md bg-black dark:bg-white text-white dark:text-black text-[10px] font-mono tracking-tight shadow-sm flex items-center gap-1.5 z-50 animate-in fade-in zoom-in-95 duration-150"
           >
             <span>pet me</span>
-            <span className="opacity-60">↑</span>
+            <span className="text-red-500 font-sans leading-none">♥</span>
           </div>
         )}
       </div>
 
-      {/* Floating particles — monochrome to match theme */}
+      {/* Floating particles — red hearts */}
       {particles.map((p) => (
         <div
           key={p.id}
@@ -429,10 +429,11 @@ export const PlayfulPet = () => {
             pointerEvents: "none",
             transform: `translate(calc(-50% + ${p.dx}px), calc(-50% + ${p.dy}px)) rotate(${p.rot}deg) scale(${p.scale})`,
             transition: "all 0.85s cubic-bezier(0.16, 1, 0.3, 1)",
-            fontSize: "13px",
+            fontSize: "14px",
             fontFamily: "monospace",
-            color: "#000",
-            opacity: 0.7,
+            color: "#ef4444",
+            textShadow: "0 1px 4px rgba(239, 68, 68, 0.4)",
+            opacity: 0.9,
             letterSpacing: "-0.02em",
           }}
           className="animate-in fade-in zoom-in-75 duration-150"
