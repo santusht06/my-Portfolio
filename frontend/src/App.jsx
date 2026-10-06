@@ -1,41 +1,57 @@
-import React, { useState } from "react";
-import Home from "./pages/Home";
-import SmoothScroll from "./components/SmoothScroll";
-import Loader from "./components/Loader";
-import Galaxy from "./components/Galaxy";
+import React, { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import PortfolioLayout from "./components/PortfolioLayout";
+import { Toaster } from "sonner";
+
+// Code-split page components for high-speed initial bundle performance & INP/LCP optimization
+const HomeView = lazy(() => import("./pages/HomeView"));
+const WorkView = lazy(() => import("./pages/WorkView"));
+const BlogView = lazy(() => import("./pages/BlogView"));
+const BlogPostView = lazy(() => import("./pages/BlogPostView"));
+const ResumeView = lazy(() => import("./pages/ResumeView"));
+const ContactView = lazy(() => import("./pages/ContactView"));
+
+const PageFallback = () => (
+  <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-12 animate-pulse">
+    <div className="h-8 w-48 bg-black/5 dark:bg-white/5 rounded-lg mb-4" />
+    <div className="h-4 w-72 bg-black/5 dark:bg-white/5 rounded-md mb-8" />
+    <div className="space-y-4">
+      <div className="h-28 w-full bg-black/5 dark:bg-white/5 rounded-xl" />
+      <div className="h-28 w-full bg-black/5 dark:bg-white/5 rounded-xl" />
+    </div>
+  </div>
+);
 
 const App = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-
   return (
-    <div className={`relative min-h-screen w-full ${isLoaded ? "overflow-x-hidden" : "max-h-screen overflow-hidden pointer-events-none select-none"}`}>
-      {/* App Loader (Stays mounted; GSAP sets display:none on completion without React DOM unmount flash) */}
-      <Loader onComplete={() => setIsLoaded(true)} />
-
-      {/* Background: Galaxy */}
-      <div className="fixed top-0 left-0 w-full h-full z-[-2] pointer-events-none bg-black">
-        <Galaxy
-          starSpeed={0.2}
-          density={3}
-          hueShift={140}
-          speed={1}
-          glowIntensity={0.25}
-          saturation={0}
-          mouseRepulsion
-          repulsionStrength={2}
-          twinkleIntensity={0.2}
-          rotationSpeed={0.1}
-          transparent
+    <BrowserRouter>
+      <div className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-250 overflow-x-hidden">
+        {/* Sonner Toast Notifications */}
+        <Toaster
+          position="bottom-right"
+          richColors
+          closeButton
+          toastOptions={{
+            className: "font-mono text-xs border border-black/10 dark:border-white/10",
+          }}
         />
+
+        {/* Portfolio Architecture Routes */}
+        <Suspense fallback={<PageFallback />}>
+          <Routes>
+            <Route path="/" element={<PortfolioLayout />}>
+              <Route index element={<HomeView />} />
+              <Route path="work" element={<WorkView />} />
+              <Route path="blog" element={<BlogView />} />
+              <Route path="blog/:slug" element={<BlogPostView />} />
+              <Route path="resume" element={<ResumeView />} />
+              <Route path="contact" element={<ContactView />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Routes>
+        </Suspense>
       </div>
-
-      {/* Background overlay */}
-      <div className="fixed top-0 left-0 w-full h-full bg-black/40 z-[-1] pointer-events-none" />
-
-      {/* App content */}
-      <SmoothScroll />
-      <Home />
-    </div>
+    </BrowserRouter>
   );
 };
 

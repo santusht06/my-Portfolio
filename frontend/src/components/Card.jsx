@@ -1,96 +1,129 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../assets/Pictures/logo-1.svg";
 import Signature from "../assets/Pictures/Signature.webp";
-
+import animeAvatar from "../assets/Pictures/avatar-anime.png";
+import CharacterListeningAvatar from "./CharacterListeningAvatar";
 import { GoArrowUpRight } from "react-icons/go";
-import me2f from "../assets/Pictures/me2.PNG";
-
+import { FiCopy, FiCheck, FiSearch } from "react-icons/fi";
 import SocialCard from "./SocialCard";
+import { profileData } from "../data/portfolioData";
 
-const Card = ({ onGetStarted }) => {
+const Card = ({ onOpenCommand }) => {
+  const [copied, setCopied] = useState(false);
+  const [time, setTime] = useState({ time: "", meridiem: "" });
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      const meridiem = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
+      setTime({
+        time: `${hours}:${minutes < 10 ? "0" + minutes : minutes}`,
+        meridiem,
+      });
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(profileData.email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
-    <>
-      <div className="min-h-[85vh] lg:min-h-[85vh] xl:min-h-[85vh] 2xl:min-h-[85vh] overflow-hidden md:min-h-[98vh] sm:min-h-[90vh] w-[92vw] lg:w-full max-w-7xl mx-auto bg-[#111111] rounded-3xl inner-shadow relative flex flex-col justify-start lg:ml-0 mt-5 lg:mt-0">
-        <div className="flex flex-col items-center justify-start h-full px-4 sm:px-6 lg:px-0">
-          {/* Header */}
-          <div className="w-full flex justify-between mt-6 sm:mt-8 lg:mt-10 text-white px-5 sm:px-7 lg:px-14 items-center">
-            {/* logo */}
-            <div className="flex-shrink-0">
-              <img src={Logo} alt="Santusht Logo" className="h-6 sm:h-8 lg:h-auto w-auto" />
-            </div>
-
-            {/* NavLogo */}
-            <div className="flex-1 max-w-[200px] sm:max-w-sm lg:max-w-md h-9 sm:h-10 lg:h-11 text-xs sm:text-[13px] rounded-full border-[0.1px] border-[#3e3e3e] font-MonstrateEXLight tracking-tight font-extralight text-[#BBBBBB] flex justify-center items-center gap-2 sm:gap-3 lg:gap-4 ml-4 sm:ml-6 lg:ml-8">
-              <div className="w-2 h-2 sm:w-[10px] sm:h-[10px] rounded-full bg-[#F3500F] flex-shrink-0"></div>
-              <div className="text-center">
-                <span>
-                  Available for{" "}
-                  <span className="text-gray-200">3 projects</span>
-                </span>
-              </div>
-            </div>
+    <div className="w-[92vw] sm:w-[420px] lg:w-full max-w-[440px] mx-auto p-1.5 rounded-[2rem] bezel-outer overflow-hidden shadow-xl dark:shadow-2xl transition-all">
+      <div className="bezel-inner rounded-[calc(2rem-0.375rem)] p-5 sm:p-6 lg:p-7 relative flex flex-col justify-between min-h-[580px] lg:min-h-[82vh] border border-black/[0.05] dark:border-white/[0.04]">
+        {/* Top Header: Logo & Live Time */}
+        <div className="w-full flex justify-between items-center pb-4 border-b border-black/[0.06] dark:border-white/[0.05]">
+          <div className="flex-shrink-0">
+            <img src={Logo} alt="Santusht Logo" className="h-6 sm:h-7 w-auto dark:invert-0" />
           </div>
-
-          {/* Profile Image Container */}
-          <div className="relative mt-8 sm:mt-10 lg:mt-13 mb-4 sm:mb-6 lg:mb-8">
-            <div className="h-48 w-48 sm:h-56 sm:w-56 md:h-64 md:w-64 lg:h-[270px] lg:w-[270px] xl:h-78 xl:w-78 rounded-2xl bg-white overflow-hidden relative">
-              <img
-                src={me2f}
-                alt="Santusht Profile Portrait"
-                className="h-full w-full object-cover"
-                width={270}
-                height={270}
-                loading="eager"
-                fetchPriority="high"
-              />
-            </div>
-
-            {/* Signature Overlay */}
-            <div className="absolute inset-0 flex justify-center items-end pointer-events-none">
-              <div className="w-32 sm:w-36 lg:w-44 transform translate-y-13 sm:translate-y-15 lg:translate-y-18">
-                <img
-                  src={Signature}
-                  alt="Santusht Hand-written Signature"
-                  className="h-28 sm:h-32 lg:h-40 w-full scale-110 sm:scale-120 lg:scale-150"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Email and Location */}
-          <div className="flex flex-col gap-1 sm:gap-2 items-center mt-4 sm:mt-5 lg:mt-6">
-            <a href="mailto:santushtkotai1221@gmail.com" className="text-[#BBBBBB] font-MainLight text-base sm:text-lg lg:text-[19px] xl:text-[22px] text-center px-4 hover:text-[#F3500F] transition-colors duration-300">
-              santushtkotai1221@gmail.com
-            </a>
-            <p className="text-[#393939] font-MainLight text-sm sm:text-[15px] lg:text-[16px] tracking-wide">
-              Based in Indore, India
-            </p>
-          </div>
-
-          {/* Social Card */}
-          <div className="mt-4 sm:mt-5 lg:mt-6 mb-20 sm:mb-24 lg:mb-28">
-            <SocialCard />
+          <div className="text-xs font-mono text-black dark:text-white font-medium">
+            {time.time} {time.meridiem}
           </div>
         </div>
 
-        {/* Get Started Button - Fixed at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 lg:p-9">
+        {/* Profile Image with Listening Animation */}
+        <div className="flex flex-col items-center my-3 sm:my-5 pb-2">
+          <div className="relative">
+            <CharacterListeningAvatar
+              videoSrc="/character_listening.webm"
+              posterSrc="/character_listening_poster.png"
+              audioSrc="/audio/lofi_chill.mp3"
+              trackTitle="Midnight Vibes"
+              artistName="Santusht"
+            />
+
+            {/* Hand-written Signature Overlay */}
+            <div className="absolute -bottom-5 sm:-bottom-6 inset-x-0 flex justify-center pointer-events-none z-10">
+              <img
+                src={Signature}
+                alt="Hand-written Signature"
+                width={180}
+                height={70}
+                loading="eager"
+                className="h-16 sm:h-20 lg:h-22 w-auto scale-110 drop-shadow-md"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Identity & Location */}
+        <div className="flex flex-col items-center text-center gap-1.5 my-2">
+          <h2 className="text-lg sm:text-xl font-bold text-black dark:text-white tracking-tight">
+            {profileData.name}
+          </h2>
+
           <button
-            onClick={onGetStarted}
-            className="w-full border-[0.1px] border-[#3e3e3e] font-MainLight text-sm sm:text-md text-[#BBBBBB] h-12 sm:h-14 lg:h-[56px] rounded-full  transition-all duration-300"
+            onClick={handleCopyEmail}
+            className="flex items-center gap-1.5 text-xs sm:text-sm font-mono text-[#909092] hover:text-black dark:text-[#909092] dark:hover:text-white cursor-pointer group bg-black/[0.03] hover:bg-black/[0.07] dark:bg-white/[0.03] dark:hover:bg-white/[0.07] px-3 py-1 rounded-full border border-black/[0.06] hover:border-black/20 dark:border-white/[0.06] dark:hover:border-white/20 motion-safe:active:scale-[0.95] transition-[background-color,border-color,color] duration-150 ease-smooth"
+            title="Click to copy email"
           >
-            <div className="flex justify-between items-center px-[3px] h-full">
-              <span className="flex-1 text-left px-3 sm:px-4 hover:text-[#F3500F] transition-all duration-300 ease-in-out cursor-pointer">
-                Get Started
+            <span className="truncate max-w-[240px] sm:max-w-none">{profileData.email}</span>
+            {copied ? (
+              <FiCheck className="text-black dark:text-white text-xs motion-safe:scale-110 transition-transform duration-150 ease-out-fluid" />
+            ) : (
+              <FiCopy className="text-[#909092] group-hover:text-black dark:text-[#909092] dark:group-hover:text-white text-xs transition-colors duration-150" />
+            )}
+          </button>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-[#909092] mt-1">
+            <span>{profileData.location}</span>
+          </div>
+        </div>
+
+        {/* Social Icons Strip */}
+        <div className="flex justify-center my-3">
+          <SocialCard />
+        </div>
+
+        {/* Bottom CTA: Quick Command Menu (⌘K) with nested circle */}
+        <div className="mt-4 pt-4 border-t border-black/[0.06] dark:border-white/[0.05]">
+          <button
+            onClick={onOpenCommand}
+            className="w-full flex items-center justify-between p-1.5 pl-4 rounded-full bg-black/[0.03] dark:bg-white/[0.04] border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 hover:bg-black/[0.07] dark:hover:bg-white/[0.08] motion-safe:active:scale-[0.97] transition-[background-color,border-color,color,box-shadow] duration-150 ease-smooth cursor-pointer group shadow-xs"
+          >
+            <div className="flex items-center gap-2 text-xs font-mono text-[#909092] group-hover:text-black dark:group-hover:text-white transition-colors duration-150">
+              <FiSearch className="text-sm text-[#909092] group-hover:text-black dark:group-hover:text-white transition-colors duration-150" />
+              <span>Command Menu</span>
+              <span className="text-[10px] bg-black/[0.06] dark:bg-white/[0.08] group-hover:bg-black/[0.1] dark:group-hover:bg-white/[0.12] px-1.5 py-0.5 rounded text-[#909092] group-hover:text-black dark:group-hover:text-white border border-black/[0.06] dark:border-white/[0.06] transition-[background-color,color] duration-150 ease-smooth">
+                ⌘K
               </span>
-              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-[48px] lg:h-[48px] bg-white rounded-full flex justify-center items-center text-[#575757] text-lg sm:text-xl lg:text-2xl hover:text-[#F3500F] transition-all duration-300 ease-in-out cursor-pointer flex-shrink-0">
-                <GoArrowUpRight />
-              </div>
+            </div>
+
+            {/* Nested trailing icon circle */}
+            <div className="w-9 h-9 rounded-full bg-black text-white dark:bg-white dark:text-black flex items-center justify-center text-sm group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] dark:group-hover:shadow-[0_0_12px_rgba(255,255,255,0.25)] transition-[transform,box-shadow] duration-150 ease-smooth motion-reduce:transform-none">
+              <GoArrowUpRight className="transition-transform duration-150 ease-smooth" />
             </div>
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

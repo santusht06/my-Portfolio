@@ -1,10 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light') {
+            document.documentElement.classList.remove('dark');
+          } else {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" href="/logo-1.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Fonts: Geist & Geist Mono for Ramx-matching typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <!-- SEO Meta Tags -->
     <title>Santusht | Creative Full Stack Developer Portfolio</title>
@@ -14,21 +30,21 @@
     <meta name="robots" content="index, follow" />
 
     <!-- Canonical Tag -->
-    <link rel="canonical" href="https://santusht.me" />
+    <link rel="canonical" href="https://santusht.online" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://santusht.me" />
+    <meta property="og:url" content="https://santusht.online" />
     <meta property="og:title" content="Santusht | Creative Full Stack Developer Portfolio" />
     <meta property="og:description" content="Explore projects, skills, and creative journey of Santusht, a Full Stack Developer specializing in design, development, and scalable systems." />
-    <meta property="og:image" content="https://santusht.me/og-image.webp" />
+    <meta property="og:image" content="https://santusht.online/og-image.webp" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://santusht.me" />
+    <meta name="twitter:url" content="https://santusht.online" />
     <meta name="twitter:title" content="Santusht | Creative Full Stack Developer Portfolio" />
     <meta name="twitter:description" content="Explore projects, skills, and creative journey of Santusht, a Full Stack Developer specializing in design, development, and scalable systems." />
-    <meta name="twitter:image" content="https://santusht.me/og-image.webp" />
+    <meta name="twitter:image" content="https://santusht.online/og-image.webp" />
 
     <!-- Schema.org JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -37,10 +53,10 @@
         "@graph": [
           {
             "@type": "Person",
-            "@id": "https://santusht.me/#person",
+            "@id": "https://santusht.online/#person",
             "name": "Santusht",
-            "url": "https://santusht.me",
-            "image": "https://santusht.me/og-image.webp",
+            "url": "https://santusht.online",
+            "image": "https://santusht.online/og-image.webp",
             "sameAs": [
               "https://github.com/santusht06",
               "https://www.linkedin.com/in/santusht-kotai-8a4454323"
@@ -74,24 +90,24 @@
           },
           {
             "@type": "WebSite",
-            "@id": "https://santusht.me/#website",
-            "url": "https://santusht.me",
+            "@id": "https://santusht.online/#website",
+            "url": "https://santusht.online",
             "name": "Santusht | Creative Portfolio & Projects",
             "publisher": {
-              "@id": "https://santusht.me/#person"
+              "@id": "https://santusht.online/#person"
             },
             "description": "Explore Santusht's portfolio — creative, professional, and impactful projects in design, development, and digital media."
           },
           {
             "@type": "WebPage",
-            "@id": "https://santusht.me/#webpage",
-            "url": "https://santusht.me",
+            "@id": "https://santusht.online/#webpage",
+            "url": "https://santusht.online",
             "name": "Santusht | Creative Portfolio & Projects",
             "isPartOf": {
-              "@id": "https://santusht.me/#website"
+              "@id": "https://santusht.online/#website"
             },
             "about": {
-              "@id": "https://santusht.me/#person"
+              "@id": "https://santusht.online/#person"
             },
             "description": "Explore Santusht's portfolio — creative, professional, and impactful projects in design, development, and digital media."
           }

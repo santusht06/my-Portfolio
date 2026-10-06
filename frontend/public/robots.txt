@@ -1,5 +1,5 @@
 # ============================================================
-# robots.txt for santusht.me
+# robots.txt for santusht.online
 # Production Optimized & SEO Aligned
 # ============================================================
 
@@ -85,20 +85,28 @@ Disallow: /admin/
 Crawl-delay: 5
 
 # ============================================================
-# AI TRAINING CRAWLERS (Opt-out)
+# AI SEARCH CRAWLERS (Allowed for GEO / AEO Visibility)
 # ============================================================
 
 User-agent: GPTBot
-Disallow: /
+Allow: /
+Disallow: /api/
+Disallow: /admin/
 
 User-agent: ClaudeBot
-Disallow: /
-
-User-agent: Google-Extended
-Disallow: /
+Allow: /
+Disallow: /api/
+Disallow: /admin/
 
 User-agent: PerplexityBot
-Disallow: /
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+Disallow: /admin/
 
 User-agent: CCBot
 Disallow: /
@@ -126,4 +134,4 @@ Disallow: /
 # SITEMAP
 # ============================================================
 
-Sitemap: https://santusht.me/sitemap.xml
+Sitemap: https://santusht.online/sitemap.xml

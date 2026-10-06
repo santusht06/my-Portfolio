@@ -5,31 +5,62 @@ import { DiGithubBadge } from "react-icons/di";
 
 import { IoLogoInstagram } from "react-icons/io";
 
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipPanel,
+} from "@/components/animate-ui/components/base/tooltip";
+
 const SocialCard = () => {
+  const socialLinks = [
+    {
+      name: "GitHub",
+      href: "https://github.com/santusht06",
+      label: "GitHub Profile",
+      icon: <DiGithubBadge className="text-2xl" />,
+    },
+    {
+      name: "Instagram",
+      href: "https://www.instagram.com/santusht.online?igsh=eDBoMGEwOTFvaHJp&utm_source=qr",
+      label: "Instagram Profile",
+      icon: <IoLogoInstagram className="text-xl" />,
+    },
+    {
+      name: "Threads",
+      href: "https://www.threads.com/@santusht_09?igshid=NTc4MTIwNjQ2YQ==",
+      label: "Threads Profile",
+      icon: <FaThreads className="text-base" />,
+    },
+    {
+      name: "LinkedIn",
+      href: "https://www.linkedin.com/in/santusht-kotai-8a4454323?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+      label: "LinkedIn Profile",
+      icon: <FaLinkedin className="text-base" />,
+    },
+  ];
+
   return (
-    <div>
-      <div className="mt-4   md:mt-2 flex gap-2">
-        <div className="w-[40px] h-[40px] rounded-full bg-transparent inner-shadow flex items-center justify-center text-white text-xl hover:bg-white hover:text-black transition-all ease-in-out duration-200 cursor-pointer">
-          <a href="https://github.com/santusht06" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
-            <DiGithubBadge className="text-4xl" />
-          </a>
-        </div>
-        <div className="w-[40px] h-[40px] rounded-full bg-transparent inner-shadow flex items-center justify-center text-white text-3xl hover:bg-white hover:text-black transition-all ease-in-out duration-200 cursor-pointer">
-          <a href="https://www.instagram.com/santusht.me?igsh=eDBoMGEwOTFvaHJp&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile">
-            <IoLogoInstagram />
-          </a>
-        </div>
-        <div className="w-[40px] h-[40px] rounded-full bg-transparent inner-shadow flex items-center justify-center text-white text-xl hover:bg-white hover:text-black transition-all ease-in-out duration-200 cursor-pointer">
-          <a href="https://www.threads.com/@santusht_09?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener noreferrer" aria-label="Threads Profile">
-            <FaThreads />
-          </a>
-        </div>
-        <div className="w-[40px] h-[40px] rounded-full bg-transparent inner-shadow flex items-center justify-center text-white text-xl hover:bg-white hover:text-black transition-all ease-in-out duration-200 cursor-pointer">
-          <a href="https://www.linkedin.com/in/santusht-kotai-8a4454323?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
-            <FaLinkedin />
-          </a>
-        </div>
-      </div>
+    <div className="mt-4 md:mt-2 flex items-center gap-4">
+      {socialLinks.map((item) => (
+        <Tooltip key={item.name} delayDuration={50}>
+          <TooltipTrigger
+            render={
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={item.label}
+                className="text-[#909092] hover:text-black dark:text-[#909092] dark:hover:text-white transition-colors duration-150 motion-safe:active:scale-90 inline-flex items-center justify-center cursor-pointer p-1"
+              >
+                {item.icon}
+              </a>
+            }
+          />
+          <TooltipPanel side="top" sideOffset={8}>
+            <p className="font-semibold text-xs text-black">{item.name}</p>
+          </TooltipPanel>
+        </Tooltip>
+      ))}
     </div>
   );
 };
