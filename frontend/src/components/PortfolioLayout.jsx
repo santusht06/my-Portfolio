@@ -28,10 +28,10 @@ const PortfolioLayout = () => {
       <div className="relative z-10 w-full min-h-screen flex flex-col lg:flex-row">
         {/* Left Section: Fixed Sidebar on Desktop, only shown on Home view on mobile */}
         <aside
-          className={`w-full lg:w-[430px] xl:w-[460px] lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:flex lg:items-center lg:justify-center z-20 ${
+          className={`w-full lg:w-[430px] xl:w-[460px] lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-6 z-20 ${
             isHome
-              ? "flex flex-col items-center pt-20 sm:pt-24 lg:pt-0 p-4 sm:p-6"
-              : "hidden lg:flex p-6"
+              ? "flex flex-col items-center pt-20 sm:pt-24 lg:pt-6 p-4 sm:p-6"
+              : "hidden lg:flex"
           }`}
         >
           <Card onOpenCommand={() => setIsCommandOpen(true)} />

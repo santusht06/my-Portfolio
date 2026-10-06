@@ -36,8 +36,8 @@ const Card = ({ onOpenCommand }) => {
   };
 
   return (
-    <div className="w-[92vw] sm:w-[420px] lg:w-full max-w-[440px] mx-auto p-1.5 rounded-[2rem] bezel-outer overflow-hidden shadow-xl dark:shadow-2xl transition-all">
-      <div className="bezel-inner rounded-[calc(2rem-0.375rem)] p-5 sm:p-6 lg:p-7 relative flex flex-col justify-between min-h-[580px] lg:min-h-[82vh] border border-black/[0.05] dark:border-white/[0.04]">
+    <div className="w-[92vw] sm:w-[420px] lg:w-full max-w-[440px] mx-auto p-1.5 rounded-[2rem] bezel-outer overflow-hidden shadow-xl dark:shadow-2xl transition-[border-color,box-shadow] duration-200">
+      <div className="bezel-inner rounded-[calc(2rem-0.375rem)] p-5 sm:p-6 lg:p-7 relative flex flex-col justify-between min-h-[580px] lg:min-h-[620px] lg:h-[84vh] lg:max-h-[760px] border border-black/[0.05] dark:border-white/[0.04]">
         {/* Top Header: Logo & Live Time */}
         <div className="w-full flex justify-between items-center pb-4 border-b border-black/[0.06] dark:border-white/[0.05]">
           <div className="flex-shrink-0">

@@ -89,6 +89,10 @@
   --muted: #909092;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   background-color: #ffffff;
   color: #000000;
