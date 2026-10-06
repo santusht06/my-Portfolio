@@ -22,7 +22,7 @@ const routes = [
     title: "Santusht Kotai | Software Engineer & Systems Architect",
     description: "Backend and distributed systems engineer specializing in FastAPI, PostgreSQL, Redis, Docker, and Kubernetes. GSoC contributor to Supabase.",
     heading: "Santusht Kotai",
-    content: "Backend engineer with hands-on experience building REST APIs, distributed systems, and cloud-native applications in Python, FastAPI, PostgreSQL, Redis, Docker, and Kubernetes. Google Summer of Code contributor to Supabase.",
+    content: "Living between terminal windows, lofi beats, and real-world wonder — crafting things that work silently so life can happen loudly.",
   },
   {
     path: "/work",

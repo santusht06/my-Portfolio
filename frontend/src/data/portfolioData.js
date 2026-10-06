@@ -6,7 +6,7 @@ export const profileData = {
   websiteDisplay: "santusht.online",
   location: "Indore, India",
   summary:
-    "Backend engineer with hands-on experience building REST APIs, distributed systems, and cloud-native applications in Python, FastAPI, PostgreSQL, Redis, Docker, and Kubernetes. Background spans a production backend internship, an active Google Summer of Code contribution, and independent systems projects covering authentication, caching, and mail infrastructure.",
+    "Living between terminal windows, lofi beats, and real-world wonder — crafting things that work silently so life can happen loudly.",
   quote: {
     text: "If the pain doesn't kill me, it will only make me stronger.",
     author: "Sung Jin-woo, Solo Leveling",
