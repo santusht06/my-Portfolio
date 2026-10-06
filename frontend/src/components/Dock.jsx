@@ -4,7 +4,6 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
-  AnimatePresence,
 } from "framer-motion";
 
 export function DockItem({
@@ -12,97 +11,129 @@ export function DockItem({
   label,
   onClick,
   mouseX,
+  mouseY,
   spring = { mass: 0.1, stiffness: 170, damping: 14 },
-  distance = 130,
-  magnification = 70,
-  baseItemSize = 44,
+  distance = 120,
+  magnification = 50,
+  baseItemSize = 36,
   className = "",
+  defaultExpanded = false,
+  showLabel = "inline", // "inline" | "tooltip" | "none"
 }) {
   const ref = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isToggled, setIsToggled] = useState(defaultExpanded);
 
-  // Measure distance from mouse cursor to item center
-  const mouseDistance = useTransform(mouseX, (val) => {
+  // Measure 2D Euclidean distance from mouse cursor (clientX, clientY) to item center
+  const dist = useTransform([mouseX, mouseY], ([x, y]) => {
     const rect = ref.current?.getBoundingClientRect();
     if (!rect) return Infinity;
-    return val - (rect.left + rect.width / 2);
+    if (x === Infinity || y === Infinity) return Infinity;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    return Math.hypot(x - centerX, y - centerY);
   });
 
   // Calculate target size based on proximity
   const targetSize = useTransform(
-    mouseDistance,
-    [-distance, 0, distance],
-    [baseItemSize, magnification, baseItemSize]
+    dist,
+    [0, distance],
+    [magnification, baseItemSize],
+    { clamp: true }
   );
 
   const size = useSpring(targetSize, spring);
 
+  // Proportional icon size scaling
+  const iconSize = useTransform(
+    size,
+    [baseItemSize, magnification],
+    [16, 22]
+  );
+
+  const isOpen = isHovered || isToggled;
+
+  const handleClick = (e) => {
+    setIsToggled((prev) => !prev);
+    onClick?.(e);
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      onClick?.();
+      handleClick(e);
     }
   };
 
   return (
-    <motion.div
+    <motion.button
       ref={ref}
+      type="button"
       style={{
-        width: size,
         height: size,
+        minWidth: size,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onFocus={() => setIsHovered(true)}
       onBlur={() => setIsHovered(false)}
-      onClick={onClick}
+      onClick={handleClick}
       onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="button"
+      title={label}
       aria-label={label}
-      className={`relative shrink-0 flex items-center justify-center rounded-xl bg-black/[0.04] dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.08] hover:border-black/30 dark:hover:border-white/30 hover:bg-black/[0.08] dark:hover:bg-white/[0.09] transition-colors cursor-pointer select-none outline-none group ${className}`}
+      className={`group/pill shrink-0 inline-flex items-center justify-center rounded-xl border transition-colors duration-200 px-2.5 cursor-pointer select-none outline-none ${
+        isOpen
+          ? "border-solid border-black/40 dark:border-white/40 bg-black/[0.06] dark:bg-white/[0.08]"
+          : "border-dashed border-[#909092]/30 dark:border-[#909092]/40 bg-black/[0.03] dark:bg-white/[0.04] hover:border-solid hover:border-black/40 dark:hover:border-white/40 hover:bg-black/[0.06] dark:hover:bg-white/[0.08]"
+      } focus-visible:ring-1 focus-visible:ring-black dark:focus-visible:ring-white ${className}`}
     >
-      {/* Floating Dock Tooltip */}
-      <AnimatePresence>
-        {isHovered && label && (
-          <motion.div
-            initial={{ opacity: 0, y: 4, scale: 0.9 }}
-            animate={{ opacity: 1, y: -10, scale: 1 }}
-            exit={{ opacity: 0, y: 2, scale: 0.9 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute -top-7 left-1/2 -translate-x-1/2 pointer-events-none z-40 px-2 py-0.5 rounded-md bg-black/95 dark:bg-white text-white dark:text-black text-[11px] font-mono whitespace-nowrap shadow-md border border-white/10 dark:border-black/10 flex items-center justify-center"
-          >
-            <span>{label}</span>
-            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rotate-45 bg-black/95 dark:bg-white" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Icon display area */}
-      <div className="w-full h-full flex items-center justify-center p-2 pointer-events-none">
+      <motion.span
+        style={{ width: iconSize, height: iconSize }}
+        className="shrink-0 flex items-center justify-center pointer-events-none"
+      >
         {icon}
-      </div>
-    </motion.div>
+      </motion.span>
+
+      {showLabel === "inline" && label && (
+        <span
+          className={`overflow-hidden whitespace-nowrap transition-all duration-200 ease-out font-mono tracking-tight text-xs sm:text-sm font-medium text-zinc-900 dark:text-zinc-100 pointer-events-none ${
+            isOpen
+              ? "max-w-48 opacity-100 ml-2"
+              : "max-w-0 opacity-0 ml-0 group-hover/pill:max-w-48 group-hover/pill:opacity-100 group-hover/pill:ml-2 group-focus-visible/pill:max-w-48 group-focus-visible/pill:opacity-100 group-focus-visible/pill:ml-2"
+          }`}
+        >
+          {label}
+        </span>
+      )}
+    </motion.button>
   );
 }
 
 export function Dock({
   items = [],
-  panelHeight = 68,
-  baseItemSize = 44,
-  magnification = 70,
-  distance = 130,
+  panelHeight = 48,
+  baseItemSize = 36,
+  magnification = 50,
+  distance = 120,
   spring = { mass: 0.1, stiffness: 170, damping: 14 },
   className = "",
+  showLabel = "inline",
 }) {
   const mouseX = useMotionValue(Infinity);
+  const mouseY = useMotionValue(Infinity);
 
   return (
     <motion.div
       style={{ minHeight: panelHeight }}
-      onMouseMove={(e) => mouseX.set(e.pageX)}
-      onMouseLeave={() => mouseX.set(Infinity)}
-      className={`inline-flex items-center gap-2 p-1.5 rounded-2xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.06] backdrop-blur-md max-w-full overflow-x-auto no-scrollbar scroll-smooth ${className}`}
+      onMouseMove={(e) => {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+      }}
+      onMouseLeave={() => {
+        mouseX.set(Infinity);
+        mouseY.set(Infinity);
+      }}
+      className={`flex flex-wrap items-center gap-2 py-1 bg-transparent border-0 shadow-none max-w-full ${className}`}
     >
       {items.map((item, idx) => (
         <DockItem
@@ -111,11 +142,14 @@ export function Dock({
           label={item.label}
           onClick={item.onClick}
           mouseX={mouseX}
+          mouseY={mouseY}
           spring={spring}
           distance={distance}
           magnification={magnification}
           baseItemSize={baseItemSize}
           className={item.className}
+          defaultExpanded={item.defaultExpanded}
+          showLabel={showLabel}
         />
       ))}
     </motion.div>
