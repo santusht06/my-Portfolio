@@ -1,270 +1,143 @@
 module.exports.clientHTML = `
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Thank You - Message Received</title>
-  <style>
-    * {
-      box-sizing: border-box;
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
+  <title>Thank You for Reaching Out</title>
+  <style type="text/css">
+    body, table, td, p, a, li, blockquote {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
     }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Display', Roboto, Helvetica, Arial, sans-serif;
-      background: #ffffff;
-      color: #1f2937;
-      line-height: 1.6;
-      min-height: 100vh;
-      padding: 20px 0;
+    table, td {
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
     }
-
-    .email-container {
-      max-width: 680px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow:
-        0 8px 16px rgba(0, 0, 0, 0.05),
-        0 2px 4px rgba(0, 0, 0, 0.03);
-      border: 1px solid #e5e7eb;
-    }
-
-    .email-header {
-      padding: 48px 40px 40px;
-      text-align: center;
-    }
-
-    .email-header h1 {
-      color: #111827;
-      font-size: 28px;
-      font-weight: 700;
-      margin: 0 0 12px 0;
-      letter-spacing: -0.5px;
-    }
-
-    .email-header p {
-      color: #4b5563;
-      font-size: 16px;
-      margin: 0;
-      font-weight: 400;
-    }
-
-    .email-body {
-      padding: 48px 40px;
-      background: #ffffff;
-    }
-
-    .greeting {
-      font-size: 18px;
-      font-weight: 600;
-      color: #111827;
-      margin-bottom: 24px;
-      line-height: 1.4;
-    }
-
-    .content-text {
-      font-size: 16px;
-      line-height: 1.75;
-      color: #4b5563;
-      margin-bottom: 24px;
-    }
-
-    .highlight-box {
-      background: #f1f5f9;
-      border-left: 4px solid #0ea5e9;
-      padding: 20px 24px;
-      margin: 32px 0;
-      border-radius: 0 12px 12px 0;
-      position: relative;
-    }
-
-    .highlight-box::before {
-      content: '💡';
-      position: absolute;
-      top: 20px;
-      right: 24px;
-      font-size: 20px;
-    }
-
-    .highlight-text {
-      font-size: 15px;
-      color: #0c4a6e;
-      margin: 0;
-      font-weight: 500;
-    }
-
-    .cta-section {
-      text-align: center;
-      margin: 40px 0 32px;
-    }
-
-    .cta-button {
-      display: inline-block;
-      background: #2563eb;
-      color: white;
+    img {
+      -ms-interpolation-mode: bicubic;
+      border: 0;
+      outline: none;
       text-decoration: none;
-      padding: 16px 32px;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: 0.5px;
-      transition: all 0.3s ease;
     }
-
-    .cta-button:hover {
-      background: #1d4ed8;
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      background-color: #f8fafc;
     }
-
-    .signature-section {
-      border-top: 1px solid #e5e7eb;
-      padding-top: 32px;
-      margin-top: 40px;
-    }
-
-    .signature {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .signature-avatar {
-      display: none; /* Removed avatar circle */
-    }
-
-    .signature-content {
-      flex: 1;
-    }
-
-    .signature-name {
-      font-size: 16px;
-      font-weight: 600;
-      color: #111827;
-      margin: 0 0 4px 0;
-    }
-
-    .signature-title {
-      font-size: 14px;
-      color: #6b7280;
-      margin: 0;
-    }
-
-    .email-footer {
-      padding: 32px 40px;
-      text-align: center;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    .footer-text {
-      font-size: 13px;
-      color: #64748b;
-      margin: 0;
-      line-height: 1.6;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 640px) {
-      body {
-        padding: 10px 0;
+    @media only screen and (max-width: 600px) {
+      .card-content {
+        padding: 28px 20px !important;
       }
-
-      .email-container {
-        margin: 0 10px;
-        border-radius: 16px;
+      .header-content {
+        padding: 20px 20px !important;
       }
-
-      .email-header {
-        padding: 32px 24px 24px;
-      }
-
-      .email-header h1 {
-        font-size: 24px;
-      }
-
-      .email-header p {
-        font-size: 15px;
-      }
-
-      .email-body {
-        padding: 32px 24px;
-      }
-
-      .greeting {
-        font-size: 16px;
-      }
-
-      .content-text {
-        font-size: 15px;
-      }
-
-      .highlight-box {
-        padding: 16px 20px;
-        margin: 24px 0;
-      }
-
-      .cta-button {
-        padding: 14px 28px;
-        font-size: 14px;
-      }
-
-      .email-footer {
-        padding: 24px 24px;
+      .footer-content {
+        padding: 0 20px !important;
       }
     }
   </style>
 </head>
-<body>
-  <div class="email-container">
-    <div class="email-header">
-      <h1>Message Received!</h1>
-      <p>Thank you for reaching out. Your inquiry is important to me.</p>
-    </div>
-    
-    <div class="email-body">
-      <div class="greeting">
-        Hi {{clientName}},
-      </div>
-      
-      <p class="content-text">
-        Thank you for getting in touch! I've received your message and truly appreciate you taking the time to reach out.
-      </p>
-      
-      <p class="content-text">
-        I'll personally review your inquiry and get back to you as soon as possible — typically within 24 hours. I believe in providing thoughtful, personalized responses to every message I receive.
-      </p>
-      
-      <div class="highlight-box">
-        <p class="highlight-text">
-          In the meantime, feel free to explore my portfolio and recent work. I'm always excited to connect with new people and discuss potential collaborations.
-        </p>
-      </div>
-      
-      <div class="cta-section">
-        <a href="https://santusht.online/" class="cta-button">View My Portfolio</a>
-      </div>
-      
-     <div class="signature-section">
-  <div class="signature">
-    <div class="signature-content">
-      <div class="signature-heading" style="font-size: 14px; color: #6b7280; margin-bottom: 4px;">
-        Thanks again,
-      </div>
-      <div class="signature-name">Santusht</div>
-    </div>
+<body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1e293b; -webkit-font-smoothing: antialiased;">
+  <!-- Preheader text (inbox preview snippet) -->
+  <div style="display: none; font-size: 1px; color: #f8fafc; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+    Thank you for reaching out. I’ve received your message and will review it shortly.
   </div>
-</div>
 
-    
-    <div class="email-footer">
-      <p class="footer-text">
-        This is an automated response to confirm I've received your message.<br>
-        You'll hear from me personally very soon.
-      </p>
-    </div>
-  </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; width: 100%; margin: 0; padding: 40px 12px 48px 12px;">
+    <tr>
+      <td align="center">
+        <!-- Main Card Container -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 560px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+          
+          <!-- Header -->
+          <tr>
+            <td class="header-content" style="padding: 24px 32px; border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="left" style="vertical-align: middle;">
+                    <span style="font-size: 17px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;">
+                      Santusht Kotai
+                    </span>
+                  </td>
+                  <td align="right" style="vertical-align: middle;">
+                    <span style="font-size: 12px; font-weight: 500; color: #64748b; letter-spacing: 0.2px;">
+                      Software Engineer
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Body Content -->
+          <tr>
+            <td class="card-content" style="padding: 36px 32px 32px 32px; background-color: #ffffff;">
+              <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 24px; font-weight: 600; color: #0f172a;">
+                Hi {{clientName}},
+              </p>
+
+              <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 25px; color: #334155;">
+                Thank you for reaching out through my portfolio. I’ve received your inquiry and will review it shortly.
+              </p>
+
+              <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 25px; color: #334155;">
+                I typically respond within 24 hours on business days with next steps or thoughts on your project.
+              </p>
+
+              <!-- Subtle Info Note -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border-left: 3px solid #0f172a; border-radius: 4px; margin: 0 0 28px 0;">
+                <tr>
+                  <td style="padding: 14px 18px; font-size: 13.5px; line-height: 22px; color: #475569;">
+                    Have additional documents, specs, or timelines? You can reply directly to this email anytime.
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Signature Block -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top: 1px solid #f1f5f9;">
+                <tr>
+                  <td style="padding-top: 24px;">
+                    <p style="margin: 0 0 6px 0; font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">
+                      Best regards,
+                    </p>
+                    <p style="margin: 0 0 2px 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+                      Santusht Kotai
+                    </p>
+                    <p style="margin: 0 0 12px 0; font-size: 13.5px; line-height: 20px; color: #64748b;">
+                      Full Stack &amp; Distributed Systems Engineer
+                    </p>
+                    <p style="margin: 0; font-size: 13px; line-height: 20px; color: #64748b;">
+                      <a href="https://santusht.online" style="color: #2563eb; text-decoration: none; font-weight: 500;">santusht.online</a>
+                      &nbsp;·&nbsp;
+                      <a href="https://github.com/santusht06" style="color: #64748b; text-decoration: none;">GitHub</a>
+                      &nbsp;·&nbsp;
+                      <a href="https://linkedin.com/in/santushtkotai" style="color: #64748b; text-decoration: none;">LinkedIn</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+        <!-- Sub-footer Note -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 560px; margin-top: 20px;">
+          <tr>
+            <td class="footer-content" align="center" style="font-size: 12px; line-height: 18px; color: #94a3b8; padding: 0 16px;">
+              This is a confirmation that your message was safely delivered to Santusht Kotai.<br />
+              Direct replies to this message route directly to his personal inbox.
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 `;

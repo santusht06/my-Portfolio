@@ -39,12 +39,14 @@ const RecieveMailToME = async ({
 
 const sendMailToThem = async ({ name: clientname, email: clientemail }) => {
   try {
-    const html = clientHTML.replace(/{{clientName}}/g, clientname);
+    const formattedName = clientname && clientname.trim() ? clientname.trim() : "there";
+    const html = clientHTML.replace(/{{clientName}}/g, formattedName);
 
     await transport.sendMail({
-      from: process.env.OWNER,
+      from: `"Santusht Kotai" <${process.env.OWNER}>`,
+      replyTo: process.env.OWNER,
       to: clientemail,
-      subject: `Thank You ${clientname}, for Reaching Out – I’ve Received Your Message`,
+      subject: `Thank you for reaching out — Santusht Kotai`,
       html: html,
     });
   } catch (error) {
