@@ -78,9 +78,9 @@ export const PetController = () => {
             exit={{ opacity: 0, y: 3, scale: 0.97 }}
             transition={{ duration: 0.14, ease: [0.22, 1, 0.36, 1] }}
             className="absolute right-0 top-[calc(100%+8px)] w-60 z-50 select-none
-                       bg-white/95 dark:bg-black/95 backdrop-blur-xl
-                       border border-black/[0.09] dark:border-white/[0.09]
-                       rounded-xl shadow-lg shadow-black/[0.06] dark:shadow-black/30
+                       bg-white dark:bg-black
+                       border border-black/10 dark:border-white/15
+                       rounded-xl shadow-xl shadow-black/10 dark:shadow-2xl dark:shadow-black
                        overflow-hidden"
           >
             {/* ── Header ── */}
@@ -173,9 +173,14 @@ export const PetController = () => {
 
             {/* ── Footer ── */}
             <div className="px-3.5 py-2 border-t border-black/[0.08] dark:border-white/[0.08] flex items-center justify-between">
-              <span className="flex items-center gap-1 text-[10px] font-mono text-[#909092]">
-                <Heart className="size-2.5 fill-current" />
-                {heartsCount} {heartsCount === 1 ? "pet" : "pets"}
+              <span className="flex items-center gap-1.5 text-[10px] font-mono text-[#909092]">
+                <Heart className="size-2.5 fill-red-500 text-red-500" />
+                <span>
+                  <strong className="text-black dark:text-white font-medium">
+                    {heartsCount}
+                  </strong>{" "}
+                  {heartsCount === 1 ? "pet" : "pets"}
+                </span>
               </span>
               <span className="text-[10px] font-mono text-[#909092]/60">
                 click to pet
