@@ -20,8 +20,8 @@ const FLOATING_NOTES = [
  *   OPTIONAL manual sound toggle so user can explicitly choose to unmute.
  */
 const CharacterListeningAvatar = ({
-  videoSrc = "/character_listening.webm",
-  posterSrc = "/character_listening_poster.webp",
+  videoSrc = "/character_listening.webm?v=2",
+  posterSrc = "/character_listening_poster.webp?v=2",
   audioSrc = "/audio/lofi_chill.mp3",
   trackTitle = "Midnight Vibes",
   artistName = "Santusht",
@@ -169,7 +169,7 @@ const CharacterListeningAvatar = ({
           className="w-full h-full object-contain pointer-events-none select-none"
         >
           <source src={videoSrc} type="video/webm" />
-          <source src="/character_listening.mp4" type="video/mp4" />
+          <source src="/character_listening.mp4?v=2" type="video/mp4" />
         </video>
 
         {/* 2. Floating Musical Notes around the character */}

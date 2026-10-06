@@ -51,8 +51,8 @@ const Card = ({ onOpenCommand }) => {
         <div className="flex flex-col items-center my-3 sm:my-5 pb-2">
           <div className="relative">
             <CharacterListeningAvatar
-              videoSrc="/character_listening.webm"
-              posterSrc="/character_listening_poster.webp"
+              videoSrc="/character_listening.webm?v=2"
+              posterSrc="/character_listening_poster.webp?v=2"
               audioSrc="/audio/lofi_chill.mp3"
               trackTitle="Midnight Vibes"
               artistName="Santusht"
