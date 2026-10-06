@@ -4,6 +4,7 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  AnimatePresence,
 } from "framer-motion";
 
 export function DockItem({
@@ -13,16 +14,13 @@ export function DockItem({
   mouseX,
   mouseY,
   spring = { mass: 0.1, stiffness: 170, damping: 14 },
-  distance = 120,
-  magnification = 50,
-  baseItemSize = 36,
+  distance = 130,
+  magnification = 54,
+  baseItemSize = 38,
   className = "",
-  defaultExpanded = false,
-  showLabel = "inline", // "inline" | "tooltip" | "none"
 }) {
   const ref = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [isToggled, setIsToggled] = useState(defaultExpanded);
 
   // Measure 2D Euclidean distance from mouse cursor (clientX, clientY) to item center
   const dist = useTransform([mouseX, mouseY], ([x, y]) => {
@@ -48,20 +46,17 @@ export function DockItem({
   const iconSize = useTransform(
     size,
     [baseItemSize, magnification],
-    [16, 22]
+    [18, 26]
   );
 
-  const isOpen = isHovered || isToggled;
-
   const handleClick = (e) => {
-    setIsToggled((prev) => !prev);
     onClick?.(e);
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      handleClick(e);
+      onClick?.(e);
     }
   };
 
@@ -70,8 +65,8 @@ export function DockItem({
       ref={ref}
       type="button"
       style={{
+        width: size,
         height: size,
-        minWidth: size,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -81,43 +76,43 @@ export function DockItem({
       onKeyDown={handleKeyDown}
       title={label}
       aria-label={label}
-      className={`group/pill shrink-0 inline-flex items-center justify-center rounded-xl border transition-colors duration-200 px-2.5 cursor-pointer select-none outline-none ${
-        isOpen
-          ? "border-solid border-black/40 dark:border-white/40 bg-black/[0.06] dark:bg-white/[0.08]"
-          : "border-dashed border-[#909092]/30 dark:border-[#909092]/40 bg-black/[0.03] dark:bg-white/[0.04] hover:border-solid hover:border-black/40 dark:hover:border-white/40 hover:bg-black/[0.06] dark:hover:bg-white/[0.08]"
-      } focus-visible:ring-1 focus-visible:ring-black dark:focus-visible:ring-white ${className}`}
+      className={`group/pill relative shrink-0 flex items-center justify-center rounded-xl border border-dashed border-[#909092]/30 dark:border-[#909092]/40 bg-black/[0.03] dark:bg-white/[0.04] hover:border-solid hover:border-black/40 dark:hover:border-white/40 hover:bg-black/[0.07] dark:hover:bg-white/[0.09] transition-[border-color,background-color] duration-150 cursor-pointer select-none outline-none focus-visible:ring-1 focus-visible:ring-black dark:focus-visible:ring-white ${className}`}
     >
+      {/* Floating Tooltip at exact top of the icon */}
+      <AnimatePresence>
+        {isHovered && label && (
+          <motion.div
+            initial={{ opacity: 0, y: 4, scale: 0.9 }}
+            animate={{ opacity: 1, y: -8, scale: 1 }}
+            exit={{ opacity: 0, y: 2, scale: 0.9 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute -top-7 left-1/2 -translate-x-1/2 pointer-events-none z-50 px-2 py-0.5 rounded-md bg-black/95 dark:bg-white text-white dark:text-black text-[11px] font-mono whitespace-nowrap shadow-md border border-white/10 dark:border-black/10 flex items-center justify-center tracking-tight"
+          >
+            <span>{label}</span>
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rotate-45 bg-black/95 dark:bg-white" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Centered scaling icon */}
       <motion.span
         style={{ width: iconSize, height: iconSize }}
         className="shrink-0 flex items-center justify-center pointer-events-none"
       >
         {icon}
       </motion.span>
-
-      {showLabel === "inline" && label && (
-        <span
-          className={`overflow-hidden whitespace-nowrap transition-all duration-200 ease-out font-mono tracking-tight text-xs sm:text-sm font-medium text-zinc-900 dark:text-zinc-100 pointer-events-none ${
-            isOpen
-              ? "max-w-48 opacity-100 ml-2"
-              : "max-w-0 opacity-0 ml-0 group-hover/pill:max-w-48 group-hover/pill:opacity-100 group-hover/pill:ml-2 group-focus-visible/pill:max-w-48 group-focus-visible/pill:opacity-100 group-focus-visible/pill:ml-2"
-          }`}
-        >
-          {label}
-        </span>
-      )}
     </motion.button>
   );
 }
 
 export function Dock({
   items = [],
-  panelHeight = 48,
-  baseItemSize = 36,
-  magnification = 50,
-  distance = 120,
+  panelHeight = 52,
+  baseItemSize = 38,
+  magnification = 54,
+  distance = 130,
   spring = { mass: 0.1, stiffness: 170, damping: 14 },
   className = "",
-  showLabel = "inline",
 }) {
   const mouseX = useMotionValue(Infinity);
   const mouseY = useMotionValue(Infinity);
@@ -133,7 +128,7 @@ export function Dock({
         mouseX.set(Infinity);
         mouseY.set(Infinity);
       }}
-      className={`flex flex-wrap items-center gap-2 py-1 bg-transparent border-0 shadow-none max-w-full ${className}`}
+      className={`flex flex-wrap items-center gap-2.5 pt-7 pb-2 bg-transparent border-0 shadow-none max-w-full overflow-visible ${className}`}
     >
       {items.map((item, idx) => (
         <DockItem
@@ -148,8 +143,6 @@ export function Dock({
           magnification={magnification}
           baseItemSize={baseItemSize}
           className={item.className}
-          defaultExpanded={item.defaultExpanded}
-          showLabel={showLabel}
         />
       ))}
     </motion.div>

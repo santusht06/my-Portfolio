@@ -168,10 +168,10 @@ export const TechStackPill = ({ tech, defaultExpanded = false }) => {
 export const TechDock = ({
   technologies = [],
   className = "",
-  panelHeight = 44,
-  baseItemSize = 36,
-  magnification = 50,
-  distance = 120,
+  panelHeight = 52,
+  baseItemSize = 38,
+  magnification = 54,
+  distance = 130,
 }) => {
   if (!technologies || technologies.length === 0) return null;
 
@@ -185,8 +185,8 @@ export const TechDock = ({
         <img
           src={info.svg}
           alt={`${tech} logo`}
-          width={18}
-          height={18}
+          width={20}
+          height={20}
           loading="lazy"
           className={`size-full object-contain select-none pointer-events-none ${info.className || ""}`}
         />
@@ -215,9 +215,9 @@ export const TechStackPills = ({
   technologies = [],
   className = "",
   variant = "dock", // "dock" | "capsule"
-  panelHeight = 44,
-  baseItemSize = 36,
-  magnification = 50,
+  panelHeight = 52,
+  baseItemSize = 38,
+  magnification = 54,
 }) => {
   if (!technologies || technologies.length === 0) return null;
 
