@@ -1,8 +1,27 @@
-import React from "react";
-import { profileData } from "../data/portfolioData";
+import React, { useState } from "react";
+import { curatedQuotes, profileData } from "../data/portfolioData";
 import { ScrollReveal } from "./ScrollReveal";
 
+const getRandomQuote = () => {
+  const quotesList = curatedQuotes && curatedQuotes.length > 0 ? curatedQuotes : [profileData.quote];
+  try {
+    const rawLast = sessionStorage.getItem("last_quote_index");
+    const lastIndex = rawLast !== null ? parseInt(rawLast, 10) : -1;
+    let nextIndex = Math.floor(Math.random() * quotesList.length);
+    if (quotesList.length > 1 && nextIndex === lastIndex) {
+      nextIndex = (nextIndex + 1) % quotesList.length;
+    }
+    sessionStorage.setItem("last_quote_index", nextIndex.toString());
+    return quotesList[nextIndex];
+  } catch {
+    const nextIndex = Math.floor(Math.random() * quotesList.length);
+    return quotesList[nextIndex];
+  }
+};
+
 const QuoteCard = () => {
+  const [currentQuote] = useState(() => getRandomQuote());
+
   return (
     <ScrollReveal y={20} duration={0.5}>
       <div className="relative w-full my-12 p-1.5 rounded-[1.75rem] bezel-outer overflow-hidden hover-only:hover:border-black/15 dark:hover-only:hover:border-white/15 transition-[border-color,box-shadow] duration-200 ease-smooth group">
@@ -15,12 +34,12 @@ const QuoteCard = () => {
           {/* Quote Content */}
           <div className="relative z-10 flex flex-col gap-4 min-h-[4rem] justify-center">
             <p className="font-mono text-black dark:text-white text-sm sm:text-base md:text-lg leading-relaxed tracking-tight italic">
-              "{profileData.quote.text}"
+              "{currentQuote.text}"
             </p>
 
             <div className="flex justify-end items-center">
               <span className="font-mono text-xs sm:text-sm text-[#909092] tracking-wider uppercase">
-                — {profileData.quote.author}
+                — {currentQuote.author}
               </span>
             </div>
           </div>

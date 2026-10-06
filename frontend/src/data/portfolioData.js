@@ -1,3 +1,78 @@
+export const curatedQuotes = [
+  {
+    text: "If the pain doesn't kill me, it will only make me stronger.",
+    author: "Sung Jin-woo, Solo Leveling",
+  },
+  {
+    text: "Talk is cheap. Show me the code.",
+    author: "Linus Torvalds",
+  },
+  {
+    text: "Simplicity is prerequisite for reliability.",
+    author: "Edsger W. Dijkstra",
+  },
+  {
+    text: "The best way to predict the future is to invent it.",
+    author: "Alan Kay",
+  },
+  {
+    text: "You have power over your mind - not outside events. Realize this, and you will find strength.",
+    author: "Marcus Aurelius",
+  },
+  {
+    text: "We suffer more often in imagination than in reality.",
+    author: "Seneca",
+  },
+  {
+    text: "There are only two hard things in Computer Science: cache invalidation and naming things.",
+    author: "Phil Karlton",
+  },
+  {
+    text: "Hard work is worthless for those that don't believe in themselves.",
+    author: "Naruto Uzumaki",
+  },
+  {
+    text: "Fear is not evil. It tells you what your weakness is. Once you know it, you become stronger.",
+    author: "Gildarts Clive, Fairy Tail",
+  },
+  {
+    text: "If you don't take risks, you can't create a future.",
+    author: "Monkey D. Luffy",
+  },
+  {
+    text: "Everything around you that you call life was made up by people no smarter than you.",
+    author: "Steve Jobs",
+  },
+  {
+    text: "It does not matter how slowly you go as long as you do not stop.",
+    author: "Confucius",
+  },
+  {
+    text: "Those who cannot acknowledge themselves will eventually fail.",
+    author: "Itachi Uchiha",
+  },
+  {
+    text: "Waste no more time arguing about what a good man should be. Be one.",
+    author: "Marcus Aurelius",
+  },
+  {
+    text: "First, solve the problem. Then, write the code.",
+    author: "John Johnson",
+  },
+  {
+    text: "Arise.",
+    author: "Shadow Monarch, Solo Leveling",
+  },
+  {
+    text: "A system is only as reliable as its weakest failure mode.",
+    author: "Systems Architecture Axiom",
+  },
+  {
+    text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+    author: "Winston Churchill",
+  },
+];
+
 export const profileData = {
   name: "Santusht Kotai",
   title: "Software Engineer | Backend Engineering | Distributed Systems",
@@ -7,10 +82,7 @@ export const profileData = {
   location: "Indore, India",
   summary:
     "Living between terminal windows, lofi beats, and real-world wonder — crafting things that work silently so life can happen loudly.",
-  quote: {
-    text: "If the pain doesn't kill me, it will only make me stronger.",
-    author: "Sung Jin-woo, Solo Leveling",
-  },
+  quote: curatedQuotes[0],
   socials: [
     { name: "GitHub", url: "https://github.com/santusht06", label: "github.com/santusht06" },
     { name: "LinkedIn", url: "https://www.linkedin.com/in/santusht-kotai-8a4454323", label: "LinkedIn Profile" },
