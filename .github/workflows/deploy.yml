@@ -1,0 +1,99 @@
+name: Production CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+jobs:
+  validate-and-build:
+    name: Validate & Build Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (v20)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: "frontend/package-lock.json"
+
+      - name: Validate Backend Syntax
+        run: |
+          echo "🔍 Checking backend code syntax..."
+          node --check backend/index.js
+          node --check backend/controllers/Blog.controller.js
+          node --check backend/routes/Blog.route.js
+          node --check backend/routes/Quote.route.js
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: |
+          echo "📦 Installing frontend packages..."
+          npm ci
+
+      - name: Build Frontend & Test SSG Prerendering
+        working-directory: frontend
+        run: |
+          echo "⚡ Compiling production bundle & generating static SEO pages..."
+          npm run build
+
+  deploy-to-server:
+    name: Deploy to Production Server
+    runs-on: ubuntu-latest
+    needs: validate-and-build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Execute Remote SSH Deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          timeout: 180s
+          script: |
+            set -e
+            echo "=========================================="
+            echo "🚀 Starting automated deployment..."
+            echo "Commit: ${{ github.sha }}"
+            echo "Time: $(date -u)"
+            echo "=========================================="
+
+            cd /var/www/my-Portfolio
+
+            # 1. Sync repository to latest commit from origin/main
+            echo "📥 Fetching and syncing code..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            # 2. Update Backend and restart daemon
+            echo "📦 Installing backend production dependencies..."
+            cd /var/www/my-Portfolio/backend
+            npm install --production --no-audit --no-fund
+
+            echo "🔄 Restarting portfolio-backend systemd service..."
+            systemctl restart portfolio-backend.service
+
+            # 3. Build Frontend with full SSG prerender
+            echo "⚡ Installing frontend dependencies & building SSG dist..."
+            cd /var/www/my-Portfolio/frontend
+            npm install --no-audit --no-fund
+            npm run build
+
+            # 4. Test and reload Nginx
+            echo "🔄 Testing and reloading Nginx..."
+            nginx -t
+            systemctl reload nginx
+
+            echo "=========================================="
+            echo "🎉 Deployment successful!"
+            echo "Live URL: https://santusht.online"
+            echo "=========================================="
