@@ -156,17 +156,30 @@ const CharacterListeningAvatar = ({
           }`}
         />
 
-        {/* Transparent Character Video (strictly muted by default, no SEO penalty) */}
+        {/* Original Illustrated Portrait (displayed when resting / not hovered) */}
+        <img
+          src={posterSrc}
+          alt="Santusht Kotai, backend and distributed systems engineer (illustrated portrait)"
+          width={260}
+          height={260}
+          loading="eager"
+          className={`absolute inset-0 w-full h-full object-contain pointer-events-none select-none z-10 transition-opacity duration-300 ease-out ${
+            isPlaying ? "opacity-0" : "opacity-100"
+          }`}
+        />
+
+        {/* Transparent Character Video (strictly muted by default, plays on hover) */}
         <video
           ref={videoRef}
-          poster={posterSrc}
           playsInline
           muted
           loop
           preload="auto"
           disablePictureInPicture
           disableRemotePlayback
-          className="w-full h-full object-contain pointer-events-none select-none"
+          className={`w-full h-full object-contain pointer-events-none select-none transition-opacity duration-300 ease-out ${
+            isPlaying ? "opacity-100" : "opacity-0"
+          }`}
         >
           <source src={videoSrc} type="video/webm" />
           <source src="/character_listening.mp4" type="video/mp4" />
