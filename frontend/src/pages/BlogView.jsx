@@ -163,8 +163,6 @@ const BlogView = () => {
                           <div className="flex items-center gap-2.5 mb-2 flex-wrap">
                             <span className="text-[11px] font-mono text-[#909092]">
                               {b.date} • {b.readTime}
-                              {typeof b.views === "number" && b.views > 0 ? ` • ${b.views} views` : ""}
-                              {typeof b.likes === "number" && b.likes > 0 ? ` • ${b.likes} ❤️` : ""}
                             </span>
                           </div>
 

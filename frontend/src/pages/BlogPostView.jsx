@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
-import { FiArrowLeft, FiClock, FiCalendar, FiShare2, FiCheck, FiHeart, FiEye } from "react-icons/fi";
+import { FiArrowLeft, FiClock, FiCalendar, FiShare2, FiCheck } from "react-icons/fi";
 import { blogs, profileData } from "@/data/portfolioData";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import SEOHead from "@/components/SEOHead";
@@ -12,9 +12,6 @@ const BlogPostView = () => {
   const [copied, setCopied] = useState(false);
   const staticPost = blogs.find((b) => b.id === slug);
   const [post, setPost] = useState(staticPost);
-  const [likes, setLikes] = useState(staticPost?.likes || 0);
-  const [hasLiked, setHasLiked] = useState(false);
-  const [views, setViews] = useState(staticPost?.views || 0);
 
   useEffect(() => {
     let isMounted = true;
@@ -25,8 +22,6 @@ const BlogPostView = () => {
           const json = await res.json();
           if (isMounted && json.success && json.data) {
             setPost(json.data);
-            if (typeof json.data.likes === "number") setLikes(json.data.likes);
-            if (typeof json.data.views === "number") setViews(json.data.views);
           }
         }
       } catch (err) {
@@ -42,18 +37,6 @@ const BlogPostView = () => {
   if (!post) {
     return <Navigate to="/blog" replace />;
   }
-
-  const handleLike = async () => {
-    if (hasLiked) return;
-    setLikes((prev) => prev + 1);
-    setHasLiked(true);
-    toast.success("Thank you for reading!");
-    try {
-      await fetch(`/api/v1/blogs/${slug}/like`, { method: "POST" });
-    } catch (err) {
-      console.debug("Like sync failed:", err);
-    }
-  };
 
   const handleShare = () => {
     if (navigator.share) {
@@ -114,20 +97,6 @@ const BlogPostView = () => {
 
           <div className="flex items-center gap-2">
             <button
-              onClick={handleLike}
-              disabled={hasLiked}
-              className={`inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded-md border transition-all duration-150 cursor-pointer ${
-                hasLiked
-                  ? "bg-rose-500/10 text-rose-500 border-rose-500/30"
-                  : "bg-black/[0.03] dark:bg-white/[0.04] text-[#909092] border-black/[0.06] dark:border-white/[0.06] hover:text-rose-500 hover:border-rose-500/30"
-              }`}
-              title="Like this engineering report"
-            >
-              <FiHeart className={hasLiked ? "fill-rose-500 text-rose-500" : ""} />
-              <span>{likes > 0 ? likes : "Like"}</span>
-            </button>
-
-            <button
               onClick={handleShare}
               className="inline-flex items-center gap-1.5 text-xs font-mono text-[#909092] hover:text-black dark:hover:text-white px-2.5 py-1 rounded-md bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.06] dark:border-white/[0.06] hover:border-black/20 dark:hover:border-white/20 transition-all duration-150 cursor-pointer"
               title="Share article"
@@ -178,15 +147,6 @@ const BlogPostView = () => {
             <FiClock className="text-[#909092]" />
             {post.readTime}
           </span>
-          {views > 0 && (
-            <>
-              <span>•</span>
-              <span className="flex items-center gap-1.5">
-                <FiEye className="text-xs" />
-                {views} {views === 1 ? "view" : "views"}
-              </span>
-            </>
-          )}
           <span>•</span>
           <span>By {profileData.name}</span>
         </div>
