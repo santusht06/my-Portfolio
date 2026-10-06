@@ -5,11 +5,7 @@ import { blogs } from "../data/portfolioData";
 import Footer from "../components/Footer";
 import DetailModal from "../components/DetailModal";
 import SEOHead from "../components/SEOHead";
-import {
-  ScrollReveal,
-  ScrollRevealGroup,
-  ScrollRevealItem,
-} from "../components/ScrollReveal";
+import { ScrollReveal } from "../components/ScrollReveal";
 import {
   Tabs,
   TabsList,
@@ -31,7 +27,7 @@ const BlogView = () => {
     let isMounted = true;
     const fetchBlogs = async () => {
       try {
-        const res = await fetch("/api/v1/blogs");
+        const res = await fetch("/api/v1/blogs?sort=createdAt");
         if (res.ok) {
           const json = await res.json();
           if (isMounted && json.success && Array.isArray(json.data) && json.data.length > 0) {
@@ -149,12 +145,9 @@ const BlogView = () => {
                   No posts found in this category.
                 </div>
               ) : (
-                <ScrollRevealGroup
-                  className="divide-y divide-black/[0.06] dark:divide-white/[0.06]"
-                  stagger={0.06}
-                >
+                <div className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
                   {filteredBlogs.map((b) => (
-                    <ScrollRevealItem key={b.id}>
+                    <div key={b.id}>
                       <Link
                         to={`/blog/${b.id}`}
                         className="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group cursor-pointer hover-only:hover:bg-black/[0.03] dark:hover-only:hover:bg-white/[0.035] px-3.5 rounded-xl motion-safe:active:scale-[0.98] transition-colors duration-150 ease-smooth block"
@@ -192,9 +185,9 @@ const BlogView = () => {
                           <FiArrowRight className="group-hover:translate-x-1 transition-transform duration-150 ease-smooth motion-reduce:transform-none text-[#909092] group-hover:text-black dark:group-hover:text-white" />
                         </div>
                       </Link>
-                    </ScrollRevealItem>
+                    </div>
                   ))}
-                </ScrollRevealGroup>
+                </div>
               )}
             </TabsPanel>
           </TabsPanels>

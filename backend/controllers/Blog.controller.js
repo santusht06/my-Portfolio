@@ -6,7 +6,7 @@ const Blog = require("../models/Blog.model");
  */
 exports.getAllBlogs = async (req, res) => {
   try {
-    const { category, type, search, q, page = 1, limit = 50, sort = "-createdAt" } = req.query;
+    const { category, type, search, q, page = 1, limit = 50, sort = "createdAt" } = req.query;
 
     const filter = { isPublished: true };
 
