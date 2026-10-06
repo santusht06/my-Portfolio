@@ -15,6 +15,18 @@ const PortfolioLayout = () => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+  // Global Command/Ctrl + K shortcut to open/toggle Command Palette
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setIsCommandOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const isHome = location.pathname === "/";
 
   return (
