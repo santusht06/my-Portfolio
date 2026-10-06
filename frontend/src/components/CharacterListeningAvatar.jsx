@@ -21,7 +21,7 @@ const FLOATING_NOTES = [
  */
 const CharacterListeningAvatar = ({
   videoSrc = "/character_listening.webm",
-  posterSrc = "/character_listening_poster.png",
+  posterSrc = "/character_listening_poster.webp",
   audioSrc = "/audio/lofi_chill.mp3",
   trackTitle = "Midnight Vibes",
   artistName = "Santusht",

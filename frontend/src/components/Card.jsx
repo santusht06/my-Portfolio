@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Logo from "../assets/Pictures/logo-1.svg";
 import Signature from "../assets/Pictures/Signature.webp";
-import animeAvatar from "../assets/Pictures/avatar-anime.png";
 import CharacterListeningAvatar from "./CharacterListeningAvatar";
 import { GoArrowUpRight } from "react-icons/go";
 import { FiCopy, FiCheck, FiSearch } from "react-icons/fi";
@@ -53,7 +52,7 @@ const Card = ({ onOpenCommand }) => {
           <div className="relative">
             <CharacterListeningAvatar
               videoSrc="/character_listening.webm"
-              posterSrc="/character_listening_poster.png"
+              posterSrc="/character_listening_poster.webp"
               audioSrc="/audio/lofi_chill.mp3"
               trackTitle="Midnight Vibes"
               artistName="Santusht"

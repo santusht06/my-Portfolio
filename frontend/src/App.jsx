@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PortfolioLayout from "./components/PortfolioLayout";
 import { Toaster } from "sonner";
 
@@ -10,6 +10,7 @@ const BlogView = lazy(() => import("./pages/BlogView"));
 const BlogPostView = lazy(() => import("./pages/BlogPostView"));
 const ResumeView = lazy(() => import("./pages/ResumeView"));
 const ContactView = lazy(() => import("./pages/ContactView"));
+const NotFoundView = lazy(() => import("./pages/NotFoundView"));
 
 const PageFallback = () => (
   <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-12 animate-pulse">
@@ -46,7 +47,7 @@ const App = () => {
               <Route path="blog/:slug" element={<BlogPostView />} />
               <Route path="resume" element={<ResumeView />} />
               <Route path="contact" element={<ContactView />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<NotFoundView />} />
             </Route>
           </Routes>
         </Suspense>

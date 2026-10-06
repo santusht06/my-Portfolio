@@ -80,12 +80,7 @@ const BlogView = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <SEOHead
-        title="Engineering Blog & Systems Post-Mortems | Santusht Kotai"
-        description="Real engineering problems, post-mortems, architectural decision records (ADRs), and deep dives from building production systems by Santusht Kotai."
-        canonical="/blog"
-        keywords="Backend Engineering Blog, Systems Architecture, Post-Mortems, ADR, Distributed Systems, FastAPI, Redis Streams, Docker Sandboxes, Interleet, Sharexpress"
-      />
+      <SEOHead canonical="/blog" />
       {/* Header */}
       <ScrollReveal delay={0.04} y={16}>
         <div className="mb-8">

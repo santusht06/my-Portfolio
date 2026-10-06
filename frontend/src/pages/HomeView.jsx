@@ -12,6 +12,7 @@ import {
   experiences,
   projects,
   achievements,
+  blogs,
   developmentGears,
   personalItems,
 } from "../data/portfolioData";
@@ -19,7 +20,7 @@ import QuoteCard from "../components/QuoteCard";
 import Footer from "../components/Footer";
 import DetailModal from "../components/DetailModal";
 import TechStackPills from "../components/TechStackPills";
-import animeAvatar from "../assets/Pictures/avatar-anime.png";
+import animeAvatar from "../assets/Pictures/avatar-anime.webp";
 import {
   ScrollReveal,
   ScrollRevealGroup,
@@ -64,12 +65,8 @@ const HomeView = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <SEOHead
-        title="Santusht Kotai | Software Engineer & Systems Architect"
-        description="Backend & distributed systems engineer specializing in FastAPI, PostgreSQL, Redis, Docker, and Kubernetes. GSoC contributor to Supabase."
-        canonical="/"
-        keywords="Santusht Kotai, Backend Engineer, Distributed Systems, FastAPI, PostgreSQL, Redis, Kubernetes, Docker, Supabase, Indore, India"
-      />
+      <SEOHead canonical="/" />
+
       {/* 1. Header & Summary (Matching Resume & Ramx Layout) */}
       <ScrollReveal delay={0.04} y={16}>
         <section className="mb-8 lg:mb-12">
@@ -78,7 +75,7 @@ const HomeView = () => {
             <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border border-[#909092]/25 dark:border-[#909092]/30 p-0.5 bg-white dark:bg-black shadow-md">
               <img
                 src={animeAvatar}
-                alt="Santusht Kotai - Full Stack Software Developer"
+                alt="Santusht Kotai, backend and distributed systems engineer (illustrated portrait)"
                 width={64}
                 height={64}
                 loading="eager"
@@ -340,7 +337,51 @@ const HomeView = () => {
         </ScrollRevealGroup>
       </section>
 
-      {/* 7. Solo Leveling Quote Card */}
+      {/* 7. Latest engineering notes — internal links to the blog cluster */}
+      <section className="mb-14" aria-labelledby="latest-notes-heading">
+        <ScrollReveal delay={0.04} y={14}>
+          <h2
+            id="latest-notes-heading"
+            className="text-lg sm:text-xl font-bold text-black dark:text-white mb-4 tracking-tight"
+          >
+            Latest Engineering Notes
+          </h2>
+        </ScrollReveal>
+        <ul className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
+          {blogs.slice(0, 4).map((b) => (
+            <li key={b.id}>
+              <Link
+                to={`/blog/${b.id}`}
+                className="group flex items-start justify-between gap-4 py-4 px-3 -mx-3 rounded-xl hover-only:hover:bg-black/[0.03] dark:hover-only:hover:bg-white/[0.035] transition-colors duration-150"
+              >
+                <span>
+                  <span className="block text-[11px] font-mono text-[#909092] mb-1">
+                    {b.date} • {b.readTime}
+                  </span>
+                  <span className="block text-sm sm:text-base font-semibold text-black dark:text-white leading-snug">
+                    {b.title}
+                  </span>
+                  <span className="block text-xs sm:text-sm text-[#909092] mt-1 leading-relaxed">
+                    {b.subtitle}
+                  </span>
+                </span>
+                <FiArrowRight className="mt-5 flex-shrink-0 text-[#909092] group-hover:translate-x-1 group-hover:text-black dark:group-hover:text-white transition-transform duration-150 motion-reduce:transform-none" />
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-4">
+          <Link
+            to="/blog"
+            className="inline-flex items-center gap-2 text-xs font-mono text-[#909092] hover:text-black dark:hover:text-white transition-colors duration-150 group"
+          >
+            <span>Read all engineering articles</span>
+            <FiArrowRight className="text-xs group-hover:translate-x-1 transition-transform duration-150 motion-reduce:transform-none" />
+          </Link>
+        </div>
+      </section>
+
+      {/* 8. Solo Leveling Quote Card */}
       <QuoteCard />
 
       {/* 8. Footer */}

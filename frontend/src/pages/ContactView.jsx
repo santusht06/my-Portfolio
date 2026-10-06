@@ -102,12 +102,7 @@ const ContactView = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <SEOHead
-        title="Contact & Work Inquiries | Santusht Kotai"
-        description="Get in touch with Santusht Kotai for backend engineering roles, distributed systems consulting, API development, or collaborations."
-        canonical="/contact"
-        keywords="Contact Santusht Kotai, Hire Backend Engineer, Software Engineering Inquiry, Full Stack Developer Contact"
-      />
+      <SEOHead canonical="/contact" />
       {/* Header - Consistent with WorkView, BlogView, ResumeView */}
       <ScrollReveal delay={0.04} y={16}>
         <div className="mb-8 sm:mb-10">

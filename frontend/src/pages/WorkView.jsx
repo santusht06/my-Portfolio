@@ -18,12 +18,8 @@ import TechStackPills from "../components/TechStackPills";
 const WorkView = () => {
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <SEOHead
-        title="Engineering Experience & Projects | Santusht Kotai"
-        description="Explore production backend engineering, distributed architectures, AWS microservices, and Supabase open-source contributions by Santusht Kotai."
-        canonical="/work"
-        keywords="Backend Engineer, Systems Architecture, FastAPI, Distributed Systems, Microservices, Supabase GSoC, AWS, Docker, Kubernetes"
-      />
+      <SEOHead canonical="/work" />
+
       {/* Header */}
       <ScrollReveal delay={0.04} y={16}>
         <div className="mb-12">

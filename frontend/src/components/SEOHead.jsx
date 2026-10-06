@@ -1,84 +1,112 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import {
+  SITE_URL,
+  SITE_NAME,
+  OG_IMAGE,
+  OG_IMAGE_WIDTH,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_ALT,
+  toCanonicalPath,
+  buildGraph,
+  getPageMeta,
+} from "../lib/seoSchema";
 
-const BASE_URL = "https://santusht.online";
-const DEFAULT_IMAGE = "https://santusht.online/og-image.webp";
-
+/**
+ * Runtime SEO head manager (SPA navigation).
+ *
+ * The first paint for crawlers comes from scripts/prerender.js, which uses the
+ * SAME helpers from lib/seoSchema, so the values written here match the static
+ * HTML and never "flip" between crawl and render.
+ */
 export const SEOHead = ({
-  title,
-  description,
+  title: titleProp,
+  description: descriptionProp,
   keywords,
   canonical,
-  ogImage = DEFAULT_IMAGE,
-  schema = null,
+  ogImage = OG_IMAGE,
+  ogType = "website",
+  noindex = false,
+  schema,
 }) => {
-  const rawPath = canonical || location.pathname;
-  const normalizedPath = rawPath === "/" ? "/" : rawPath.endsWith("/") ? rawPath : `${rawPath}/`;
-  const currentUrl = `${BASE_URL}${normalizedPath}`;
+  const location = useLocation();
+  const canonicalPath = toCanonicalPath(canonical || location.pathname);
+  const currentUrl = `${SITE_URL}${canonicalPath}`;
+  const meta = getPageMeta(canonicalPath);
+  const title = titleProp ?? meta?.title;
+  const description = descriptionProp ?? meta?.description;
 
   useEffect(() => {
-    // 1. Title
-    if (title) {
-      document.title = title;
-    }
+    if (title) document.title = title;
 
-    // Helper to set meta tags
-    const setMetaTag = (selector, attribute, value) => {
+    const setMeta = (attr, key, value) => {
       if (!value) return;
-      let el = document.querySelector(selector);
+      let el = document.head.querySelector(`meta[${attr}="${key}"]`);
       if (!el) {
         el = document.createElement("meta");
-        if (selector.startsWith('meta[name=')) {
-          el.setAttribute("name", selector.match(/name="([^"]+)"/)?.[1] || "");
-        } else if (selector.startsWith('meta[property=')) {
-          el.setAttribute("property", selector.match(/property="([^"]+)"/)?.[1] || "");
-        }
+        el.setAttribute(attr, key);
         document.head.appendChild(el);
       }
-      el.setAttribute(attribute, value);
+      el.setAttribute("content", value);
     };
 
-    // 2. Standard Meta Tags
-    setMetaTag('meta[name="description"]', "content", description);
-    if (keywords) {
-      setMetaTag('meta[name="keywords"]', "content", keywords);
+    // Standard
+    setMeta("name", "description", description);
+    setMeta("name", "keywords", keywords);
+    setMeta(
+      "name",
+      "robots",
+      noindex
+        ? "noindex, nofollow"
+        : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    );
+
+    // Canonical
+    let link = document.head.querySelector('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement("link");
+      link.setAttribute("rel", "canonical");
+      document.head.appendChild(link);
+    }
+    link.setAttribute("href", currentUrl);
+
+    // Open Graph
+    setMeta("property", "og:type", ogType);
+    setMeta("property", "og:site_name", SITE_NAME);
+    setMeta("property", "og:title", title);
+    setMeta("property", "og:description", description);
+    setMeta("property", "og:url", currentUrl);
+    setMeta("property", "og:image", ogImage);
+    if (ogImage === OG_IMAGE) {
+      setMeta("property", "og:image:width", String(OG_IMAGE_WIDTH));
+      setMeta("property", "og:image:height", String(OG_IMAGE_HEIGHT));
+      setMeta("property", "og:image:alt", OG_IMAGE_ALT);
     }
 
-    // 3. Canonical Tag
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (!canonicalLink) {
-      canonicalLink = document.createElement("link");
-      canonicalLink.setAttribute("rel", "canonical");
-      document.head.appendChild(canonicalLink);
-    }
-    canonicalLink.setAttribute("href", currentUrl);
+    // Twitter
+    setMeta("name", "twitter:title", title);
+    setMeta("name", "twitter:description", description);
+    setMeta("name", "twitter:url", currentUrl);
+    setMeta("name", "twitter:image", ogImage);
+    if (ogImage === OG_IMAGE) setMeta("name", "twitter:image:alt", OG_IMAGE_ALT);
 
-    // 4. OpenGraph
-    setMetaTag('meta[property="og:title"]', "content", title);
-    setMetaTag('meta[property="og:description"]', "content", description);
-    setMetaTag('meta[property="og:url"]', "content", currentUrl);
-    setMetaTag('meta[property="og:image"]', "content", ogImage);
-
-    // 5. Twitter Card
-    setMetaTag('meta[name="twitter:title"]', "content", title);
-    setMetaTag('meta[name="twitter:description"]', "content", description);
-    setMetaTag('meta[name="twitter:url"]', "content", currentUrl);
-    setMetaTag('meta[name="twitter:image"]', "content", ogImage);
-
-    // 6. JSON-LD Dynamic Schema
-    let dynamicSchemaEl = document.getElementById("dynamic-seo-schema");
-    if (schema) {
-      if (!dynamicSchemaEl) {
-        dynamicSchemaEl = document.createElement("script");
-        dynamicSchemaEl.id = "dynamic-seo-schema";
-        dynamicSchemaEl.type = "application/ld+json";
-        document.head.appendChild(dynamicSchemaEl);
+    // JSON-LD: explicit schema wins, otherwise derive the page graph from the
+    // shared registry. The prerendered <script id="dynamic-seo-schema"> is
+    // reused (not duplicated) so there is only ever ONE graph in the document.
+    const graph = noindex ? null : schema || buildGraph(canonicalPath);
+    let schemaEl = document.getElementById("dynamic-seo-schema");
+    if (graph) {
+      if (!schemaEl) {
+        schemaEl = document.createElement("script");
+        schemaEl.id = "dynamic-seo-schema";
+        schemaEl.type = "application/ld+json";
+        document.head.appendChild(schemaEl);
       }
-      dynamicSchemaEl.textContent = JSON.stringify(schema);
-    } else if (dynamicSchemaEl) {
-      dynamicSchemaEl.remove();
+      schemaEl.textContent = JSON.stringify(graph);
+    } else if (schemaEl) {
+      schemaEl.remove();
     }
-  }, [title, description, keywords, currentUrl, ogImage, schema]);
+  }, [title, description, keywords, canonicalPath, currentUrl, ogImage, ogType, noindex, schema]);
 
   return null;
 };

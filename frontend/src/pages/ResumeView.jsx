@@ -11,12 +11,7 @@ const ResumeView = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <SEOHead
-        title="Resume & Qualifications | Santusht Kotai"
-        description="View and download the professional software engineer resume of Santusht Kotai. Backend development, distributed systems, FastAPI, and Supabase GSoC."
-        canonical="/resume"
-        keywords="Santusht Kotai Resume, Software Engineer Resume PDF, Backend Developer CV, FastAPI, Distributed Systems, Supabase GSoC"
-      />
+      <SEOHead canonical="/resume" />
 
       {/* Header */}
       <ScrollReveal delay={0.04} y={16}>

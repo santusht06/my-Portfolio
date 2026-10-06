@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
-import { FiArrowLeft, FiClock, FiCalendar, FiShare2, FiCheck } from "react-icons/fi";
+import { FiArrowLeft, FiClock, FiCalendar, FiShare2, FiCheck, FiArrowRight } from "react-icons/fi";
 import { blogs, profileData } from "@/data/portfolioData";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import SEOHead from "@/components/SEOHead";
 import Footer from "@/components/Footer";
+import { buildGraph, getPostMeta, getRelatedPosts } from "@/lib/seoSchema";
 import { toast } from "sonner";
 
 const BlogPostView = () => {
@@ -34,6 +35,13 @@ const BlogPostView = () => {
     };
   }, [slug]);
 
+  const postMeta = post ? getPostMeta(post) : null;
+  const related = useMemo(() => (post ? getRelatedPosts(post, 3) : []), [post]);
+  const schema = useMemo(
+    () => (post ? buildGraph(`/blog/${post.id}`, { post }) : null),
+    [post]
+  );
+
   if (!post) {
     return <Navigate to="/blog" replace />;
   }
@@ -53,34 +61,13 @@ const BlogPostView = () => {
     }
   };
 
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": post.title,
-    "description": post.subtitle,
-    "author": {
-      "@type": "Person",
-      "name": profileData.name,
-      "url": "https://santusht.online"
-    },
-    "datePublished": post.date,
-    "publisher": {
-      "@type": "Person",
-      "name": profileData.name
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://santusht.online/blog/${post.id}`
-    }
-  };
-
   return (
     <article className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
       <SEOHead
-        title={`${post.title} — Santusht Kotai`}
-        description={post.subtitle}
+        title={postMeta.title}
+        description={postMeta.description}
         canonical={`/blog/${post.id}`}
-        keywords={`${post.categories.join(", ")}, Backend Engineering, Distributed Systems, Santusht Kotai`}
+        ogType="article"
         schema={schema}
       />
 
@@ -246,6 +233,50 @@ const BlogPostView = () => {
           </p>
         </div>
       </ScrollReveal>
+
+      {/* Related articles — internal linking */}
+      {related.length > 0 && (
+        <section
+          aria-labelledby="related-articles-heading"
+          className="mt-14 pt-8 border-t border-black/[0.06] dark:border-white/[0.06]"
+        >
+          <h2
+            id="related-articles-heading"
+            className="text-xs font-mono uppercase tracking-[0.2em] text-[#909092] mb-4"
+          >
+            Related engineering notes
+          </h2>
+          <ul className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
+            {related.map((r) => (
+              <li key={r.id}>
+                <Link
+                  to={`/blog/${r.id}`}
+                  className="group flex items-start justify-between gap-4 py-4 px-1 rounded-lg hover-only:hover:bg-black/[0.03] dark:hover-only:hover:bg-white/[0.035] transition-colors duration-150"
+                >
+                  <span>
+                    <span className="block text-sm sm:text-base font-semibold text-black dark:text-white leading-snug">
+                      {r.title}
+                    </span>
+                    <span className="block text-xs sm:text-sm text-[#909092] mt-1 leading-relaxed">
+                      {r.subtitle}
+                    </span>
+                  </span>
+                  <FiArrowRight className="mt-1 flex-shrink-0 text-[#909092] group-hover:translate-x-1 group-hover:text-black dark:group-hover:text-white transition-transform duration-150 motion-reduce:transform-none" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-xs font-mono text-[#909092]">
+            <Link to="/blog" className="underline underline-offset-4 hover:text-black dark:hover:text-white">
+              Browse all engineering articles
+            </Link>
+            {" · "}
+            <Link to="/work" className="underline underline-offset-4 hover:text-black dark:hover:text-white">
+              See the production systems behind them
+            </Link>
+          </p>
+        </section>
+      )}
 
       {/* Footer */}
       <div className="mt-16 pt-8 border-t border-black/[0.06] dark:border-white/[0.06]">

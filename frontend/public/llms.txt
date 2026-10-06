@@ -1,0 +1,29 @@
+# Santusht Kotai
+
+> Santusht Kotai is a software engineer from Indore, India specializing in backend and distributed systems (FastAPI, PostgreSQL, Redis, Docker, Kubernetes, AWS). Google Summer of Code 2026 contributor at Supabase and founder of Sharexpress Foundation.
+
+## Key pages
+- [Home](https://santusht.online/): Santusht Kotai is a software engineer from Indore, India building FastAPI, Redis and Kubernetes systems. Google Summer of Code 2026 contributor at Supabase.
+- [Work & projects](https://santusht.online/work/): Production backend engineering by Santusht Kotai: 25+ FastAPI APIs, AWS microservices, a self-hosted mail platform, and open-source work with Supabase.
+- [Engineering blog](https://santusht.online/blog/): Post-mortems, architecture decision records and deep dives on Redis, FastAPI, SSE, Docker sandboxes and distributed systems from real production work.
+- [Resume](https://santusht.online/resume/): View or download the resume of Santusht Kotai: FastAPI, PostgreSQL, Redis, AWS, Kubernetes, distributed systems, and Supabase GSoC 2026.
+- [Contact](https://santusht.online/contact/): Contact Santusht Kotai for backend engineering roles, distributed systems consulting, API development or open-source collaboration.
+
+## Engineering articles
+- [Incident #001: Why My Cache Kept Returning Stale Contest Data](https://santusht.online/blog/why-cache-returned-stale-data/): Race conditions between mutations, Redis write-through invalidation, and SSE synchronization.
+- [I Built a Real-Time Backend With SSE — Then Events Started Fighting Each Other](https://santusht.online/blog/sse-events-fighting-each-other/): Handling reconnects, duplicate event deliveries, event ordering, and frontend state synchronization.
+- [Architecting 25+ Production APIs in FastAPI: Latency & Security](https://santusht.online/blog/fastapi-production-patterns/): Lessons learned building enterprise microservices serving 10,000+ daily requests.
+- [ADR-001: Why Kafka Was the Wrong Choice for My Architecture](https://santusht.online/blog/why-i-didnt-use-kafka/): Operational complexity vs latency requirements: Why I rejected Kafka in favor of a native Redis engine.
+- [Building a Self-Hosted Mail Server from Scratch (SMTP, IMAP & POP3)](https://santusht.online/blog/self-hosted-mail-infrastructure/): How Sharexpress handles mail queuing, RFC protocol compliance, and security.
+- [Building ChaosQueue: A Native Async Redis Queue Engine from Scratch](https://santusht.online/blog/building-chaosqueue-redis/): Worker claiming, visibility timeouts, dead-letter queues, distributed locking, and crash recovery.
+- [Designing Non-Root Docker Sandboxes for Untrusted Code Execution](https://santusht.online/blog/docker-sandbox-code-execution/): Security guardrails, AST analysis, mutation testing, and cgroup isolation in Interleet.
+- [Turning My Laptop Into a Distributed Compute Worker Behind NAT](https://santusht.online/blog/laptop-distributed-compute-worker/): Connecting private remote workers using reverse WebSockets, heartbeats, and Docker execution pipelines.
+- [Incident #002: My 4GB Server Couldn't Handle Concurrent Contest Traffic](https://santusht.online/blog/contest-server-memory-outage/): Investigating Docker container memory pressure, CPU throttling, and worker queue starvation under load.
+- [Why RAG Is More Than 'Put PDFs Into a Vector Database'](https://santusht.online/blog/production-rag-document-pipeline/): Designing OCR extraction, hybrid lexical+semantic search, reranking, and citation verification.
+- [PostgreSQL Query Optimization & Redis Cache Stampede Prevention](https://santusht.online/blog/redis-distributed-caching-patterns/): Techniques for index tuning, composite B-Trees, and mutex locks under heavy load.
+- [Contributing to Supabase for Google Summer of Code (GSoC 2026)](https://santusht.online/blog/gsoc-supabase-contributions/): Navigating massive open-source distributed codebases, Postgres extensions, and shipping upstream PRs.
+- [How I Reached LeetCode Knight (Top 1.2% Globally)](https://santusht.online/blog/leetcode-knight-systematic-dsa/): 500+ problems solved: A mental model for Graphs, DP, and System Design.
+
+## Profiles
+- [GitHub](https://github.com/santusht06)
+- [LinkedIn](https://www.linkedin.com/in/santusht-kotai-8a4454323)
