@@ -34,6 +34,15 @@ const CharacterListeningAvatar = ({
   const audioRef = useRef(null);
   const prefersReducedMotion = useReducedMotion();
 
+  // Ensure initial frame is stopped at 0 on mount
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+  }, []);
+
   // Clean up any audio on unmount
   useEffect(() => {
     return () => {
@@ -154,7 +163,7 @@ const CharacterListeningAvatar = ({
           playsInline
           muted
           loop
-          preload="metadata"
+          preload="auto"
           disablePictureInPicture
           disableRemotePlayback
           className="w-full h-full object-contain pointer-events-none select-none"

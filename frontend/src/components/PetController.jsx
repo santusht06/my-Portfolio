@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Cat, Heart, Sparkles, Moon, Compass, Power } from "lucide-react";
+import { Cat, Heart, Power } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePet } from "@/context/PetContext";
 import {
@@ -8,161 +8,178 @@ import {
   TooltipPanel,
 } from "@/components/animate-ui/components/base/tooltip";
 
+const MODES = [
+  { id: "followCursor", label: "Follow", emoji: "🐾" },
+  { id: "runAway",      label: "Shy",    emoji: "💨" },
+  { id: "nap",          label: "Nap",    emoji: "💤" },
+];
+
+const SKINS = [
+  { id: "classic", label: "Classic", dot: "#d4d4d4" },
+  { id: "sakura",  label: "Sakura",  dot: "#f9a8d4" },
+];
+
 export const PetController = () => {
-  const {
-    isEnabled,
-    togglePet,
-    skin,
-    setSkin,
-    mode,
-    setMode,
-    heartsCount,
-  } = usePet();
+  const { isEnabled, togglePet, skin, setSkin, mode, setMode, heartsCount } =
+    usePet();
 
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // Close popup when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setIsOpen(false);
       }
     };
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    if (isOpen) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
   return (
     <div className="relative" ref={menuRef}>
+      {/* Trigger Button — matches TopNav's other icon buttons exactly */}
       <Tooltip delayDuration={60}>
         <TooltipTrigger
           render={
             <button
-              onClick={() => setIsOpen((prev) => !prev)}
+              onClick={() => setIsOpen((p) => !p)}
               aria-label="Pet companion settings"
-              className={`relative size-8 rounded-full flex items-center justify-center transition-all duration-150 cursor-pointer ${
+              className={`relative size-8 rounded-full flex items-center justify-center transition-[background-color,border-color,color] duration-150 cursor-pointer border ${
                 isEnabled
-                  ? "bg-black/10 dark:bg-white/10 text-black dark:text-white border border-black/20 dark:border-white/20 shadow-xs"
-                  : "bg-black/5 dark:bg-white/[0.04] hover:bg-black/10 dark:hover:bg-white/[0.08] text-[#909092] hover:text-black dark:hover:text-white border border-black/10 dark:border-white/[0.08]"
+                  ? "bg-black/[0.07] dark:bg-white/[0.07] border-black/20 dark:border-white/20 text-black dark:text-white"
+                  : "bg-black/5 dark:bg-white/[0.04] border-black/10 dark:border-white/[0.08] text-[#909092] hover:bg-black/10 dark:hover:bg-white/[0.08] hover:text-black dark:hover:text-white"
               }`}
             >
-              <Cat className="size-4 transition-transform hover:scale-110" />
-              {/* Active breathing status dot */}
+              <Cat className="size-4" />
+              {/* Live pulse dot */}
               {isEnabled && (
-                <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-black animate-pulse" />
+                <span
+                  className="absolute -top-px -right-px size-[7px] rounded-full bg-black dark:bg-white ring-1 ring-white dark:ring-black"
+                  aria-hidden
+                />
               )}
             </button>
           }
         />
         <TooltipPanel side="bottom" sideOffset={6}>
           <p className="font-semibold text-xs text-black">
-            {isEnabled ? "Playful Pet: Active" : "Playful Pet: Sleeping"}
+            {isEnabled ? "Neko · Active" : "Neko · Sleeping"}
           </p>
         </TooltipPanel>
       </Tooltip>
 
-      {/* Mini Controls Popover */}
+      {/* Popover */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.95 }}
+            initial={{ opacity: 0, y: 5, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 4, scale: 0.95 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute right-0 top-10 w-64 p-3 bg-white/95 dark:bg-black/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl shadow-xl z-50 text-xs font-sans text-black dark:text-white select-none"
+            exit={{ opacity: 0, y: 3, scale: 0.97 }}
+            transition={{ duration: 0.14, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute right-0 top-[calc(100%+8px)] w-60 z-50 select-none
+                       bg-white/95 dark:bg-black/95 backdrop-blur-xl
+                       border border-black/[0.09] dark:border-white/[0.09]
+                       rounded-xl shadow-lg shadow-black/[0.06] dark:shadow-black/30
+                       overflow-hidden"
           >
-            {/* Header with Title & Power Toggle */}
-            <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-black/10 dark:border-white/10">
-              <div className="flex items-center gap-1.5 font-medium">
-                <Cat className="size-3.5 text-pink-500" />
-                <span className="font-semibold">Playful Pet</span>
-                <span className="text-[10px] font-mono text-[#909092] px-1 py-0.2 rounded bg-black/5 dark:bg-white/5">
+            {/* ── Header ── */}
+            <div className="flex items-center justify-between px-3.5 pt-3 pb-2.5 border-b border-black/[0.08] dark:border-white/[0.08]">
+              <div className="flex items-center gap-2">
+                <Cat className="size-3.5 text-black dark:text-white shrink-0" />
+                <span className="text-xs font-semibold text-black dark:text-white tracking-[-0.01em]">
                   Neko
                 </span>
+                <span className="text-[10px] font-mono text-[#909092] tabular-nums">
+                  /{" "}
+                  {mode === "followCursor"
+                    ? "following"
+                    : mode === "runAway"
+                    ? "shy"
+                    : "napping"}
+                </span>
               </div>
+
+              {/* Power toggle — no colour, just opacity shift */}
               <button
                 onClick={togglePet}
-                className={`px-2 py-0.5 rounded-full text-[11px] font-medium transition-colors flex items-center gap-1 cursor-pointer ${
-                  isEnabled
-                    ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
-                    : "bg-black/5 dark:bg-white/5 text-[#909092] border border-black/10 dark:border-white/10"
-                }`}
+                aria-label={isEnabled ? "Disable pet" : "Enable pet"}
+                className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono
+                            border transition-all duration-150 cursor-pointer ${
+                              isEnabled
+                                ? "border-black/20 dark:border-white/20 text-black dark:text-white bg-black/[0.06] dark:bg-white/[0.06]"
+                                : "border-black/10 dark:border-white/10 text-[#909092] hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
+                            }`}
               >
-                <Power className="size-3" />
-                {isEnabled ? "On" : "Off"}
+                <Power className="size-2.5" />
+                {isEnabled ? "on" : "off"}
               </button>
             </div>
 
-            {/* Skin Selector */}
-            <div className="mb-2.5">
-              <div className="text-[11px] font-mono text-[#909092] mb-1.5 flex items-center justify-between">
-                <span>Skin</span>
-                <Sparkles className="size-3 text-[#909092]" />
+            {/* ── Body ── */}
+            <div className="px-3.5 pt-2.5 pb-3 space-y-3.5">
+
+              {/* Skin row */}
+              <div>
+                <p className="text-[10px] font-mono text-[#909092] uppercase tracking-wider mb-1.5">
+                  Skin
+                </p>
+                <div className="flex gap-1.5">
+                  {SKINS.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => setSkin(s.id)}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-sans
+                                  border transition-all duration-150 cursor-pointer ${
+                                    skin === s.id
+                                      ? "border-black dark:border-white bg-black dark:bg-white text-white dark:text-black font-medium"
+                                      : "border-black/10 dark:border-white/10 text-[#909092] hover:text-black dark:hover:text-white hover:border-black/25 dark:hover:border-white/25 hover:bg-black/[0.03] dark:hover:bg-white/[0.03]"
+                                  }`}
+                    >
+                      <span
+                        className="size-1.5 rounded-full shrink-0 inline-block"
+                        style={{ backgroundColor: skin === s.id ? (skin === "sakura" ? "#f9a8d4" : "#d4d4d4") : s.dot }}
+                      />
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-1.5">
-                <button
-                  onClick={() => setSkin("classic")}
-                  className={`px-2 py-1.5 rounded-lg text-[11px] flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    skin === "classic"
-                      ? "bg-black text-white dark:bg-white dark:text-black font-semibold shadow-xs"
-                      : "bg-black/5 dark:bg-white/5 text-[#909092] hover:text-black dark:hover:text-white"
-                  }`}
-                >
-                  <span className="size-2 rounded-full bg-slate-300 border border-black/20 inline-block" />
-                  Classic Cat
-                </button>
-                <button
-                  onClick={() => setSkin("sakura")}
-                  className={`px-2 py-1.5 rounded-lg text-[11px] flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    skin === "sakura"
-                      ? "bg-pink-500 text-white font-semibold shadow-xs"
-                      : "bg-black/5 dark:bg-white/5 text-[#909092] hover:text-pink-500"
-                  }`}
-                >
-                  <span className="size-2 rounded-full bg-pink-400 border border-pink-600/20 inline-block" />
-                  Sakura Pink
-                </button>
+
+              {/* Behavior row */}
+              <div>
+                <p className="text-[10px] font-mono text-[#909092] uppercase tracking-wider mb-1.5">
+                  Behavior
+                </p>
+                <div className="flex gap-1">
+                  {MODES.map((m) => (
+                    <button
+                      key={m.id}
+                      onClick={() => setMode(m.id)}
+                      className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-lg text-[10px] font-mono
+                                  border transition-all duration-150 cursor-pointer ${
+                                    mode === m.id
+                                      ? "border-black/20 dark:border-white/20 bg-black/[0.06] dark:bg-white/[0.06] text-black dark:text-white"
+                                      : "border-transparent text-[#909092] hover:text-black dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.04]"
+                                  }`}
+                    >
+                      <span className="text-sm leading-none">{m.emoji}</span>
+                      <span>{m.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Behavior Mode Selector */}
-            <div className="mb-3">
-              <div className="text-[11px] font-mono text-[#909092] mb-1.5 flex items-center justify-between">
-                <span>Behavior</span>
-                <Compass className="size-3 text-[#909092]" />
-              </div>
-              <div className="grid grid-cols-3 gap-1">
-                {[
-                  { id: "followCursor", label: "Follow", icon: "🐾" },
-                  { id: "runAway", label: "Shy", icon: "💨" },
-                  { id: "nap", label: "Nap", icon: "💤" },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setMode(item.id)}
-                    className={`py-1 rounded-md text-[11px] flex items-center justify-center gap-1 transition-all cursor-pointer ${
-                      mode === item.id
-                        ? "bg-black/10 dark:bg-white/15 text-black dark:text-white font-medium border border-black/15 dark:border-white/15"
-                        : "text-[#909092] hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
-                    }`}
-                  >
-                    <span>{item.icon}</span>
-                    <span>{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Love / Heart Stats Footer */}
-            <div className="pt-2 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] text-[#909092]">
-              <span className="flex items-center gap-1">
-                <Heart className="size-3 text-pink-500 fill-pink-500" />
-                <span>Petted {heartsCount} times</span>
+            {/* ── Footer ── */}
+            <div className="px-3.5 py-2 border-t border-black/[0.08] dark:border-white/[0.08] flex items-center justify-between">
+              <span className="flex items-center gap-1 text-[10px] font-mono text-[#909092]">
+                <Heart className="size-2.5 fill-current" />
+                {heartsCount} {heartsCount === 1 ? "pet" : "pets"}
               </span>
-              <span className="font-mono text-[10px]">Click pet for ❤</span>
+              <span className="text-[10px] font-mono text-[#909092]/60">
+                click to pet
+              </span>
             </div>
           </motion.div>
         )}

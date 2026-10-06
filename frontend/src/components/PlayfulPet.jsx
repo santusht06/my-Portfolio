@@ -406,18 +406,18 @@ export const PlayfulPet = () => {
         }}
         className="select-none outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white rounded-md"
       >
-        {/* Subtle Hover Tooltip */}
+        {/* Hover Tooltip — matches app monochrome theme */}
         {isHovered && (
           <div
-            className="absolute -top-7 left-1/2 -translate-x-1/2 pointer-events-none whitespace-nowrap px-2 py-0.5 rounded-full bg-black/90 dark:bg-white text-white dark:text-black text-[10px] font-mono tracking-tight shadow-md flex items-center gap-1 z-50 animate-in fade-in zoom-in-95 duration-150"
+            className="absolute -top-7 left-1/2 -translate-x-1/2 pointer-events-none whitespace-nowrap px-2 py-0.5 rounded-md bg-black dark:bg-white text-white dark:text-black text-[10px] font-mono tracking-tight shadow-sm flex items-center gap-1.5 z-50 animate-in fade-in zoom-in-95 duration-150"
           >
-            <span>Pet me!</span>
-            <span className="text-pink-400 dark:text-pink-500">❤</span>
+            <span>pet me</span>
+            <span className="opacity-60">↑</span>
           </div>
         )}
       </div>
 
-      {/* Floating Heart Burst Particles */}
+      {/* Floating particles — monochrome to match theme */}
       {particles.map((p) => (
         <div
           key={p.id}
@@ -428,14 +428,16 @@ export const PlayfulPet = () => {
             zIndex: 1000000,
             pointerEvents: "none",
             transform: `translate(calc(-50% + ${p.dx}px), calc(-50% + ${p.dy}px)) rotate(${p.rot}deg) scale(${p.scale})`,
-            transition: "all 0.9s cubic-bezier(0.16, 1, 0.3, 1)",
-            fontSize: "16px",
-            color: skin === "sakura" ? "#ec4899" : "#f43f5e",
-            textShadow: "0 1px 3px rgba(0,0,0,0.2)",
+            transition: "all 0.85s cubic-bezier(0.16, 1, 0.3, 1)",
+            fontSize: "13px",
+            fontFamily: "monospace",
+            color: "#000",
+            opacity: 0.7,
+            letterSpacing: "-0.02em",
           }}
-          className="animate-in fade-in zoom-in-50 duration-200"
+          className="animate-in fade-in zoom-in-75 duration-150"
         >
-          ❤
+          ♥
         </div>
       ))}
     </>
