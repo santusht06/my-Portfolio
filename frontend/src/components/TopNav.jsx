@@ -25,12 +25,7 @@ const TopNav = ({ onOpenCommand }) => {
     : navLinks.find((l) => l.path !== "/" && location.pathname.startsWith(l.path))?.path || "/";
 
   return (
-    <header
-      className="fixed top-0 right-0 left-0 lg:left-[430px] xl:left-[460px] z-40 py-2.5 sm:py-3.5 bg-white/80 dark:bg-black/80 backdrop-blur-md transition-colors pointer-events-none"
-      style={{
-        WebkitBackdropFilter: "blur(12px)",
-      }}
-    >
+    <header className="fixed top-0 right-0 left-0 lg:left-[430px] xl:left-[460px] z-40 py-2.5 sm:py-3.5 bg-transparent pointer-events-none">
       <div className="flex items-center justify-between w-full max-w-4xl mx-auto px-3 sm:px-6 pointer-events-auto">
         {/* Navigation links - clean without any enclosing box container */}
         <nav className="flex items-center gap-0.5 sm:gap-2 overflow-x-auto no-scrollbar scroll-smooth flex-shrink min-w-0 pr-1">
