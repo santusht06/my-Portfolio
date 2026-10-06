@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { createPortal } from "react-dom";
 import { Cat, Heart, Power } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePet } from "@/context/PetContext";
@@ -20,17 +19,12 @@ const SKINS = [
   { id: "sakura",  label: "Sakura",  dot: "#f9a8d4" },
 ];
 
-export const PetController = ({ onOpenChange }) => {
+export const PetController = () => {
   const { isEnabled, togglePet, skin, setSkin, mode, setMode, heartsCount } =
     usePet();
 
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
-
-  // Notify parent (e.g. TopNav) of open state so header can raise z-index
-  useEffect(() => {
-    onOpenChange?.(isOpen);
-  }, [isOpen, onOpenChange]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -38,95 +32,57 @@ export const PetController = ({ onOpenChange }) => {
         setIsOpen(false);
       }
     };
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    if (isOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
   return (
-    <>
-      {/* Fullscreen backdrop blur overlay for focus and premium feeling */}
-      {typeof document !== "undefined" &&
-        createPortal(
-          <AnimatePresence>
-            {isOpen && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                onClick={() => setIsOpen(false)}
-                className="fixed inset-0 z-40 bg-black/40 dark:bg-black/70 backdrop-blur-md cursor-pointer"
-                aria-hidden="true"
-              />
-            )}
-          </AnimatePresence>,
-          document.body
-        )}
-
-      <div className="relative" ref={menuRef}>
-        {/* Trigger Button — matches TopNav's other icon buttons exactly */}
-        <Tooltip delayDuration={60}>
-          <TooltipTrigger
-            render={
-              <button
-                onClick={() => setIsOpen((p) => !p)}
-                aria-label="Pet companion settings"
-                className={`relative size-8 rounded-full flex items-center justify-center transition-all duration-150 cursor-pointer border ${
-                  isOpen
-                    ? "bg-black dark:bg-white text-white dark:text-black border-black dark:border-white shadow-md ring-2 ring-black/15 dark:ring-white/25 scale-105"
-                    : isEnabled
-                    ? "bg-black/[0.07] dark:bg-white/[0.07] border-black/20 dark:border-white/20 text-black dark:text-white"
-                    : "bg-black/5 dark:bg-white/[0.04] border-black/10 dark:border-white/[0.08] text-[#909092] hover:bg-black/10 dark:hover:bg-white/[0.08] hover:text-black dark:hover:text-white"
-                }`}
-              >
-                <Cat className="size-4" />
-                {/* Live pulse dot */}
-                {isEnabled && (
-                  <span
-                    className={`absolute -top-px -right-px size-[7px] rounded-full ring-1 ${
-                      isOpen
-                        ? "bg-emerald-400 ring-black dark:ring-white"
-                        : "bg-black dark:bg-white ring-white dark:ring-black"
-                    }`}
-                    aria-hidden
-                  />
-                )}
-              </button>
-            }
-          />
-          <TooltipPanel side="bottom" sideOffset={6}>
-            <p className="font-semibold text-xs text-black">
-              {isEnabled ? "Neko · Active" : "Neko · Sleeping"}
-            </p>
-          </TooltipPanel>
-        </Tooltip>
-
-        {/* Popover */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 6, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 4, scale: 0.96 }}
-              transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute right-0 top-[calc(100%+10px)] w-64 z-50 select-none
-                         bg-white dark:bg-black
-                         border border-black/15 dark:border-white/20
-                         rounded-2xl shadow-2xl shadow-black/25 dark:shadow-black/90
-                         ring-1 ring-black/5 dark:ring-white/10
-                         overflow-hidden"
+    <div className="relative" ref={menuRef}>
+      {/* Trigger Button — matches TopNav's other icon buttons exactly */}
+      <Tooltip delayDuration={60}>
+        <TooltipTrigger
+          render={
+            <button
+              onClick={() => setIsOpen((p) => !p)}
+              aria-label="Pet companion settings"
+              className={`relative size-8 rounded-full flex items-center justify-center transition-[background-color,border-color,color] duration-150 cursor-pointer border ${
+                isEnabled
+                  ? "bg-black/[0.07] dark:bg-white/[0.07] border-black/20 dark:border-white/20 text-black dark:text-white"
+                  : "bg-black/5 dark:bg-white/[0.04] border-black/10 dark:border-white/[0.08] text-[#909092] hover:bg-black/10 dark:hover:bg-white/[0.08] hover:text-black dark:hover:text-white"
+              }`}
             >
+              <Cat className="size-4" />
+              {/* Live pulse dot */}
+              {isEnabled && (
+                <span
+                  className="absolute -top-px -right-px size-[7px] rounded-full bg-black dark:bg-white ring-1 ring-white dark:ring-black"
+                  aria-hidden
+                />
+              )}
+            </button>
+          }
+        />
+        <TooltipPanel side="bottom" sideOffset={6}>
+          <p className="font-semibold text-xs text-black">
+            {isEnabled ? "Neko · Active" : "Neko · Sleeping"}
+          </p>
+        </TooltipPanel>
+      </Tooltip>
+
+      {/* Popover */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 5, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 3, scale: 0.97 }}
+            transition={{ duration: 0.14, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute right-0 top-[calc(100%+8px)] w-60 z-50 select-none
+                       bg-white dark:bg-black
+                       border border-black/10 dark:border-white/15
+                       rounded-xl shadow-xl shadow-black/10 dark:shadow-2xl dark:shadow-black
+                       overflow-hidden"
+          >
             {/* ── Header ── */}
             <div className="flex items-center justify-between px-3.5 pt-3 pb-2.5 border-b border-black/[0.08] dark:border-white/[0.08]">
               <div className="flex items-center gap-2">
@@ -233,8 +189,7 @@ export const PetController = ({ onOpenChange }) => {
           </motion.div>
         )}
       </AnimatePresence>
-      </div>
-    </>
+    </div>
   );
 };
 
