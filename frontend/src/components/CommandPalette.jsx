@@ -18,8 +18,10 @@ import {
   DialogPanel,
 } from "@/components/animate-ui/components/headless/dialog";
 import { blogs, experiences, projects, profileData } from "../data/portfolioData";
+import { usePet } from "@/context/PetContext";
 
 const CommandPalette = ({ isOpen, onClose }) => {
+  const { isEnabled, togglePet, skin, setSkin, mode, setMode } = usePet();
   const [query, setQuery] = useState("");
   const [copied, setCopied] = useState(false);
   const inputRef = useRef(null);
@@ -209,6 +211,76 @@ const CommandPalette = ({ isOpen, onClose }) => {
               <FiExternalLink className="text-xs text-[#909092] group-hover:text-black dark:group-hover:text-white group-hover:translate-x-0.5 transition-[color,transform] duration-150 ease-smooth motion-reduce:transform-none" />
             </a>
           </div>
+
+          {/* Playful Pet Controls */}
+          {(!query || "playful pet neko cat companion".includes(query.toLowerCase())) && (
+            <div className="py-1">
+              <div className="px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider text-[#909092] flex items-center justify-between">
+                <span>Playful Pet (Neko Companion)</span>
+                <span className="text-[10px]">{isEnabled ? "Active" : "Sleeping"}</span>
+              </div>
+              <button
+                onClick={() => {
+                  togglePet();
+                  onClose(false);
+                }}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover-only:hover:translate-x-0.5 motion-safe:active:scale-[0.98] transition-[background-color,color,transform] duration-150 ease-smooth motion-reduce:transition-none motion-reduce:transform-none group text-left cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="text-base">🐱</span>
+                  <span>{isEnabled ? "Disable Playful Pet" : "Enable Playful Pet"}</span>
+                </div>
+                <span className="text-xs font-mono text-[#909092] group-hover:text-black dark:group-hover:text-white">
+                  {isEnabled ? "Turn Off" : "Turn On"}
+                </span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setSkin(skin === "classic" ? "sakura" : "classic");
+                  onClose(false);
+                }}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover-only:hover:translate-x-0.5 motion-safe:active:scale-[0.98] transition-[background-color,color,transform] duration-150 ease-smooth motion-reduce:transition-none motion-reduce:transform-none group text-left cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="text-base">🌸</span>
+                  <span>Switch Skin: {skin === "classic" ? "Sakura Pink" : "Classic White"}</span>
+                </div>
+                <span className="text-xs font-mono text-[#909092] group-hover:text-black dark:group-hover:text-white">
+                  Toggle Skin
+                </span>
+              </button>
+
+              <button
+                onClick={() => {
+                  const nextMode =
+                    mode === "followCursor"
+                      ? "runAway"
+                      : mode === "runAway"
+                      ? "nap"
+                      : "followCursor";
+                  setMode(nextMode);
+                  onClose(false);
+                }}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover-only:hover:translate-x-0.5 motion-safe:active:scale-[0.98] transition-[background-color,color,transform] duration-150 ease-smooth motion-reduce:transition-none motion-reduce:transform-none group text-left cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="text-base">🐾</span>
+                  <span>
+                    Cycle Behavior:{" "}
+                    {mode === "followCursor"
+                      ? "Follow Cursor"
+                      : mode === "runAway"
+                      ? "Shy (Run Away)"
+                      : "Nap (Sleep)"}
+                  </span>
+                </div>
+                <span className="text-xs font-mono text-[#909092] group-hover:text-black dark:group-hover:text-white">
+                  Cycle Mode
+                </span>
+              </button>
+            </div>
+          )}
 
           {/* Work Experiences */}
           {filteredExperiences.length > 0 && (

@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PortfolioLayout from "./components/PortfolioLayout";
 import { Toaster } from "sonner";
+import { PetProvider } from "./context/PetContext";
 
 // Code-split page components for high-speed initial bundle performance & INP/LCP optimization
 const HomeView = lazy(() => import("./pages/HomeView"));
@@ -26,32 +27,34 @@ const PageFallback = () => (
 const App = () => {
   return (
     <BrowserRouter>
-      <div className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-250 overflow-x-hidden">
-        {/* Sonner Toast Notifications */}
-        <Toaster
-          position="bottom-right"
-          richColors
-          closeButton
-          toastOptions={{
-            className: "font-mono text-xs border border-black/10 dark:border-white/10",
-          }}
-        />
+      <PetProvider>
+        <div className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-250 overflow-x-hidden">
+          {/* Sonner Toast Notifications */}
+          <Toaster
+            position="bottom-right"
+            richColors
+            closeButton
+            toastOptions={{
+              className: "font-mono text-xs border border-black/10 dark:border-white/10",
+            }}
+          />
 
-        {/* Portfolio Architecture Routes */}
-        <Suspense fallback={<PageFallback />}>
-          <Routes>
-            <Route path="/" element={<PortfolioLayout />}>
-              <Route index element={<HomeView />} />
-              <Route path="work" element={<WorkView />} />
-              <Route path="blog" element={<BlogView />} />
-              <Route path="blog/:slug" element={<BlogPostView />} />
-              <Route path="resume" element={<ResumeView />} />
-              <Route path="contact" element={<ContactView />} />
-              <Route path="*" element={<NotFoundView />} />
-            </Route>
-          </Routes>
-        </Suspense>
-      </div>
+          {/* Portfolio Architecture Routes */}
+          <Suspense fallback={<PageFallback />}>
+            <Routes>
+              <Route path="/" element={<PortfolioLayout />}>
+                <Route index element={<HomeView />} />
+                <Route path="work" element={<WorkView />} />
+                <Route path="blog" element={<BlogView />} />
+                <Route path="blog/:slug" element={<BlogPostView />} />
+                <Route path="resume" element={<ResumeView />} />
+                <Route path="contact" element={<ContactView />} />
+                <Route path="*" element={<NotFoundView />} />
+              </Route>
+            </Routes>
+          </Suspense>
+        </div>
+      </PetProvider>
     </BrowserRouter>
   );
 };

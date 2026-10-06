@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Card from "./Card";
 import TopNav from "./TopNav";
 import CommandPalette from "./CommandPalette";
+import PlayfulPet from "./PlayfulPet";
 
 const PortfolioLayout = () => {
   const [isCommandOpen, setIsCommandOpen] = useState(false);
@@ -61,6 +62,9 @@ const PortfolioLayout = () => {
           </motion.div>
         </main>
       </div>
+
+      {/* Interactive Desktop Pet (Neko) cursor companion */}
+      <PlayfulPet />
 
       {/* Global shadcn-style Command Palette (Cmd+K) */}
       <CommandPalette

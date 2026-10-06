@@ -8,6 +8,7 @@ import {
   TooltipTrigger,
   TooltipPanel,
 } from "@/components/animate-ui/components/base/tooltip";
+import PetController from "./PetController";
 
 const TopNav = ({ onOpenCommand }) => {
   const location = useLocation();
@@ -64,8 +65,10 @@ const TopNav = ({ onOpenCommand }) => {
           })}
         </nav>
 
-        {/* Right tool: Theme Toggler & Search / Command Palette (Cmd+K) */}
+        {/* Right tool: Pet Controller, Theme Toggler & Search / Command Palette (Cmd+K) */}
         <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <PetController />
+
           <Tooltip delayDuration={60}>
             <TooltipTrigger
               render={
