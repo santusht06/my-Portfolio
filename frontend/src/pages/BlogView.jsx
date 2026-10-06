@@ -63,20 +63,6 @@ const BlogView = () => {
     { label: "INCIDENTS & ADRs", key: "Incidents & ADRs" },
   ];
 
-  const getTypeBadge = (type) => {
-    switch (type) {
-      case "INCIDENT":
-        return "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/30";
-      case "ARCHITECTURE":
-        return "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/30";
-      case "BUILD LOG":
-        return "text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/30";
-      case "DEEP DIVE":
-      default:
-        return "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30";
-    }
-  };
-
   // Count items per category (dynamic MongoDB counts if available)
   const getCount = (key) => {
     if (liveCategoryCounts && liveCategoryCounts[key] !== undefined) {
@@ -175,15 +161,6 @@ const BlogView = () => {
                       >
                         <div className="max-w-xl">
                           <div className="flex items-center gap-2.5 mb-2 flex-wrap">
-                            {b.type && (
-                              <span
-                                className={`text-[10px] font-mono uppercase font-bold tracking-wider px-2 py-0.5 rounded border ${getTypeBadge(
-                                  b.type
-                                )}`}
-                              >
-                                {b.type}
-                              </span>
-                            )}
                             <span className="text-[11px] font-mono text-[#909092]">
                               {b.date} • {b.readTime}
                               {typeof b.views === "number" && b.views > 0 ? ` • ${b.views} views` : ""}

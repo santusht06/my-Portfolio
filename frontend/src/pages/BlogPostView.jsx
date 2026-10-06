@@ -147,23 +147,8 @@ const BlogPostView = () => {
           </div>
         </div>
 
-        {/* Type Badge & Categories */}
+        {/* Categories */}
         <div className="flex items-center gap-2 mb-4 flex-wrap">
-          {post.type && (
-            <span
-              className={`text-[10px] font-mono uppercase font-bold tracking-wider px-2.5 py-0.5 rounded border ${
-                post.type === "INCIDENT"
-                  ? "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/30"
-                  : post.type === "ARCHITECTURE"
-                  ? "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/30"
-                  : post.type === "BUILD LOG"
-                  ? "text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/30"
-                  : "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30"
-              }`}
-            >
-              {post.type}
-            </span>
-          )}
           {post.categories.map((cat) => (
             <span
               key={cat}
