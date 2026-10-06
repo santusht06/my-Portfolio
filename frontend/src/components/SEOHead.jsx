@@ -12,8 +12,9 @@ export const SEOHead = ({
   ogImage = DEFAULT_IMAGE,
   schema = null,
 }) => {
-  const location = useLocation();
-  const currentUrl = canonical ? `${BASE_URL}${canonical}` : `${BASE_URL}${location.pathname}`;
+  const rawPath = canonical || location.pathname;
+  const normalizedPath = rawPath === "/" ? "/" : rawPath.endsWith("/") ? rawPath : `${rawPath}/`;
+  const currentUrl = `${BASE_URL}${normalizedPath}`;
 
   useEffect(() => {
     // 1. Title

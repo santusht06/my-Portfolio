@@ -65,7 +65,7 @@ console.log("⚡ Generating SSG prerendered static pages...");
 
 routes.forEach((route) => {
   let html = template;
-  const canonicalUrl = `https://santusht.online${route.path === "/" ? "" : route.path}`;
+  const canonicalUrl = `https://santusht.online${route.path === "/" ? "/" : route.path + "/"}`;
 
   // Replace Title
   html = html.replace(/<title>.*?<\/title>/i, `<title>${route.title}</title>`);
