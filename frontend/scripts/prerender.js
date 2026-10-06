@@ -108,9 +108,10 @@ routes.forEach((route) => {
     `<meta name="twitter:url" content="${canonicalUrl}" />`
   );
 
-  // Pre-seed crawlable, standard semantic HTML inside #root for search engine bots
+  // Pre-seed crawlable, standard semantic HTML inside <noscript> for search engine bots without causing visual FOUC for users
   const preRenderedContent = `
-    <div id="root">
+    <div id="root"></div>
+    <noscript>
       <header>
         <nav aria-label="Primary Navigation">
           <a href="/">Home</a>
@@ -124,7 +125,7 @@ routes.forEach((route) => {
         <h1>${route.heading}</h1>
         <p>${route.content}</p>
       </main>
-    </div>
+    </noscript>
   `.trim();
 
   html = html.replace('<div id="root"></div>', preRenderedContent);
