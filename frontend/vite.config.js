@@ -25,7 +25,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api-quotes/, ""),
       },
       "/api": {
-        target: "http://localhost:3001",
+        target: process.env.VITE_API_URL || "http://127.0.0.1:8787",
         changeOrigin: true,
       },
     },
@@ -49,7 +49,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-react": ["react", "react-dom", "react-router-dom", "react-redux", "@reduxjs/toolkit"],
           "vendor-motion": ["framer-motion", "gsap"],
           "vendor-ui": ["lucide-react", "react-icons", "sonner", "clsx", "tailwind-merge"],
         },

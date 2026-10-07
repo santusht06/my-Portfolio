@@ -28,21 +28,18 @@ const Contact = forwardRef((props, ref) => {
       e.preventDefault();
       setisLoading(true);
 
-      const response = await axios.post(
-        "/api/v1/sendmail",
-        data
-      );
+      const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+      const response = await axios.post(`${API_BASE}/api/v1/sendmail`, data);
 
-      console.log(response.data);
-      setresponses(response.data);
-      if (response.status === 200) {
+      if (response.status === 200 || response.data?.success) {
         setsuccess(true);
+        setresponses(response.data);
         setdata({ name: "", email: "", phone: "", message: "" });
       } else {
         setsuccess(false);
+        seterror(true);
       }
     } catch (error) {
-
       seterror(true);
       return error;
     } finally {

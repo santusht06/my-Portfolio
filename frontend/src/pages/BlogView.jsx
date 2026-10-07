@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiSearch } from "react-icons/fi";
-import { blogs } from "../data/portfolioData";
 import Footer from "../components/Footer";
 import DetailModal from "../components/DetailModal";
 import SEOHead from "../components/SEOHead";
@@ -13,40 +12,32 @@ import {
   TabsPanels,
   TabsPanel,
 } from "@/components/animate-ui/components/base/tabs";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchBlogs,
+  selectBlogs,
+  selectCategoryCounts,
+  selectBlogsStatus,
+} from "@/store/slices/blogsSlice";
+import { BlogListSkeleton } from "../components/BlogSkeleton";
 
 const BlogView = () => {
+  const dispatch = useDispatch();
+  const blogList = useSelector(selectBlogs);
+  const liveCategoryCounts = useSelector(selectCategoryCounts);
+  const status = useSelector(selectBlogsStatus);
+  const isLoading = status === "loading" && blogList.length === 0;
+
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeArticle, setActiveArticle] = useState(null);
-  const [blogList, setBlogList] = useState(blogs);
-  const [liveCategoryCounts, setLiveCategoryCounts] = useState(null);
-  const [isLiveConnected, setIsLiveConnected] = useState(false);
 
-  // Dynamic fetch from MongoDB API
+  // Dynamic fetch via Redux from Supabase PostgreSQL API
   useEffect(() => {
-    let isMounted = true;
-    const fetchBlogs = async () => {
-      try {
-        const res = await fetch("/api/v1/blogs?sort=createdAt");
-        if (res.ok) {
-          const json = await res.json();
-          if (isMounted && json.success && Array.isArray(json.data) && json.data.length > 0) {
-            setBlogList(json.data);
-            setIsLiveConnected(true);
-            if (json.categoryCounts) {
-              setLiveCategoryCounts(json.categoryCounts);
-            }
-          }
-        }
-      } catch (err) {
-        console.debug("Backend API offline, serving static dataset fallback:", err);
-      }
-    };
-    fetchBlogs();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+    if (status === "idle") {
+      dispatch(fetchBlogs());
+    }
+  }, [dispatch, status]);
 
   // Engineering-first categories matching systems identity
   const categories = [
@@ -135,7 +126,9 @@ const BlogView = () => {
           {/* Blog Posts List with animate-ui TabsPanels */}
           <TabsPanels>
             <TabsPanel value={selectedCategory}>
-              {filteredBlogs.length === 0 ? (
+              {isLoading ? (
+                <BlogListSkeleton count={4} />
+              ) : filteredBlogs.length === 0 ? (
                 <div className="py-12 text-center text-[#909092] font-mono text-sm">
                   No posts found in this category.
                 </div>

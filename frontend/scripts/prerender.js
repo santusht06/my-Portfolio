@@ -19,7 +19,6 @@ import { execSync } from "child_process";
 import { fileURLToPath } from "url";
 
 import {
-  blogs,
   profileData,
   experiences,
   projects,
@@ -27,6 +26,31 @@ import {
   skillsData,
   education,
 } from "../src/data/portfolioData.js";
+
+const SUPABASE_URL = "https://bcehjzwewfwoalrcuvba.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_dBbibk3qK-DEgDNhMbLxQw_x3satGKo";
+
+let blogs = [];
+try {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/blogs?select=*&is_published=eq.true&order=created_at.desc`,
+    {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+    }
+  );
+  if (res.ok) {
+    const raw = await res.json();
+    blogs = raw.map((b) => ({
+      ...b,
+      readTime: b.read_time || "5 min read",
+    }));
+  }
+} catch (e) {
+  console.warn("Could not fetch blogs from Supabase for prerender:", e);
+}
 import {
   SITE_URL,
   SITE_NAME,
@@ -349,7 +373,7 @@ for (const post of blogs) {
       title: meta.title,
       description: meta.description,
       shellHtml: buildPostShell(post),
-      graph: buildGraph(key),
+      graph: buildGraph(key, { post }),
       ogType: "article",
     })
   );

@@ -6,6 +6,8 @@ node_modules/
 dist/
 dist-ssr/
 frontend/dist/
+.wrangler/
+backend/.wrangler/
 
 # Environment files
 .env

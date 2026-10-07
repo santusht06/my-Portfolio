@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiArrowUpRight, FiGithub, FiExternalLink } from "react-icons/fi";
 import {
@@ -33,8 +33,28 @@ import {
 } from "@/components/animate-ui/components/base/tooltip";
 import SEOHead from "../components/SEOHead";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchBlogs,
+  selectBlogs,
+  selectBlogsStatus,
+} from "@/store/slices/blogsSlice";
+import { HomeBlogSkeleton } from "@/components/BlogSkeleton";
+
 const HomeView = () => {
+  const dispatch = useDispatch();
+  const allBlogs = useSelector(selectBlogs);
+  const status = useSelector(selectBlogsStatus);
+  const isLoading = status === "loading" && allBlogs.length === 0;
+  const latestBlogs = allBlogs.slice(0, 4);
+
   const [modalData, setModalData] = useState(null);
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchBlogs());
+    }
+  }, [dispatch, status]);
 
   const socialIcons = [
     {
@@ -347,16 +367,19 @@ const HomeView = () => {
             Latest Engineering Notes
           </h2>
         </ScrollReveal>
-        <ul className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
-          {blogs.slice(0, 4).map((b) => (
-            <li key={b.id}>
+        {isLoading ? (
+          <HomeBlogSkeleton count={3} />
+        ) : (
+          <ul className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
+            {latestBlogs.map((b) => (
+              <li key={b.id}>
               <Link
                 to={`/blog/${b.id}`}
                 className="group flex items-start justify-between gap-4 py-4 px-3 -mx-3 rounded-xl hover-only:hover:bg-black/[0.03] dark:hover-only:hover:bg-white/[0.035] transition-colors duration-150"
               >
                 <span>
                   <span className="block text-[11px] font-mono text-[#909092] mb-1">
-                    {b.date} • {b.readTime}
+                    {b.date} • {b.readTime || b.read_time || "5 min read"}
                   </span>
                   <span className="block text-sm sm:text-base font-semibold text-black dark:text-white leading-snug">
                     {b.title}
@@ -370,6 +393,7 @@ const HomeView = () => {
             </li>
           ))}
         </ul>
+      )}
         <div className="mt-4">
           <Link
             to="/blog"

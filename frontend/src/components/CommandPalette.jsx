@@ -18,11 +18,16 @@ import {
   Dialog,
   DialogPanel,
 } from "@/components/animate-ui/components/headless/dialog";
-import { blogs, experiences, projects, profileData } from "../data/portfolioData";
+import { experiences, projects, profileData } from "../data/portfolioData";
 import { usePet } from "@/context/PetContext";
+import { useSelector, useDispatch } from "react-redux";
+import { selectBlogs, fetchBlogs } from "@/store/slices/blogsSlice";
 
 export const CommandPalette = ({ isOpen, onClose }) => {
   const { isEnabled, togglePet, skin, setSkin, mode, setMode } = usePet();
+  const dispatch = useDispatch();
+  const allBlogs = useSelector(selectBlogs);
+
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -31,17 +36,22 @@ export const CommandPalette = ({ isOpen, onClose }) => {
   const selectedItemRef = useRef(null);
   const navigate = useNavigate();
 
-  // Reset query and focus input on open
+  // Reset query, load dynamic blogs, and focus input on open
   useEffect(() => {
     if (isOpen) {
       setQuery("");
       setSelectedIndex(0);
+
+      if (allBlogs.length === 0) {
+        dispatch(fetchBlogs());
+      }
+
       const timer = setTimeout(() => {
         inputRef.current?.focus();
       }, 40);
       return () => clearTimeout(timer);
     }
-  }, [isOpen]);
+  }, [isOpen, allBlogs.length, dispatch]);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(profileData.email);
@@ -225,15 +235,16 @@ export const CommandPalette = ({ isOpen, onClose }) => {
 
   // 6. Blog Posts
   const filteredBlogs = useMemo(() => {
-    if (!query) return blogs.slice(0, 4);
+    if (!query) return allBlogs.slice(0, 4);
     const q = query.toLowerCase();
-    return blogs.filter(
+    return allBlogs.filter(
       (b) =>
-        b.title.toLowerCase().includes(q) ||
-        b.subtitle.toLowerCase().includes(q) ||
-        b.tags?.some((t) => t.toLowerCase().includes(q))
+        b.title?.toLowerCase().includes(q) ||
+        b.subtitle?.toLowerCase().includes(q) ||
+        (Array.isArray(b.categories) && b.categories.some((c) => c.toLowerCase().includes(q))) ||
+        (Array.isArray(b.tags) && b.tags.some((t) => t.toLowerCase().includes(q)))
     );
-  }, [query]);
+  }, [allBlogs, query]);
 
   // Flattened list for unified keyboard navigation (Arrow Up/Down, Enter)
   const flatItems = useMemo(() => {

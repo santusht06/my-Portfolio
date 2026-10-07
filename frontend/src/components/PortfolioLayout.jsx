@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Card from "./Card";
 import TopNav from "./TopNav";
 import CommandPalette from "./CommandPalette";
 import PlayfulPet from "./PlayfulPet";
+import CustomCursor from "./animate-ui/components/animate/cursor";
 
 const PortfolioLayout = () => {
   const [isCommandOpen, setIsCommandOpen] = useState(false);
@@ -77,6 +78,9 @@ const PortfolioLayout = () => {
 
       {/* Interactive Desktop Pet (Neko) cursor companion */}
       <PlayfulPet />
+
+      {/* Global Animated SVG Cursor (no bottom description) */}
+      <CustomCursor global={true} />
 
       {/* Global shadcn-style Command Palette (Cmd+K) */}
       <CommandPalette

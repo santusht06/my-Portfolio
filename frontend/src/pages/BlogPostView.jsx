@@ -5,42 +5,52 @@ import { blogs, profileData } from "@/data/portfolioData";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import SEOHead from "@/components/SEOHead";
 import Footer from "@/components/Footer";
-import { buildGraph, getPostMeta, getRelatedPosts } from "@/lib/seoSchema";
+import { buildGraph, getPostMeta } from "@/lib/seoSchema";
 import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchBlogBySlugAsync,
+  fetchBlogs,
+  selectCurrentPost,
+  selectPostStatus,
+  selectBlogs,
+} from "@/store/slices/blogsSlice";
+import { BlogPostSkeleton } from "@/components/BlogSkeleton";
 
 const BlogPostView = () => {
   const { slug } = useParams();
+  const dispatch = useDispatch();
   const [copied, setCopied] = useState(false);
-  const staticPost = blogs.find((b) => b.id === slug);
-  const [post, setPost] = useState(staticPost);
+
+  const post = useSelector(selectCurrentPost);
+  const postStatus = useSelector(selectPostStatus);
+  const allBlogs = useSelector(selectBlogs);
+
+  const loading = postStatus === "loading" || (!post && postStatus !== "failed");
 
   useEffect(() => {
-    let isMounted = true;
-    const fetchPost = async () => {
-      try {
-        const res = await fetch(`/api/v1/blogs/${slug}`);
-        if (res.ok) {
-          const json = await res.json();
-          if (isMounted && json.success && json.data) {
-            setPost(json.data);
-          }
-        }
-      } catch (err) {
-        console.debug("Backend fetch failed, using static data:", err);
+    if (slug) {
+      dispatch(fetchBlogBySlugAsync(slug));
+      if (allBlogs.length === 0) {
+        dispatch(fetchBlogs());
       }
-    };
-    if (slug) fetchPost();
-    return () => {
-      isMounted = false;
-    };
-  }, [slug]);
+    }
+  }, [dispatch, slug]);
+
+  const related = useMemo(() => {
+    if (!allBlogs.length || !slug) return [];
+    return allBlogs.filter((b) => b.id !== slug).slice(0, 3);
+  }, [allBlogs, slug]);
 
   const postMeta = post ? getPostMeta(post) : null;
-  const related = useMemo(() => (post ? getRelatedPosts(post, 3) : []), [post]);
   const schema = useMemo(
     () => (post ? buildGraph(`/blog/${post.id}`, { post }) : null),
     [post]
   );
+
+  if (loading) {
+    return <BlogPostSkeleton />;
+  }
 
   if (!post) {
     return <Navigate to="/blog" replace />;

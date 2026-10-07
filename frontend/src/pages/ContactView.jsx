@@ -73,7 +73,8 @@ const ContactView = () => {
     try {
       setIsSubmitting(true);
 
-      const response = await axios.post("/api/v1/sendmail", data);
+      const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+      const response = await axios.post(`${API_BASE}/api/v1/sendmail`, data);
 
       if (response.status === 200 || response.data?.success) {
         toast.success("Message sent successfully!", {
@@ -89,7 +90,7 @@ const ContactView = () => {
       const errorMsg =
         error.response?.data?.message ||
         (error.code === "ERR_NETWORK"
-          ? `Could not reach backend server. Feel free to email directly at ${profileData.email}`
+          ? `Could not reach backend API. Feel free to email directly at ${profileData.email}`
           : "An unexpected error occurred while sending your message.");
 
       toast.error("Unable to send message", {

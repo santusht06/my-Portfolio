@@ -1,22 +1,31 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "santusht-portfolio-worker",
+  "version": "2.0.0",
+  "description": "Cloudflare Worker edge backend for Santusht's portfolio",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "worker:dev": "wrangler dev",
+    "worker:deploy": "wrangler deploy",
+    "migrate:supabase": "node scripts/migrateBlogsToSupabase.js",
+    "upload:cloudinary": "node scripts/uploadToCloudinary.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "cloudflare-workers",
+    "edge",
+    "serverless",
+    "supabase"
+  ],
+  "author": "Santusht Kotai",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.1",
-    "express": "^5.1.0",
-    "mongoose": "^9.11.0",
-    "nodemailer": "^7.0.5"
+    "@supabase/supabase-js": "^2.109.0",
+    "cloudinary": "^2.11.0",
+    "dotenv": "^17.2.1"
+  },
+  "devDependencies": {
+    "wrangler": "^4.86.0"
   }
 }

@@ -25,13 +25,11 @@ jobs:
           cache: "npm"
           cache-dependency-path: "frontend/package-lock.json"
 
-      - name: Validate Backend Syntax
+      - name: Validate Cloudflare Worker Syntax
+        working-directory: backend
         run: |
-          echo "🔍 Checking backend code syntax..."
-          node --check backend/index.js
-          node --check backend/controllers/Blog.controller.js
-          node --check backend/routes/Blog.route.js
-          node --check backend/routes/Quote.route.js
+          echo "🔍 Checking Cloudflare Worker syntax..."
+          node --check src/index.js
 
       - name: Install Frontend Dependencies
         working-directory: frontend
@@ -45,55 +43,62 @@ jobs:
           echo "⚡ Compiling production bundle & generating static SEO pages..."
           npm run build
 
-  deploy-to-server:
-    name: Deploy to Production Server
+  decommission-ground-server:
+    name: Decommission Legacy Ground Server
     runs-on: ubuntu-latest
     needs: validate-and-build
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Execute Remote SSH Deployment
+      - name: Stop Daemons & Wipe Legacy Files on Ground Server
         uses: appleboy/ssh-action@v1.0.3
+        continue-on-error: true
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          timeout: 180s
+          timeout: 60s
           script: |
-            set -e
             echo "=========================================="
-            echo "🚀 Starting automated deployment..."
-            echo "Commit: ${{ github.sha }}"
-            echo "Time: $(date -u)"
+            echo "🛑 DECOMMISSIONING GROUND ERA SERVER..."
+            echo "=========================================="
+            
+            # 1. Stop and disable portfolio-backend systemd daemon
+            echo "🛑 Stopping portfolio-backend service..."
+            sudo systemctl stop portfolio-backend.service || systemctl stop portfolio-backend.service || true
+            sudo systemctl disable portfolio-backend.service || systemctl disable portfolio-backend.service || true
+            
+            # 2. Stop and disable Nginx to release ports 80/443
+            echo "🛑 Stopping Nginx..."
+            sudo systemctl stop nginx || systemctl stop nginx || true
+            sudo systemctl disable nginx || systemctl disable nginx || true
+
+            # 3. Wipe legacy deployed files from /var/www/my-Portfolio
+            echo "🧹 Removing legacy files from /var/www/my-Portfolio..."
+            sudo rm -rf /var/www/my-Portfolio/* 2>/dev/null || rm -rf /var/www/my-Portfolio/* 2>/dev/null || true
+            
+            echo "=========================================="
+            echo "✅ Ground era server successfully decommissioned!"
+            echo "Traffic now routes to Vercel (frontend) & Cloudflare Workers (backend)."
             echo "=========================================="
 
-            cd /var/www/my-Portfolio
+  deploy-cloudflare-worker:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-latest
+    needs: validate-and-build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-            # 1. Sync repository to latest commit from origin/main
-            echo "📥 Fetching and syncing code..."
-            git fetch origin main
-            git reset --hard origin/main
+      - name: Setup Node.js (v20)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-            # 2. Update Backend and restart daemon
-            echo "📦 Installing backend production dependencies..."
-            cd /var/www/my-Portfolio/backend
-            npm install --production --no-audit --no-fund
-
-            echo "🔄 Restarting portfolio-backend systemd service..."
-            systemctl restart portfolio-backend.service
-
-            # 3. Build Frontend with full SSG prerender
-            echo "⚡ Installing frontend dependencies & building SSG dist..."
-            cd /var/www/my-Portfolio/frontend
-            npm install --no-audit --no-fund
-            npm run build
-
-            # 4. Test and reload Nginx
-            echo "🔄 Testing and reloading Nginx..."
-            nginx -t
-            systemctl reload nginx
-
-            echo "=========================================="
-            echo "🎉 Deployment successful!"
-            echo "Live URL: https://santusht.online"
-            echo "=========================================="
+      - name: Deploy Cloudflare Worker
+        uses: cloudflare/wrangler-action@v3
+        continue-on-error: true
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: backend

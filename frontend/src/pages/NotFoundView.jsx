@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import SEOHead from "../components/SEOHead";
 import Footer from "../components/Footer";
-import { blogs } from "../data/portfolioData";
+import { useDispatch, useSelector } from "react-redux";
+import { selectBlogs, fetchBlogs } from "@/store/slices/blogsSlice";
 
 /**
  * Real 404 view. Previously every unknown URL silently redirected to "/",
@@ -11,7 +12,15 @@ import { blogs } from "../data/portfolioData";
  * This page is noindex and offers genuinely useful next steps.
  */
 const NotFoundView = () => {
-  const latest = blogs.slice(0, 3);
+  const dispatch = useDispatch();
+  const allBlogs = useSelector(selectBlogs);
+  const latest = allBlogs.slice(0, 3);
+
+  useEffect(() => {
+    if (allBlogs.length === 0) {
+      dispatch(fetchBlogs());
+    }
+  }, [dispatch, allBlogs.length]);
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-12">
