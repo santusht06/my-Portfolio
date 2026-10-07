@@ -40,3 +40,5 @@ skills-lock.json
 /Aloof Anime Portrait with Headphones.png
 /character_listening.webm
 *.mov
+.vercel
+.env*
