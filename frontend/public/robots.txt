@@ -59,8 +59,17 @@ Disallow: /.env
 Disallow: /.git/
 
 User-agent: Googlebot-Image
+Allow: /
+Allow: /favicon*
+Allow: /*.ico
+Allow: /*.png
+Allow: /*.webp
 Allow: /images/
 Allow: /assets/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /.env
+Disallow: /.git/
 
 # ============================================================
 # BING
