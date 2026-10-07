@@ -1,8 +1,5 @@
-/**
- * Cloudflare Worker Backend for Santusht's Portfolio
- * Replaces on-premise/ground Express server with serverless edge functions.
- * Connects directly to Supabase PostgreSQL at the edge with zero cold starts.
- */
+import { sendGmailSmtp } from "./smtpClient.js";
+import { clientHTML, ownerNotificationHTML } from "./emailTemplates.js";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -265,7 +262,7 @@ export default {
       // 6. POST /api/v1/sendmail (Contact form)
       if (pathname === "/api/v1/sendmail" && method === "POST") {
         const body = await request.json().catch(() => ({}));
-        const { name, email, message } = body;
+        const { name, email, message, phone } = body;
 
         if (!name || !email || !message) {
           return jsonResponse(
@@ -274,20 +271,74 @@ export default {
           );
         }
 
-        // Store contact inquiry in Supabase if table exists
-        ctx.waitUntil(
-          fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
-            method: "POST",
-            headers: supabaseHeaders,
-            body: JSON.stringify({
-              name,
-              email,
-              phone: body.phone || "",
-              message,
-              created_at: new Date().toISOString(),
-            }),
-          }).catch(() => {})
-        );
+        const emailUser = env.EMAIL_USER || env.OWNER || "santushtkotai1221@gmail.com";
+        const emailPass = env.EMAIL_PASS || env.PASS;
+
+        // 1. Store contact inquiry in Supabase
+        const dbPromise = fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+          method: "POST",
+          headers: supabaseHeaders,
+          body: JSON.stringify({
+            name,
+            email,
+            phone: phone || "",
+            message,
+            created_at: new Date().toISOString(),
+          }),
+        }).catch((err) => console.error("Error saving contact message to Supabase:", err));
+
+        // 2. Dispatch Emails asynchronously via Gmail SMTP
+        if (emailUser && emailPass) {
+          ctx.waitUntil(
+            (async () => {
+              await dbPromise;
+
+              // Send Notification Email to Owner
+              try {
+                const ownerHtml = ownerNotificationHTML
+                  .replace(/{{clientName}}/g, name)
+                  .replace(/{{clientEmail}}/g, email)
+                  .replace(/{{clientPhone}}/g, phone || "Not provided")
+                  .replace(/{{clientMessage}}/g, message);
+
+                await sendGmailSmtp({
+                  user: emailUser,
+                  pass: emailPass,
+                  from: `"Santusht Portfolio" <${emailUser}>`,
+                  to: emailUser,
+                  replyTo: email,
+                  subject: `${name} contacted you via your portfolio`,
+                  html: ownerHtml,
+                });
+                console.log(`[Email Success]: Notification sent to owner (${emailUser})`);
+              } catch (err) {
+                console.error("[Email Error - Owner Notification]:", err);
+              }
+
+              // Send Autoresponder Email to Client
+              try {
+                const formattedName = name && name.trim() ? name.trim() : "there";
+                const autoresponderHtml = clientHTML.replace(/{{clientName}}/g, formattedName);
+
+                await sendGmailSmtp({
+                  user: emailUser,
+                  pass: emailPass,
+                  from: `"Santusht Kotai" <${emailUser}>`,
+                  to: email,
+                  replyTo: emailUser,
+                  subject: "Thank you for reaching out — Santusht Kotai",
+                  html: autoresponderHtml,
+                });
+                console.log(`[Email Success]: Autoresponder sent to client (${email})`);
+              } catch (err) {
+                console.error("[Email Error - Client Autoresponder]:", err);
+              }
+            })()
+          );
+        } else {
+          ctx.waitUntil(dbPromise);
+          console.warn("[Email Warning]: EMAIL_PASS or PASS secret is not configured in Worker.");
+        }
 
         return jsonResponse({
           success: true,
