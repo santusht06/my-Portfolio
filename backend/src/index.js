@@ -39,6 +39,7 @@ export default {
     const url = new URL(request.url);
     const pathname = url.pathname;
     const method = request.method;
+    const isGet = method === "GET" || method === "HEAD";
 
     // Handle CORS preflight
     if (method === "OPTIONS") {
@@ -74,7 +75,7 @@ export default {
 
     try {
       // 1. GET /api/v1/blogs/categories
-      if (pathname === "/api/v1/blogs/categories" && method === "GET") {
+      if (pathname === "/api/v1/blogs/categories" && isGet) {
         const res = await fetch(
           `${SUPABASE_URL}/rest/v1/blogs?select=categories&is_published=eq.true`,
           { headers: supabaseHeaders }
@@ -106,7 +107,7 @@ export default {
 
       // 2. GET /api/v1/blogs/:slug
       const singleBlogMatch = pathname.match(/^\/api\/v1\/blogs\/([^/]+)$/);
-      if (singleBlogMatch && method === "GET") {
+      if (singleBlogMatch && isGet) {
         const slug = decodeURIComponent(singleBlogMatch[1]);
         const res = await fetch(
           `${SUPABASE_URL}/rest/v1/blogs?id=eq.${encodeURIComponent(slug)}&select=*`,
@@ -161,7 +162,7 @@ export default {
       }
 
       // 4. GET /api/v1/blogs (List & Search & Filter)
-      if (pathname === "/api/v1/blogs" && method === "GET") {
+      if (pathname === "/api/v1/blogs" && isGet) {
         const searchParams = url.searchParams;
         const category = searchParams.get("category");
         const type = searchParams.get("type");
@@ -237,7 +238,7 @@ export default {
       }
 
       // 5. GET /api/v1/quote
-      if (pathname === "/api/v1/quote" && method === "GET") {
+      if (pathname === "/api/v1/quote" && isGet) {
         try {
           const quoteRes = await fetch("https://zenquotes.io/api/random");
           if (quoteRes.ok) {
