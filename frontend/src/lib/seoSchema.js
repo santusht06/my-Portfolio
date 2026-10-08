@@ -1,7 +1,7 @@
 /**
  * seoSchema.js
  * ---------------------------------------------------------------------------
- * Single source of truth for SEO metadata + JSON-LD.
+ * Single source of truth for SEO metadata + JSON-LD + Google Sitelinks Architecture.
  *
  * Used by BOTH:
  *   - scripts/prerender.js  (Node, build time → static HTML for every crawler)
@@ -10,7 +10,7 @@
  * Keep this file free of JSX, aliases ("@/") and browser globals so it stays
  * importable from plain Node ESM.
  */
-import { profileData, education, blogs } from "../data/portfolioData.js";
+import { profileData, education, blogs, faqData } from "../data/portfolioData.js";
 
 export const SITE_URL = "https://santusht.online";
 export const SITE_NAME = "Santusht Kotai";
@@ -19,9 +19,13 @@ export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 export const OG_IMAGE_ALT =
   "Santusht Kotai — Software Engineer, Backend & Distributed Systems";
+export const AVATAR_IMAGE = `${SITE_URL}/avatar-anime.png`;
+export const FAVICON_512 = `${SITE_URL}/favicon-512x512.png`;
 
 export const PERSON_ID = `${SITE_URL}/#person`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
+export const SITELINKS_ID = `${SITE_URL}/#sitelinks`;
+export const FAQ_ID = `${SITE_URL}/#faqpage`;
 
 /* -------------------------------------------------------------------------- */
 /* URL helpers                                                                */
@@ -30,7 +34,6 @@ export const WEBSITE_ID = `${SITE_URL}/#website`;
 /**
  * Canonical form used everywhere (sitemap, <link rel=canonical>, og:url,
  * JSON-LD): leading slash + trailing slash, no query/hash.
- * The production host serves static directories, so "/work" 301s to "/work/".
  */
 export const toCanonicalPath = (input = "/") => {
   const clean = String(input).split("#")[0].split("?")[0] || "/";
@@ -63,7 +66,7 @@ export const readTimeToIso = (value) => {
 /** Append brand only when the full title still fits a ~62 char SERP budget. */
 export const brandTitle = (title) => {
   if (title.includes(SITE_NAME)) return title;
-  const suffix = ` | ${SITE_NAME}`;
+  const suffix = ` — ${SITE_NAME}`;
   return title.length + suffix.length <= 62 ? `${title}${suffix}` : title;
 };
 
@@ -77,42 +80,42 @@ export const getPostText = (post) => {
 };
 
 /* -------------------------------------------------------------------------- */
-/* Page registry — titles/descriptions tuned for intent + CTR                 */
+/* Page registry — titles/descriptions tuned for intent + CTR + Sitelinks      */
 /* -------------------------------------------------------------------------- */
 
 export const PAGES = {
   "/": {
-    title: "Santusht Kotai — Backend & Distributed Systems Engineer",
+    title: "Santusht Kotai — Software Engineer & Systems Architect",
     description:
-      "Santusht Kotai is a software engineer from Indore, India building FastAPI, Redis and Kubernetes systems. Google Summer of Code 2026 contributor at Supabase.",
+      "Santusht Kotai is a backend and distributed systems engineer from Indore, India. Explore FastAPI APIs, Redis engines, GSoC Supabase work, and technical articles.",
     h1: "Santusht Kotai — Software Engineer & Systems Architect",
     breadcrumb: "Home",
   },
   "/work/": {
-    title: "Work & Projects — Backend Engineering",
+    title: "Projects & Systems Architecture — Santusht Kotai",
     description:
-      "Production backend engineering by Santusht Kotai: 25+ FastAPI APIs, AWS microservices, a self-hosted mail platform, and open-source work with Supabase.",
-    h1: "Engineering & Experience",
-    breadcrumb: "Work",
+      "Production backend engineering and systems projects by Santusht Kotai: 25+ FastAPI APIs, AWS microservices, Sharexpress Mail, and Supabase GSoC 2026.",
+    h1: "Projects & Systems Architecture",
+    breadcrumb: "Projects",
   },
   "/blog/": {
-    title: "Engineering Blog: Incidents, ADRs & Deep Dives",
+    title: "Engineering Blog: Incidents, ADRs & Deep Dives — Santusht Kotai",
     description:
-      "Post-mortems, architecture decision records and deep dives on Redis, FastAPI, SSE, Docker sandboxes and distributed systems from real production work.",
+      "In-depth post-mortems, architecture decision records, Redis engines, Docker sandboxes, and distributed systems deep dives from production.",
     h1: "Engineering Blog & Field Notes",
     breadcrumb: "Blog",
   },
   "/resume/": {
-    title: "Resume — Backend Engineer (PDF)",
+    title: "Resume — Santusht Kotai | Software Engineer",
     description:
-      "View or download the resume of Santusht Kotai: FastAPI, PostgreSQL, Redis, AWS, Kubernetes, distributed systems, and Supabase GSoC 2026.",
+      "Technical resume of Santusht Kotai: Backend engineering, distributed systems, FastAPI, PostgreSQL, Redis, AWS, Kubernetes, and Supabase GSoC 2026.",
     h1: "Resume",
     breadcrumb: "Resume",
   },
   "/contact/": {
-    title: "Contact — Hire a Backend Engineer",
+    title: "Contact & Collaboration — Santusht Kotai",
     description:
-      "Contact Santusht Kotai for backend engineering roles, distributed systems consulting, API development or open-source collaboration.",
+      "Get in touch with Santusht Kotai for backend engineering roles, distributed systems consulting, API development, or open-source collaboration.",
     h1: "Get in Touch",
     breadcrumb: "Contact",
   },
@@ -161,7 +164,7 @@ export const getRelatedPosts = (post, limit = 3) => {
 };
 
 /* -------------------------------------------------------------------------- */
-/* JSON-LD builders                                                           */
+/* JSON-LD builders (Google Rich Snippets & Sitelinks Architecture)           */
 /* -------------------------------------------------------------------------- */
 
 const SAME_AS = [
@@ -186,17 +189,18 @@ const KNOWS_ABOUT = [
   "AWS",
   "OAuth 2.0",
   "API Security",
+  "High-Concurrency Architectures",
 ];
 
 export const buildPerson = () => ({
   "@type": "Person",
   "@id": PERSON_ID,
   name: profileData.name,
-  alternateName: ["Santusht"],
+  alternateName: ["Santusht", "santusht06"],
   url: `${SITE_URL}/`,
-  image: `${SITE_URL}/avatar-anime.png`,
+  image: AVATAR_IMAGE,
   email: `mailto:${profileData.email}`,
-  jobTitle: "Software Engineer",
+  jobTitle: "Software Engineer & Systems Architect",
   description:
     "Backend and distributed systems engineer from Indore, India, specializing in FastAPI, PostgreSQL, Redis, Docker and Kubernetes. Google Summer of Code 2026 contributor at Supabase and founder of Sharexpress Foundation.",
   worksFor: {
@@ -212,6 +216,7 @@ export const buildPerson = () => ({
   award: [
     "Google Summer of Code 2026 — Supabase",
     "Buildverse Education Technology Hackathon — Winner 2026",
+    "LeetCode Knight (Top 1.2% Globally)",
   ],
   address: {
     "@type": "PostalAddress",
@@ -227,9 +232,141 @@ export const buildWebSite = () => ({
   "@id": WEBSITE_ID,
   url: `${SITE_URL}/`,
   name: SITE_NAME,
+  alternateName: [
+    "Santusht",
+    "santusht.online",
+    "santusht06",
+    "Santusht Kotai — Portfolio",
+  ],
+  description:
+    "Software Engineer & Systems Architect specializing in Backend Engineering, FastAPI, Redis, and Distributed Systems.",
   inLanguage: "en",
   publisher: { "@id": PERSON_ID },
+  image: AVATAR_IMAGE,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${SITE_URL}/blog/?search={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+  hasPart: [
+    {
+      "@type": "WebPage",
+      "@id": `${absoluteUrl("/work/")}#webpage`,
+      name: "Projects & Systems Architecture",
+      url: absoluteUrl("/work/"),
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${absoluteUrl("/blog/")}#webpage`,
+      name: "Engineering Blog",
+      url: absoluteUrl("/blog/"),
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${absoluteUrl("/resume/")}#webpage`,
+      name: "Resume",
+      url: absoluteUrl("/resume/"),
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${absoluteUrl("/contact/")}#webpage`,
+      name: "Contact",
+      url: absoluteUrl("/contact/"),
+    },
+  ],
 });
+
+/**
+ * SiteNavigationElement structured data explicitly maps out Google Sitelinks
+ */
+export const buildSiteNavigation = () => ({
+  "@type": "ItemList",
+  "@id": SITELINKS_ID,
+  name: "Santusht Kotai — Primary Navigation & Sitelinks",
+  description:
+    "Primary navigation structure and featured links for Santusht Kotai's systems portfolio.",
+  itemListElement: [
+    {
+      "@type": "SiteNavigationElement",
+      position: 1,
+      name: "Projects",
+      description:
+        "Production backend systems, distributed architectures, 25+ FastAPI APIs, and open-source contributions.",
+      url: absoluteUrl("/work/"),
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 2,
+      name: "Engineering Blog",
+      description:
+        "In-depth engineering notes, incident post-mortems, and architectural decision records.",
+      url: absoluteUrl("/blog/"),
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 3,
+      name: "Resume",
+      description:
+        "Technical resume of Santusht Kotai: Backend engineering, distributed systems, and GSoC 2026.",
+      url: absoluteUrl("/resume/"),
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 4,
+      name: "Contact",
+      description:
+        "Get in touch for backend engineering roles, system design consulting, and collaboration.",
+      url: absoluteUrl("/contact/"),
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 5,
+      name: "ADR-001: Why Kafka Was the Wrong Choice",
+      description:
+        "Why Kafka was rejected in favor of a native Redis engine for asynchronous worker queues.",
+      url: absoluteUrl("/blog/why-i-didnt-use-kafka/"),
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 6,
+      name: "Building a Self-Hosted Mail Server",
+      description:
+        "Architecting a compliant self-hosted mail server supporting SMTP, IMAP4, and POP3 from scratch.",
+      url: absoluteUrl("/blog/self-hosted-mail-infrastructure/"),
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 7,
+      name: "The FAQ",
+      description:
+        "Frequently asked questions covering backend architecture, services, timeline, and collaboration.",
+      url: `${SITE_URL}/#faq`,
+    },
+  ],
+});
+
+/**
+ * FAQPage structured data for rich FAQ expandable cards in Google Search
+ */
+export const buildFAQPage = () => {
+  const faqs = faqData || [];
+  if (!faqs.length) return null;
+  return {
+    "@type": "FAQPage",
+    "@id": FAQ_ID,
+    mainEntity: faqs.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+};
 
 const buildBreadcrumb = (items) => ({
   "@type": "BreadcrumbList",
@@ -314,6 +451,40 @@ export const buildGraph = (path, { post } = {}) => {
       ...base,
       mainEntity: { "@id": PERSON_ID },
       about: { "@id": PERSON_ID },
+    });
+    // Add Sitelinks & FAQ structured data to homepage
+    graph.push(buildSiteNavigation());
+    const faqPage = buildFAQPage();
+    if (faqPage) graph.push(faqPage);
+  } else if (canonical === "/work/") {
+    graph.push({
+      "@type": "CollectionPage",
+      ...base,
+      about: { "@id": PERSON_ID },
+      mainEntity: {
+        "@type": "ItemList",
+        name: "Featured Systems Projects",
+        itemListElement: [
+          {
+            "@type": "SoftwareApplication",
+            position: 1,
+            name: "Sharexpress Mail Infrastructure & Cloud Services",
+            applicationCategory: "DeveloperApplication",
+            operatingSystem: "Linux, Cloud",
+            offers: { "@type": "Offer", price: "0" },
+            url: "https://github.com/santusht06/sharexpress",
+          },
+          {
+            "@type": "SoftwareApplication",
+            position: 2,
+            name: "Interleet – AI Interview & Systems Sandbox",
+            applicationCategory: "DeveloperApplication",
+            operatingSystem: "Linux, Cloud",
+            offers: { "@type": "Offer", price: "0" },
+            url: "https://github.com/santusht06/interleet",
+          },
+        ],
+      },
     });
   } else if (canonical === "/blog/") {
     graph.push({

@@ -2,50 +2,10 @@ import React, { useState, useRef, useLayoutEffect, useEffect } from "react";
 import ScrollTextAnimationHome from "./ScrollTextAnimationHome";
 import FAQCard from "./FAQCard";
 import gsap from "gsap";
+import { faqData } from "../data/portfolioData";
 
 const FAQ = ({ scrollToContact }) => {
-  const data = [
-    {
-      question: "What services do you offer?",
-      answer:
-        "I specialize in full-stack web development, UI/UX design, mobile application development, and backend architecture. My focus is on building clean, responsive, and scalable digital products tailored to your business needs.",
-    },
-    {
-      question: "How do you typically work with clients?",
-      answer:
-        "I follow a collaborative, transparent approach. After understanding your requirements, I propose a structured timeline, share regular updates, and ensure each milestone is delivered with precision. Communication is key throughout the project lifecycle.",
-    },
-    {
-      question: "Do you offer post-launch support or maintenance?",
-      answer:
-        "Yes, I offer flexible post-launch support packages that include bug fixes, performance monitoring, feature updates, and security enhancements to ensure your application stays optimized over time.",
-    },
-    {
-      question: "How long does a typical project take?",
-      answer:
-        "Project timelines vary depending on scope and complexity. A standard portfolio website may take 2–3 weeks, while a fully-featured web or mobile app could span 4–8 weeks or more. I always provide a clear timeline estimate after discussing your project in detail.",
-    },
-    {
-      question: "What technologies do you work with?",
-      answer:
-        "I work with modern technologies including React, Next.js, Node.js, Tailwind CSS, MongoDB, Firebase, Express.js, and more. For mobile, I use React Native and Flutter, depending on the project requirements.",
-    },
-    {
-      question: "How much do you charge for a project?",
-      answer:
-        "Pricing depends on the project's scope, features, and timeline. After an initial consultation, I provide a detailed proposal outlining the estimated cost. I aim to deliver high-value solutions within a fair and transparent pricing model.",
-    },
-    {
-      question: "Can you work with my existing design or codebase?",
-      answer:
-        "Absolutely. I can integrate into ongoing projects, refactor existing code, or work alongside your in-house team to improve performance, scalability, or visual design.",
-    },
-    {
-      question: "How do I get started?",
-      answer:
-        "Simply reach out through the contact form, or email me directly with a brief overview of your project. I’ll respond promptly to schedule a discovery call and guide you through the next steps.",
-    },
-  ];
+  const data = faqData;
   const itemRefs = useRef([]);
 
   useEffect(() => {
@@ -120,7 +80,7 @@ const FAQ = ({ scrollToContact }) => {
   }, [visibleCount]);
 
   return (
-    <div className="w-[750px] mt-30 mb-30">
+    <div id="faq" className="w-[750px] mt-30 mb-30 scroll-mt-24">
       <div className="text-start">
         <ScrollTextAnimationHome title={"FAQs"} stagger={0.05} />
       </div>

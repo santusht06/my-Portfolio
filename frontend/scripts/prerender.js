@@ -25,6 +25,7 @@ import {
   achievements,
   skillsData,
   education,
+  faqData,
 } from "../src/data/portfolioData.js";
 
 const SUPABASE_URL = "https://bcehjzwewfwoalrcuvba.supabase.co";
@@ -194,6 +195,17 @@ const articleListHtml = (posts) =>
     )
     .join("")}</ul>`;
 
+const faqHtml = () =>
+  `<section id="faq">
+  <h2>Frequently Asked Questions</h2>
+  <dl>${(faqData || [])
+    .map(
+      (f) =>
+        `<dt><strong>${esc(f.question)}</strong></dt><dd>${esc(f.answer)}</dd>`
+    )
+    .join("\n")}</dl>
+</section>`;
+
 const shell = (inner) =>
   `<div class="seo-shell">${navHtml()}<main>${inner}</main>${footerHtml()}</div>`;
 
@@ -210,6 +222,7 @@ ${projectsHtml(2)}
 ${achievementsHtml()}
 <h2>Latest Engineering Notes</h2>
 ${articleListHtml(blogs.slice(0, 4))}
+${faqHtml()}
 <p>${internal("/blog/", "Read all engineering articles")} &middot; ${internal("/work/", "See all work and projects")}</p>`),
 
   "/work/": () =>

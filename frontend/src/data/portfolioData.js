@@ -271,6 +271,39 @@ export const personalItems = [
   },
 ];
 
+export const faqData = [
+  {
+    question: "What engineering services and expertise do you offer?",
+    answer:
+      "I specialize in backend engineering, distributed systems architecture, high-throughput REST APIs with FastAPI & Go, database design & indexing with PostgreSQL and Redis, and containerized cloud infrastructure on AWS and Kubernetes.",
+  },
+  {
+    question: "How do you approach system design and architecture?",
+    answer:
+      "I follow clean, modular, and fault-tolerant architectural principles. Every system is engineered with clear service boundaries, atomic transactions, connection pooling, and resilient failover mechanisms.",
+  },
+  {
+    question: "What core technologies and tech stack do you work with?",
+    answer:
+      "My primary backend stack includes Python (FastAPI, SQLAlchemy), Golang (Gin), PostgreSQL, Redis, Docker, Kubernetes, AWS, and Cloudflare Workers. On frontend, I work with React, Vite, and Redux Toolkit.",
+  },
+  {
+    question: "What open-source and distributed systems projects have you built?",
+    answer:
+      "I am the founder of Sharexpress Foundation, creator of Sharexpress Mail (self-hosted SMTP/IMAP/POP3 mail infrastructure), Interleet (distributed AI coding sandbox), and an active contributor to Supabase (GSoC 2026).",
+  },
+  {
+    question: "Can you collaborate on existing codebases or microservices?",
+    answer:
+      "Yes, I regularly integrate into existing enterprise architectures, optimize database query performance, remediate OWASP vulnerabilities, and scale high-throughput API endpoints.",
+  },
+  {
+    question: "How can I contact you or collaborate on engineering projects?",
+    answer:
+      "You can reach out directly through the contact form on this site, or via email at santushtkotai1221@gmail.com, GitHub (github.com/santusht06), and LinkedIn.",
+  },
+];
+
 // Blog posts are fetched 100% dynamically from Supabase PostgreSQL via /api/v1/blogs
 export const blogs = [];
 export default blogs;
