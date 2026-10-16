@@ -1,5 +1,7 @@
 # Santusht's Portfolio (`santusht.online`)
 
+![AI Maintained](https://img.shields.io/badge/readme-AI%20maintained-blue)
+
 Modern portfolio with a serverless edge backend and high-performance React frontend.
 
 ## Architecture
@@ -26,8 +28,6 @@ my-Portfolio/
 │   ├── wrangler.jsonc    # Cloudflare Wrangler configuration
 │   └── scripts/          # Database migration & asset upload utilities
 ├── supabase/             # Supabase PostgreSQL schema migrations
-└── vercel.json           # Root Vercel build configuration
-```
 
 ---
 
