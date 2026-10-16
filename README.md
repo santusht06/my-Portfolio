@@ -59,6 +59,8 @@ cd backend
 npx wrangler login       # One-time login
 npm run worker:deploy    # Deploys to Cloudflare edge
 ```
+
+### 2. Deploy Frontend (Vercel)
 1. Push repository to GitHub.
 2. Import project in Vercel.
 3. Build Command: `npm --prefix frontend run build`
