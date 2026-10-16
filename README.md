@@ -28,6 +28,8 @@ my-Portfolio/
 │   ├── wrangler.jsonc    # Cloudflare Wrangler configuration
 │   └── scripts/          # Database migration & asset upload utilities
 ├── supabase/             # Supabase PostgreSQL schema migrations
+└── vercel.json           # Root Vercel build configuration
+```
 
 ---
 
@@ -37,14 +39,14 @@ my-Portfolio/
 ```bash
 cd backend
 npm run dev
-# Running on http://127.0.0.1:8787
+# Running on [http://127.0.0.1:8787](http://127.0.0.1:8787)
 ```
 
 ### 2. Run Frontend
 ```bash
 cd frontend
 npm run dev
-# Running on http://localhost:5173 (proxies /api to 127.0.0.1:8787)
+# Running on [http://localhost:5173](http://localhost:5173) (proxies /api to 127.0.0.1:8787)
 ```
 
 ---
@@ -57,8 +59,6 @@ cd backend
 npx wrangler login       # One-time login
 npm run worker:deploy    # Deploys to Cloudflare edge
 ```
-
-### 2. Deploy Frontend (Vercel)
 1. Push repository to GitHub.
 2. Import project in Vercel.
 3. Build Command: `npm --prefix frontend run build`
