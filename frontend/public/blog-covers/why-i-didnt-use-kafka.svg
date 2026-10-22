@@ -1,49 +1,108 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <defs>
-    <!-- Ultra-subtle linear background gradient -->
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Background Gradient -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#09090b" />
       <stop offset="100%" stop-color="#050507" />
     </linearGradient>
 
-    <!-- Subtle radial glow from top-left -->
-    <radialGradient id="topGlow" cx="15%" cy="15%" r="65%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.04" />
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-    </radialGradient>
+    <!-- Markers for arrows -->
+    <marker id="arr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#71717a" />
+    </marker>
+    <marker id="arrGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#10b981" />
+    </marker>
+    <marker id="arrEmerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399" />
+    </marker>
+    <marker id="arrSky" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrRose" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+    </marker>
 
-    <!-- Minimal grid pattern -->
-    <pattern id="cleanGrid" width="48" height="48" patternUnits="userSpaceOnUse">
-      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#ffffff" stroke-width="1" stroke-opacity="0.025"/>
+    <!-- Minimal subtle grid -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-width="1" stroke-opacity="0.02"/>
     </pattern>
   </defs>
 
   <!-- Background -->
-  <rect width="1200" height="630" fill="url(#bgGradient)" />
-  <rect width="1200" height="630" fill="url(#topGlow)" />
-  <rect width="1200" height="630" fill="url(#cleanGrid)" />
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect width="1200" height="630" fill="url(#grid)" />
+  <rect x="24" y="24" width="1152" height="582" rx="16" fill="none" stroke="#27272a" stroke-width="1" />
 
-  <!-- Outer Minimal Border Frame -->
-  <rect x="32" y="32" width="1136" height="566" rx="16" fill="none" stroke="#27272a" stroke-width="1" stroke-opacity="0.8" />
+  <!-- Diagram Content -->
+  
+  <g transform="translate(60, 60)">
+    <!-- 1. Producer -->
+    <g transform="translate(50, 175)">
+      <rect x="0" y="0" width="180" height="80" rx="8" fill="#18181b" stroke="#3f3f46" stroke-width="1.2" />
+      <text x="90" y="34" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#a1a1aa">CLIENT SUBMISSIONS</text>
+      <text x="90" y="55" text-anchor="middle" font-family="'Geist', sans-serif" font-size="14" font-weight="600" fill="#f4f4f5">FastAPI Gateway</text>
+    </g>
 
-  <!-- Category Tag -->
-  <g transform="translate(96, 120)">
-    <text font-family="'Geist Mono', 'SF Mono', 'Fira Code', monospace" font-size="13" font-weight="600" fill="#71717a" letter-spacing="0.1em">// ARCHITECTURE · DISTRIBUTED SYSTEMS</text>
+    <!-- Arrow 1: Producer -> Stream -->
+    <path d="M 230 215 L 320 215" stroke="#71717a" stroke-width="1.5" marker-end="url(#arr)" />
+    <text x="275" y="205" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="10.5" fill="#71717a">XADD</text>
+
+    <!-- 2. Redis Streams Core -->
+    <g transform="translate(320, 115)">
+      <rect x="0" y="0" width="280" height="200" rx="10" fill="#121215" stroke="#52525b" stroke-width="1.5" />
+      <text x="140" y="32" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="12" font-weight="700" fill="#e4e4e7" letter-spacing="0.05em">REDIS STREAMS</text>
+      <text x="140" y="52" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="11" fill="#71717a">tasks:interleet</text>
+
+      <!-- Sub-box: PEL -->
+      <rect x="20" y="75" width="240" height="52" rx="6" fill="#18181b" stroke="#3f3f46" stroke-width="1" />
+      <text x="140" y="96" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#f4f4f5">Consumer Group: evaluators</text>
+      <text x="140" y="115" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="10" fill="#a1a1aa">Pending Entries List (PEL)</text>
+
+      <!-- Status indicator -->
+      <circle cx="35" cy="165" r="4" fill="#10b981" />
+      <text x="48" y="169" font-family="'Geist Mono', monospace" font-size="10.5" fill="#a1a1aa">Sub-millisecond task leasing</text>
+    </g>
+
+    <!-- Arrow 2A: Stream -> Worker 1 (Fast Task) -->
+    <path d="M 600 175 L 700 135" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrGreen)" />
+    <text x="650" y="145" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="10.5" fill="#10b981">XREADGROUP</text>
+
+    <!-- Arrow 2B: Stream -> Worker 2 (Slow Task) -->
+    <path d="M 600 255 L 700 295" stroke="#71717a" stroke-width="1.5" marker-end="url(#arr)" />
+    <text x="650" y="290" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="10.5" fill="#71717a">XREADGROUP</text>
+
+    <!-- 3. Workers Pool -->
+    <!-- Worker 1: Fast Task -->
+    <g transform="translate(700, 95)">
+      <rect x="0" y="0" width="260" height="80" rx="8" fill="#18181b" stroke="#10b981" stroke-width="1.2" />
+      <text x="20" y="30" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#10b981">WORKER #1 (IDLE)</text>
+      <text x="20" y="52" font-family="'Geist', sans-serif" font-size="13" font-weight="500" fill="#f4f4f5">Syntax Check (40ms)</text>
+      <text x="20" y="68" font-family="'Geist Mono', monospace" font-size="10" fill="#71717a">XACK -> Purged from PEL</text>
+    </g>
+
+    <!-- Worker 2: Slow Task -->
+    <g transform="translate(700, 255)">
+      <rect x="0" y="0" width="260" height="80" rx="8" fill="#18181b" stroke="#3f3f46" stroke-width="1.2" />
+      <text x="20" y="30" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#a1a1aa">WORKER #2 (BUSY)</text>
+      <text x="20" y="52" font-family="'Geist', sans-serif" font-size="13" font-weight="500" fill="#f4f4f5">Adversarial Run (12,000ms)</text>
+      <text x="20" y="68" font-family="'Geist Mono', monospace" font-size="10" fill="#71717a">Lease active in PEL</text>
+    </g>
+
+    <!-- 4. Supervisor & Recovery Loop -->
+    <g transform="translate(320, 360)">
+      <rect x="0" y="0" width="280" height="60" rx="8" fill="#18181b" stroke="#3f3f46" stroke-width="1" stroke-dasharray="3 3" />
+      <text x="140" y="27" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#d4d4d8">Orphan Recovery Supervisor</text>
+      <text x="140" y="47" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="10" fill="#71717a">XPENDING -> XCLAIM (idle > 20s)</text>
+    </g>
+
+    <!-- Connection: PEL -> Supervisor -> Worker -->
+    <path d="M 460 315 L 460 360" stroke="#71717a" stroke-width="1.2" stroke-dasharray="3 3" />
+    <path d="M 600 390 L 830 390 L 830 335" stroke="#71717a" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arr)" />
   </g>
 
-  <!-- Main Title & Subtitle -->
-  <g>
-    <text x="96" y="275" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="700" fill="#fafafa" letter-spacing="-0.03em">ADR-001: Why Kafka Was the Wrong Choice</text>
-    <text x="96" y="333" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="700" fill="#fafafa" letter-spacing="-0.03em">for My Architecture</text>
-    <text x="96" y="405" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="400" fill="#a1a1aa" letter-spacing="-0.01em">Evaluating distributed append-only logs vs native Redis Streams.</text>
-  </g>
-
-  <!-- Clean Bottom Metadata Bar -->
-  <g transform="translate(96, 524)">
-    <!-- Username on left -->
-    <text font-family="'Geist Mono', 'SF Mono', 'Fira Code', monospace" font-size="15" font-weight="500" fill="#a1a1aa">santusht06</text>
-    
-    <!-- Clean minimal site domain on right -->
-    <text x="1008" y="0" text-anchor="end" font-family="'Geist Mono', 'SF Mono', 'Fira Code', monospace" font-size="14" font-weight="400" fill="#52525b">santusht.online</text>
+  <!-- Clean Bottom Corner Signature -->
+  <g transform="translate(64, 580)">
+    <text font-family="'Geist Mono', 'SF Mono', 'Fira Code', monospace" font-size="13" font-weight="500" fill="#71717a">By Santusht Kotai</text>
   </g>
 </svg>

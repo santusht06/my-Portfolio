@@ -1,49 +1,98 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <defs>
-    <!-- Ultra-subtle linear background gradient -->
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Background Gradient -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#09090b" />
       <stop offset="100%" stop-color="#050507" />
     </linearGradient>
 
-    <!-- Subtle radial glow from top-left -->
-    <radialGradient id="topGlow" cx="15%" cy="15%" r="65%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.04" />
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-    </radialGradient>
+    <!-- Markers for arrows -->
+    <marker id="arr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#71717a" />
+    </marker>
+    <marker id="arrGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#10b981" />
+    </marker>
+    <marker id="arrEmerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399" />
+    </marker>
+    <marker id="arrSky" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrRose" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+    </marker>
 
-    <!-- Minimal grid pattern -->
-    <pattern id="cleanGrid" width="48" height="48" patternUnits="userSpaceOnUse">
-      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#ffffff" stroke-width="1" stroke-opacity="0.025"/>
+    <!-- Minimal subtle grid -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-width="1" stroke-opacity="0.02"/>
     </pattern>
   </defs>
 
   <!-- Background -->
-  <rect width="1200" height="630" fill="url(#bgGradient)" />
-  <rect width="1200" height="630" fill="url(#topGlow)" />
-  <rect width="1200" height="630" fill="url(#cleanGrid)" />
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect width="1200" height="630" fill="url(#grid)" />
+  <rect x="24" y="24" width="1152" height="582" rx="16" fill="none" stroke="#27272a" stroke-width="1" />
 
-  <!-- Outer Minimal Border Frame -->
-  <rect x="32" y="32" width="1136" height="566" rx="16" fill="none" stroke="#27272a" stroke-width="1" stroke-opacity="0.8" />
+  <!-- Diagram Content -->
+  
+  <g transform="translate(70, 75)">
+    <!-- Problem Ingestion -->
+    <g transform="translate(40, 160)">
+      <rect x="0" y="0" width="180" height="85" rx="8" fill="#18181b" stroke="#3f3f46" stroke-width="1.2" />
+      <text x="90" y="30" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#a1a1aa">ALGORITHMIC PROBLEM</text>
+      <text x="90" y="52" text-anchor="middle" font-family="'Geist', sans-serif" font-size="13" font-weight="600" fill="#f4f4f5">Constraint Bounds</text>
+      <text x="90" y="70" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="9.5" fill="#71717a">N &lt;= 10^5 vs N &lt;= 20</text>
+    </g>
 
-  <!-- Category Tag -->
-  <g transform="translate(96, 120)">
-    <text font-family="'Geist Mono', 'SF Mono', 'Fira Code', monospace" font-size="13" font-weight="600" fill="#71717a" letter-spacing="0.1em">// ALGORITHMS · PATTERNS</text>
+    <!-- Branching to 4 Core Archetypes -->
+    <path d="M 220 202 L 310 100" stroke="#71717a" stroke-width="1.5" marker-end="url(#arr)" />
+    <path d="M 220 202 L 310 170" stroke="#71717a" stroke-width="1.5" marker-end="url(#arr)" />
+    <path d="M 220 202 L 310 240" stroke="#71717a" stroke-width="1.5" marker-end="url(#arr)" />
+    <path d="M 220 202 L 310 310" stroke="#71717a" stroke-width="1.5" marker-end="url(#arr)" />
+
+    <!-- 4 Pattern Cards -->
+    <g transform="translate(310, 65)">
+      <rect x="0" y="0" width="300" height="60" rx="6" fill="#18181b" stroke="#38bdf8" stroke-width="1.2" />
+      <text x="20" y="26" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#38bdf8">01. CONTIGUOUS RANGES</text>
+      <text x="20" y="46" font-family="'Geist', sans-serif" font-size="12.5" font-weight="500" fill="#f4f4f5">Two Pointers &amp; Sliding Window [L, R] Invariant</text>
+    </g>
+
+    <g transform="translate(310, 140)">
+      <rect x="0" y="0" width="300" height="60" rx="6" fill="#18181b" stroke="#10b981" stroke-width="1.2" />
+      <text x="20" y="26" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#10b981">02. NEXT GREATER/SMALLER</text>
+      <text x="20" y="46" font-family="'Geist', sans-serif" font-size="12.5" font-weight="500" fill="#f4f4f5">Monotonic Stack &amp; Queue (O(N) amortized)</text>
+    </g>
+
+    <g transform="translate(310, 215)">
+      <rect x="0" y="0" width="300" height="60" rx="6" fill="#18181b" stroke="#f59e0b" stroke-width="1.2" />
+      <text x="20" y="26" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#f59e0b">03. STATE TRANSITIONS</text>
+      <text x="20" y="46" font-family="'Geist', sans-serif" font-size="12.5" font-weight="500" fill="#f4f4f5">DAG State-Space Exploration &amp; DP Memoization</text>
+    </g>
+
+    <g transform="translate(310, 290)">
+      <rect x="0" y="0" width="300" height="60" rx="6" fill="#18181b" stroke="#a855f7" stroke-width="1.2" />
+      <text x="20" y="26" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#a855f7">04. DYNAMIC CONNECTIVITY</text>
+      <text x="20" y="46" font-family="'Geist', sans-serif" font-size="12.5" font-weight="500" fill="#f4f4f5">Disjoint Set Union (Path Compression + Rank)</text>
+    </g>
+
+    <!-- Output Synthesis -->
+    <path d="M 610 95 L 680 170" stroke="#71717a" stroke-width="1.5" />
+    <path d="M 610 170 L 680 185" stroke="#71717a" stroke-width="1.5" />
+    <path d="M 610 245 L 680 205" stroke="#71717a" stroke-width="1.5" />
+    <path d="M 610 320 L 680 220" stroke="#71717a" stroke-width="1.5" />
+    <path d="M 680 195 L 720 195" stroke="#71717a" stroke-width="1.5" marker-end="url(#arr)" />
+
+    <g transform="translate(720, 150)">
+      <rect x="0" y="0" width="250" height="90" rx="8" fill="#121215" stroke="#10b981" stroke-width="1.5" />
+      <text x="20" y="28" font-family="'Geist Mono', monospace" font-size="11" font-weight="600" fill="#10b981">RESULT: LEETCODE KNIGHT</text>
+      <text x="20" y="50" font-family="'Geist', sans-serif" font-size="13" font-weight="600" fill="#f4f4f5">Top 1.2% Globally · 1,940+ Rating</text>
+      <text x="20" y="70" font-family="'Geist Mono', monospace" font-size="9.5" fill="#71717a">Systems engineering algorithmic fluency</text>
+    </g>
   </g>
 
-  <!-- Main Title & Subtitle -->
-  <g>
-    <text x="96" y="275" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="700" fill="#fafafa" letter-spacing="-0.03em">How Systematic Pattern Recognition</text>
-    <text x="96" y="333" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="700" fill="#fafafa" letter-spacing="-0.03em">Took Me to LeetCode Knight</text>
-    <text x="96" y="405" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="400" fill="#a1a1aa" letter-spacing="-0.01em">Deconstructing algorithmic problems into 14 foundational archetypes.</text>
-  </g>
-
-  <!-- Clean Bottom Metadata Bar -->
-  <g transform="translate(96, 524)">
-    <!-- Username on left -->
-    <text font-family="'Geist Mono', 'SF Mono', 'Fira Code', monospace" font-size="15" font-weight="500" fill="#a1a1aa">santusht06</text>
-    
-    <!-- Clean minimal site domain on right -->
-    <text x="1008" y="0" text-anchor="end" font-family="'Geist Mono', 'SF Mono', 'Fira Code', monospace" font-size="14" font-weight="400" fill="#52525b">santusht.online</text>
+  <!-- Clean Bottom Corner Signature -->
+  <g transform="translate(64, 580)">
+    <text font-family="'Geist Mono', 'SF Mono', 'Fira Code', monospace" font-size="13" font-weight="500" fill="#71717a">By Santusht Kotai</text>
   </g>
 </svg>
