@@ -270,15 +270,37 @@ ${educationHtml()}`),
 const buildPostShell = (post) => {
   const s = post.sections;
   const related = getRelatedPosts(post, 3);
-  const body = s
-    ? `<p><strong>TL;DR:</strong> ${esc(s.tldr)}</p>
-<h2>01. The Problem &amp; Observed Symptoms</h2><p>${esc(s.problem)}</p>
-<h2>02. Root Cause Investigation</h2><p>${esc(s.rootCause)}</p>
-<h2>03. Architectural Redesign &amp; Fix</h2><p>${esc(s.solution)}</p>
-<h2>Key Engineering Takeaways</h2><ul>${(s.takeaways || [])
-        .map((t) => `<li>${esc(t)}</li>`)
-        .join("")}</ul>`
-    : `<p>${esc(post.content)}</p>`;
+  let body = "";
+
+  if (post.overview || (s && !Array.isArray(s) && s.tldr)) {
+    body += `<p><strong>Operational Overview:</strong> ${esc(post.overview || s.tldr)}</p>
+`;
+  }
+
+  const secItems = Array.isArray(s) ? s : Array.isArray(s?.items) ? s.items : null;
+  if (secItems) {
+    body += secItems
+      .map((sec) => {
+        let out = "";
+        if (sec.heading) out += `<h2>${esc(sec.heading)}</h2>`;
+        if (sec.body || sec.content) out += `<p>${esc(sec.body || sec.content)}</p>`;
+        if (sec.code) out += `<pre><code>${esc(sec.code)}</code></pre>`;
+        if (sec.callout) out += `<blockquote>${esc(sec.callout)}</blockquote>`;
+        return out;
+      })
+      .join("\n");
+  } else if (s && typeof s === "object" && (s.problem || s.solution)) {
+    body += `${s.problem ? `<h2>01. The Problem &amp; Observed Symptoms</h2><p>${esc(s.problem)}</p>` : ""}
+${s.rootCause ? `<h2>02. Root Cause Investigation</h2><p>${esc(s.rootCause)}</p>` : ""}
+${s.solution ? `<h2>03. Architectural Redesign &amp; Fix</h2><p>${esc(s.solution)}</p>` : ""}`;
+  } else if (post.content) {
+    body += `<p>${esc(post.content)}</p>`;
+  }
+
+  const takeaways = Array.isArray(s) ? post.takeaways : (s && s.takeaways);
+  if (Array.isArray(takeaways) && takeaways.length > 0) {
+    body += `<h2>Key Engineering Takeaways</h2><ul>${takeaways.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`;
+  }
 
   return shell(`<nav aria-label="Breadcrumb">${internal("/", "Home")} / ${internal("/blog/", "Blog")} / ${esc(post.title)}</nav>
 <article>

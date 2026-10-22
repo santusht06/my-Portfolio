@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiSearch } from "react-icons/fi";
+import { FiArrowRight } from "react-icons/fi";
+import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../components/Footer";
 import DetailModal from "../components/DetailModal";
 import SEOHead from "../components/SEOHead";
@@ -20,6 +21,146 @@ import {
   selectBlogsStatus,
 } from "@/store/slices/blogsSlice";
 import { BlogListSkeleton } from "../components/BlogSkeleton";
+import { getBlogCoverImage } from "@/lib/blogImage";
+
+/**
+ * Individual Blog List Item with Hover Preview Card & Blur coordination
+ * Matches the exact interaction pattern and visual aesthetics of ramx.in/blog
+ */
+const BlogListItem = ({
+  blog,
+  isHovered,
+  onHoverStart,
+  onHoverEnd,
+  canHover,
+}) => {
+  const articleRef = useRef(null);
+  const titleRef = useRef(null);
+  const [coords, setCoords] = useState({ x: 0, y: 0, showAbove: false });
+  const coverImage = getBlogCoverImage(blog);
+
+  const updatePosition = (clientX) => {
+    if (!articleRef.current) return;
+    const articleRect = articleRef.current.getBoundingClientRect();
+    const titleRect = titleRef.current
+      ? titleRef.current.getBoundingClientRect()
+      : { top: articleRect.top, height: 28 };
+
+    const relX = clientX - articleRect.left;
+    const relY = titleRect.top - articleRect.top;
+    const cardWidth = 300;
+    const cardHeight = 160;
+    const showAbove = titleRect.top + 100 + cardHeight > window.innerHeight;
+
+    // Horizontally clamp preview card so it never clips out of the container bounds
+    const targetX =
+      relX + 20 + cardWidth > articleRect.width - 8
+        ? relX - cardWidth - 20
+        : relX + 20;
+
+    const clampedX = Math.max(8, Math.min(targetX, articleRect.width - cardWidth - 8));
+    const targetY = showAbove
+      ? relY - cardHeight - 14
+      : relY + (titleRect.height || 28) + 14;
+
+    setCoords({ x: clampedX, y: targetY, showAbove });
+  };
+
+  const handleMouseEnter = (e) => {
+    if (!canHover) return;
+    updatePosition(e.clientX);
+    onHoverStart(blog.id);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!canHover) return;
+    updatePosition(e.clientX);
+  };
+
+  const handleMouseLeave = () => {
+    onHoverEnd();
+  };
+
+  return (
+    <article
+      ref={articleRef}
+      className="blog-list-item group relative isolate"
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <Link
+        to={`/blog/${blog.id}`}
+        className="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover-only:hover:bg-black/[0.03] dark:hover-only:hover:bg-white/[0.035] px-3.5 rounded-xl motion-safe:active:scale-[0.98] transition-colors duration-150 ease-smooth block"
+      >
+        <div className="max-w-xl">
+          <div className="flex items-center gap-2.5 mb-2 flex-wrap">
+            <span className="text-[11px] font-mono text-[#909092]">
+              {blog.date} • {blog.readTime}
+            </span>
+          </div>
+
+          <h2
+            ref={titleRef}
+            className="text-base sm:text-lg font-semibold text-black dark:text-white group-hover:text-black dark:group-hover:text-white transition-colors duration-150 leading-snug"
+          >
+            {blog.title}
+          </h2>
+          <p className="text-xs sm:text-sm text-[#909092] mt-1.5 leading-relaxed">
+            {blog.subtitle}
+          </p>
+
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {blog.categories
+              ?.filter((c) => c !== "Incidents & ADRs")
+              .map((c) => (
+                <span
+                  key={c}
+                  className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/[0.03] dark:bg-white/[0.04] text-[#909092] border border-black/[0.06] dark:border-white/[0.08] hover-only:hover:border-black/20 dark:hover-only:hover:border-white/20 hover-only:hover:text-black dark:hover-only:hover:text-white transition-[border-color,color] duration-150"
+                >
+                  {c}
+                </span>
+              ))}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5 text-xs font-mono text-[#909092] group-hover:text-black dark:group-hover:text-white transition-colors duration-150 flex-shrink-0 self-start sm:self-center">
+          <span>Read report</span>
+          <FiArrowRight className="group-hover:translate-x-1 transition-transform duration-150 ease-smooth motion-reduce:transform-none text-[#909092] group-hover:text-black dark:group-hover:text-white" />
+        </div>
+      </Link>
+
+      {/* Floating Preview Card with framer-motion matching ramx.in */}
+      <AnimatePresence>
+        {isHovered && canHover && (
+          <motion.div
+            className="pointer-events-none absolute z-[9999] overflow-hidden rounded-xl shadow-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0c0c0e]"
+            style={{
+              left: coords.x,
+              top: coords.y,
+              width: 300,
+              height: 160,
+              transform: "translateZ(0px)",
+            }}
+            initial={{ opacity: 0, scale: 0.92, filter: "blur(10px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, scale: 0.92, filter: "blur(10px)" }}
+            transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <img
+              src={coverImage}
+              alt={blog.title}
+              width={300}
+              height={160}
+              className="w-full h-full object-cover"
+              loading="eager"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </article>
+  );
+};
 
 const BlogView = () => {
   const dispatch = useDispatch();
@@ -31,6 +172,22 @@ const BlogView = () => {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeArticle, setActiveArticle] = useState(null);
+  const [hoveredBlogId, setHoveredBlogId] = useState(null);
+  const [canHover, setCanHover] = useState(false);
+
+  // Check hover capability and min-width to ensure smooth desktop behavior
+  useEffect(() => {
+    const mql = window.matchMedia("(hover: hover) and (min-width: 768px)");
+    setCanHover(mql.matches);
+    const handler = (e) => setCanHover(e.matches);
+    if (mql.addEventListener) {
+      mql.addEventListener("change", handler);
+      return () => mql.removeEventListener("change", handler);
+    } else if (mql.addListener) {
+      mql.addListener(handler);
+      return () => mql.removeListener(handler);
+    }
+  }, []);
 
   // Dynamic fetch via Redux from Supabase PostgreSQL API
   useEffect(() => {
@@ -50,7 +207,7 @@ const BlogView = () => {
     { label: "INCIDENTS & ADRs", key: "Incidents & ADRs" },
   ];
 
-  // Count items per category (dynamic MongoDB counts if available)
+  // Count items per category
   const getCount = (key) => {
     if (liveCategoryCounts && liveCategoryCounts[key] !== undefined) {
       return liveCategoryCounts[key];
@@ -133,47 +290,16 @@ const BlogView = () => {
                   No posts found in this category.
                 </div>
               ) : (
-                <div className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
+                <div className="blog-list blog-list-container divide-y divide-black/[0.06] dark:divide-white/[0.06] relative">
                   {filteredBlogs.map((b) => (
-                    <div key={b.id}>
-                      <Link
-                        to={`/blog/${b.id}`}
-                        className="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group cursor-pointer hover-only:hover:bg-black/[0.03] dark:hover-only:hover:bg-white/[0.035] px-3.5 rounded-xl motion-safe:active:scale-[0.98] transition-colors duration-150 ease-smooth block"
-                      >
-                        <div className="max-w-xl">
-                          <div className="flex items-center gap-2.5 mb-2 flex-wrap">
-                            <span className="text-[11px] font-mono text-[#909092]">
-                              {b.date} • {b.readTime}
-                            </span>
-                          </div>
-
-                          <h2 className="text-base sm:text-lg font-semibold text-black dark:text-white group-hover:text-black dark:group-hover:text-white transition-colors duration-150 leading-snug">
-                            {b.title}
-                          </h2>
-                          <p className="text-xs sm:text-sm text-[#909092] mt-1.5 leading-relaxed">
-                            {b.subtitle}
-                          </p>
-
-                          <div className="flex flex-wrap gap-1.5 mt-3">
-                            {b.categories
-                              .filter((c) => c !== "Incidents & ADRs")
-                              .map((c) => (
-                                <span
-                                  key={c}
-                                  className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/[0.03] dark:bg-white/[0.04] text-[#909092] border border-black/[0.06] dark:border-white/[0.08] hover-only:hover:border-black/20 dark:hover-only:hover:border-white/20 hover-only:hover:text-black dark:hover-only:hover:text-white transition-[border-color,color] duration-150"
-                                >
-                                  {c}
-                                </span>
-                              ))}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-1.5 text-xs font-mono text-[#909092] group-hover:text-black dark:group-hover:text-white transition-colors duration-150 flex-shrink-0 self-start sm:self-center">
-                          <span>Read report</span>
-                          <FiArrowRight className="group-hover:translate-x-1 transition-transform duration-150 ease-smooth motion-reduce:transform-none text-[#909092] group-hover:text-black dark:group-hover:text-white" />
-                        </div>
-                      </Link>
-                    </div>
+                    <BlogListItem
+                      key={b.id}
+                      blog={b}
+                      isHovered={hoveredBlogId === b.id}
+                      onHoverStart={setHoveredBlogId}
+                      onHoverEnd={() => setHoveredBlogId(null)}
+                      canHover={canHover}
+                    />
                   ))}
                 </div>
               )}

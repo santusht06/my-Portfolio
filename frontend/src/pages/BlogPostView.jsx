@@ -16,6 +16,7 @@ import {
   selectBlogs,
 } from "@/store/slices/blogsSlice";
 import { BlogPostSkeleton } from "@/components/BlogSkeleton";
+import { getBlogCoverImage } from "@/lib/blogImage";
 
 const BlogPostView = () => {
   const { slug } = useParams();
@@ -43,6 +44,7 @@ const BlogPostView = () => {
   }, [allBlogs, slug]);
 
   const postMeta = post ? getPostMeta(post) : null;
+  const coverImage = useMemo(() => getBlogCoverImage(post), [post]);
   const schema = useMemo(
     () => (post ? buildGraph(`/blog/${post.id}`, { post }) : null),
     [post]
@@ -77,19 +79,20 @@ const BlogPostView = () => {
         title={postMeta.title}
         description={postMeta.description}
         canonical={`/blog/${post.id}`}
+        ogImage={coverImage}
         ogType="article"
         schema={schema}
       />
 
       <ScrollReveal delay={0.02} y={12}>
         {/* Navigation & Share Bar */}
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-black/[0.06] dark:border-white/[0.06]">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
           <Link
             to="/blog"
             className="inline-flex items-center gap-2 text-xs sm:text-sm font-mono text-[#909092] hover:text-black dark:hover:text-white transition-colors duration-150 group"
           >
             <FiArrowLeft className="group-hover:-translate-x-1 transition-transform duration-150 ease-smooth" />
-            <span>Back to all articles</span>
+            <span>Back to Blog</span>
           </Link>
 
           <div className="flex items-center gap-2">
@@ -111,6 +114,16 @@ const BlogPostView = () => {
               )}
             </button>
           </div>
+        </div>
+
+        {/* Hero Blog Cover Image at Top */}
+        <div className="w-full mb-8 sm:mb-10 overflow-hidden rounded-xl sm:rounded-2xl border border-black/[0.08] dark:border-white/[0.08] shadow-md dark:shadow-2xl bg-white dark:bg-[#0c0c0e]">
+          <img
+            src={coverImage}
+            alt={post.title}
+            className="w-full aspect-[1200/630] object-cover"
+            loading="eager"
+          />
         </div>
 
         {/* Categories */}
@@ -152,75 +165,110 @@ const BlogPostView = () => {
       {/* Main Body Content */}
       <ScrollReveal delay={0.06} y={16}>
         <div className="max-w-none text-black/90 dark:text-white/90 space-y-8">
-          {post.sections?.tldr && (
+          {/* Optional Executive Summary / Overview card only if explicitly provided */}
+          {(post.overview || (post.sections && !Array.isArray(post.sections) && post.sections.tldr)) && (
             <div className="p-5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.08] dark:border-white/[0.08] font-mono text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed">
               <div className="text-[11px] font-bold uppercase tracking-wider text-[#909092] mb-2 flex items-center gap-2">
                 <span className="inline-block size-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Executive Summary / TL;DR
+                Executive Summary / Operational Overview
               </div>
-              <p>{post.sections.tldr}</p>
-            </div>
-          )}
-
-          {post.sections?.problem && (
-            <div className="space-y-2.5">
-              <h2 className="text-lg sm:text-xl font-bold text-black dark:text-white tracking-tight">
-                01. The Problem & Observed Symptoms
-              </h2>
-              <p className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed font-sans">
-                {post.sections.problem}
+              <p className="whitespace-pre-line leading-relaxed">
+                {post.overview || post.sections.tldr}
               </p>
             </div>
           )}
 
-          {post.sections?.rootCause && (
-            <div className="space-y-2.5 p-5 rounded-xl bg-rose-500/[0.03] dark:bg-rose-500/[0.04] border border-rose-500/20">
-              <h2 className="text-base sm:text-lg font-bold text-rose-700 dark:text-rose-400 tracking-tight">
-                02. Root Cause Investigation
-              </h2>
-              <p className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed font-sans">
-                {post.sections.rootCause}
-              </p>
-            </div>
-          )}
+          {/* Dynamic Flexible Sections Array */}
+          {(() => {
+            const sectionsList = Array.isArray(post.sections) 
+              ? post.sections 
+              : Array.isArray(post.sections?.items) 
+              ? post.sections.items 
+              : null;
+            return sectionsList ? (
+              sectionsList.map((sec, idx) => (
+                <div key={idx} className="space-y-3">
+                  {sec.heading && (
+                    <h2 className="text-lg sm:text-2xl font-bold text-black dark:text-white tracking-tight mt-6">
+                      {sec.heading}
+                    </h2>
+                  )}
+                  <div className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed font-sans whitespace-pre-line">
+                    {sec.body || sec.content}
+                  </div>
+                  {sec.code && (
+                    <pre className="p-4 my-3 rounded-xl bg-black/[0.04] dark:bg-white/[0.03] border border-black/[0.08] dark:border-white/[0.08] font-mono text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 overflow-x-auto leading-relaxed">
+                      <code>{sec.code}</code>
+                    </pre>
+                  )}
+                  {sec.callout && (
+                    <div className="p-4 my-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border-l-2 border-black dark:border-white text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 font-mono leading-relaxed">
+                      {sec.callout}
+                    </div>
+                  )}
+                </div>
+              ))
+            ) : post.sections && typeof post.sections === "object" ? (
+              <>
+                {post.sections.problem && (
+                  <div className="space-y-2.5">
+                    <h2 className="text-lg sm:text-xl font-bold text-black dark:text-white tracking-tight">
+                      01. The Problem &amp; Observed Symptoms
+                    </h2>
+                    <p className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed font-sans whitespace-pre-line">
+                      {post.sections.problem}
+                    </p>
+                  </div>
+                )}
+                {post.sections.rootCause && (
+                  <div className="space-y-2.5 p-5 rounded-xl bg-rose-500/[0.03] dark:bg-rose-500/[0.04] border border-rose-500/20">
+                    <h2 className="text-base sm:text-lg font-bold text-rose-700 dark:text-rose-400 tracking-tight">
+                      02. Root Cause Investigation
+                    </h2>
+                    <p className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed font-sans whitespace-pre-line">
+                      {post.sections.rootCause}
+                    </p>
+                  </div>
+                )}
+                {post.sections.solution && (
+                  <div className="space-y-2.5">
+                    <h2 className="text-lg sm:text-xl font-bold text-black dark:text-white tracking-tight">
+                      03. Architectural Redesign &amp; Fix
+                    </h2>
+                    <p className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed font-sans whitespace-pre-line">
+                      {post.sections.solution}
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : null;
+          })()}
 
-          {post.sections?.solution && (
-            <div className="space-y-2.5">
-              <h2 className="text-lg sm:text-xl font-bold text-black dark:text-white tracking-tight">
-                03. Architectural Redesign & Fix
-              </h2>
-              <p className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed font-sans">
-                {post.sections.solution}
-              </p>
-            </div>
-          )}
-
-          {!post.sections && (
-            <p className="text-base sm:text-lg leading-relaxed font-sans">
+          {/* Fallback to raw post.content if no sections */}
+          {(!post.sections || (Array.isArray(post.sections) && post.sections.length === 0)) && post.content && (
+            <p className="text-sm sm:text-base leading-relaxed font-sans whitespace-pre-line text-zinc-700 dark:text-zinc-300">
               {post.content}
             </p>
           )}
 
-          {/* Key Engineering Takeaways */}
-          <div className="p-5 sm:p-6 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.08] dark:border-white/[0.08]">
-            <h3 className="text-base font-bold text-black dark:text-white mb-3">
-              Key Engineering Takeaways
-            </h3>
-            <ul className="space-y-2.5 text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 font-mono">
-              {(post.sections?.takeaways || [
-                "Low-latency connection pooling and asynchronous worker pipelines.",
-                "Graceful degradation and circuit-breaking under high-concurrency traffic bursts.",
-                "Security-first authorization decorators aligned with OWASP Top 10 vulnerabilities.",
-              ]).map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2.5">
-                  <span className="text-[#909092] mt-0.5 select-none font-bold">
-                    0{idx + 1}.
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Key Engineering Takeaways: Rendered ONLY if explicitly provided */}
+          {((Array.isArray(post.sections) ? post.takeaways : post.sections?.takeaways) || []).length > 0 && (
+            <div className="p-5 sm:p-6 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.08] dark:border-white/[0.08]">
+              <h3 className="text-base font-bold text-black dark:text-white mb-3">
+                Key Engineering Takeaways
+              </h3>
+              <ul className="space-y-2.5 text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 font-mono">
+                {(Array.isArray(post.sections) ? post.takeaways : post.sections.takeaways).map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
+                    <span className="text-[#909092] mt-0.5 select-none font-bold">
+                      0{idx + 1}.
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <p className="text-sm sm:text-base leading-relaxed font-sans text-[#909092] pt-4">
             For technical discussions or questions regarding this implementation, reach out directly via the{" "}

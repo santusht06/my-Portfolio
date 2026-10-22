@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <!-- Grid pattern -->
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#f1f5f9" stroke-width="1"/>
+      <circle cx="0" cy="0" r="1.5" fill="#cbd5e1"/>
+    </pattern>
+
+    <!-- Markers -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#94a3b8" />
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#10b981" />
+    </marker>
+    <marker id="arrowIndigo" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#6366f1" />
+    </marker>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="630" fill="#ffffff" />
+  <rect width="1200" height="630" fill="url(#grid)" />
+
+  <!-- Outer Elegant Border Frame -->
+  <rect x="24" y="24" width="1152" height="582" rx="20" fill="none" stroke="#e2e8f0" stroke-width="1.5" />
+
+  <!-- Top Header Row -->
+  <g transform="translate(64, 76)">
+    <!-- Category Pill -->
+    <rect x="0" y="0" width="166" height="32" rx="16" fill="#0f172a" />
+    <circle cx="16" cy="16" r="4" fill="#38bdf8" />
+    <text x="28" y="20.5" font-family="Geist Mono, monospace" font-size="11.5" font-weight="700" fill="#f8fafc" letter-spacing="0.5">INFRASTRUCTURE</text>
+
+    <!-- Post Type / Tag -->
+    <text x="182" y="20.5" font-family="Geist Mono, monospace" font-size="12" font-weight="600" fill="#64748b">DEEP DIVE</text>
+
+    <!-- Date & Read time on Right -->
+    <text x="1072" y="20.5" text-anchor="end" font-family="Geist Mono, monospace" font-size="12" font-weight="500" fill="#94a3b8">FEBRUARY 28, 2026 · 10 MIN READ</text>
+  </g>
+
+  <!-- Center Title -->
+  <g transform="translate(600, 168)">
+    <text x="0" y="0" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="800" fill="#0f172a" letter-spacing="-0.8">
+      Building a Self-Hosted Mail Server from Scratch (SMTP, IMAP &amp; POP3)
+    </text>
+    <text x="0" y="38" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="500" fill="#64748b">
+      How Sharexpress handles mail queuing, RFC protocol compliance, and security.
+    </text>
+  </g>
+
+  <!-- Bespoke Technical Diagram -->
+  
+    <g transform="translate(600, 310)">
+      <circle cx="-240" cy="0" r="38" fill="#fff" stroke="#3b82f6" stroke-width="2" filter="drop-shadow(0 4px 12px rgba(59,130,246,0.15))"/>
+      <text x="-240" y="-4" text-anchor="middle" font-family="Geist, sans-serif" font-size="13" font-weight="700" fill="#1d4ed8">SMTP</text>
+      <text x="-240" y="14" text-anchor="middle" font-family="Geist Mono, monospace" font-size="10" fill="#64748b">:25 / :587</text>
+
+      <path d="M-195 0 L-115 0" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4 4"/>
+
+      <!-- TLS Handshake Engine -->
+      <rect x="-105" y="-45" width="210" height="90" rx="14" fill="#0f172a" filter="drop-shadow(0 8px 24px rgba(15,23,42,0.25))"/>
+      <text x="0" y="-14" text-anchor="middle" font-family="Geist, sans-serif" font-size="13" font-weight="700" fill="#38bdf8">TLS Socket Engine</text>
+      <text x="0" y="7" text-anchor="middle" font-family="Geist Mono, monospace" font-size="11" fill="#94a3b8">Raw RFC MIME Parser</text>
+      <text x="0" y="25" text-anchor="middle" font-family="Geist Mono, monospace" font-size="10" fill="#34d399">SPF · DKIM · DMARC PASS</text>
+
+      <path d="M115 0 L195 0" stroke="#10b981" stroke-width="2" stroke-dasharray="4 4"/>
+
+      <circle cx="240" cy="0" r="38" fill="#fff" stroke="#10b981" stroke-width="2" filter="drop-shadow(0 4px 12px rgba(16,185,129,0.15))"/>
+      <text x="240" y="-4" text-anchor="middle" font-family="Geist, sans-serif" font-size="13" font-weight="700" fill="#047857">IMAP4</text>
+      <text x="240" y="14" text-anchor="middle" font-family="Geist Mono, monospace" font-size="10" fill="#64748b">MinIO / S3</text>
+    </g>
+  
+
+  <!-- Bottom Metadata Bar -->
+  <g transform="translate(64, 556)">
+    <!-- Author & Role -->
+    <circle cx="14" cy="14" r="14" fill="#0f172a" />
+    <text x="14" y="19" text-anchor="middle" font-family="Geist, sans-serif" font-size="13" font-weight="800" fill="#38bdf8">S</text>
+    <text x="38" y="18" font-family="Geist, sans-serif" font-size="13" font-weight="700" fill="#0f172a">Santusht Kotai</text>
+    <text x="135" y="18" font-family="Geist, sans-serif" font-size="13" font-weight="400" fill="#94a3b8">· Systems Architect</text>
+
+    <!-- Watermark right -->
+    <text x="1072" y="18" text-anchor="end" font-family="Geist Mono, monospace" font-size="12.5" font-weight="600" fill="#64748b">@santusht06 · santusht.online</text>
+  </g>
+</svg>
