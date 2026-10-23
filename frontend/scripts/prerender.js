@@ -125,15 +125,27 @@ const internal = (p, text) => a(toCanonicalPath(p), text);
 
 const navHtml = () => `<nav aria-label="Primary">${[
   ["/", "Home"],
-  ["/work/", "Work"],
-  ["/blog/", "Blog"],
-  ["/resume/", "Resume"],
-  ["/contact/", "Contact"],
+  ["/work", "Projects"],
+  ["/blog", "Blog"],
+  ["/resume", "Resume"],
+  ["/contact", "Contact"],
 ]
   .map(([p, label]) => internal(p, label))
   .join("")}</nav>`;
 
 const footerHtml = () => `<footer>
+  <nav aria-label="Footer Navigation">
+    ${[
+      ["/", "Home"],
+      ["/work", "Projects"],
+      ["/blog", "Blog"],
+      ["/resume", "Resume"],
+      ["/contact", "Contact"],
+      ["/#faq", "The FAQ"],
+    ]
+      .map(([p, label]) => (p.startsWith("/#") ? a(p, label) : internal(p, label)))
+      .join(" &middot; ")}
+  </nav>
   <p>&copy; 2026 ${esc(profileData.name)} &middot; ${esc(profileData.location)}</p>
   <p>${[
     ["GitHub", "https://github.com/santusht06"],
@@ -223,10 +235,10 @@ ${achievementsHtml()}
 <h2>Latest Engineering Notes</h2>
 ${articleListHtml(blogs.slice(0, 4))}
 ${faqHtml()}
-<p>${internal("/blog/", "Read all engineering articles")} &middot; ${internal("/work/", "See all work and projects")}</p>`),
+<p>${internal("/blog", "Read all engineering articles")} &middot; ${internal("/work", "See all work and projects")}</p>`),
 
-  "/work/": () =>
-    shell(`<h1>${esc(PAGES["/work/"].h1)}</h1>
+  "/work": () =>
+    shell(`<h1>${esc(PAGES["/work"].h1)}</h1>
 <p>Production systems, distributed architectures, open-source work, and key milestones.</p>
 <h2>Work Experience</h2>
 ${experienceHtml()}
@@ -238,16 +250,31 @@ ${achievementsHtml()}
 ${skillsHtml()}
 <h2>Education</h2>
 ${educationHtml()}
-<p>Deep dives on this work: ${internal("/blog/", "engineering blog")}.</p>`),
+<p>Deep dives on this work: ${internal("/blog", "engineering blog")}.</p>`),
 
-  "/blog/": () =>
-    shell(`<h1>${esc(PAGES["/blog/"].h1)}</h1>
+  "/projects": () =>
+    shell(`<h1>${esc(PAGES["/projects"].h1)}</h1>
+<p>Production systems, distributed architectures, open-source work, and key milestones.</p>
+<h2>Systems Projects</h2>
+${projectsHtml()}
+<h2>Work Experience</h2>
+${experienceHtml()}
+<h2>Achievements</h2>
+${achievementsHtml()}
+<h2>Technical Skills</h2>
+${skillsHtml()}
+<h2>Education</h2>
+${educationHtml()}
+<p>Deep dives on this work: ${internal("/blog", "engineering blog")}.</p>`),
+
+  "/blog": () =>
+    shell(`<h1>${esc(PAGES["/blog"].h1)}</h1>
 <p>Real systems problems faced while building production platforms &mdash; what broke, root-cause investigations, and architectural redesigns.</p>
 <h2>All articles (${blogs.length})</h2>
 ${articleListHtml(blogs)}`),
 
-  "/resume/": () =>
-    shell(`<h1>${esc(PAGES["/resume/"].h1)} &mdash; ${esc(profileData.name)}</h1>
+  "/resume": () =>
+    shell(`<h1>${esc(PAGES["/resume"].h1)} &mdash; ${esc(profileData.name)}</h1>
 <p>${esc(profileData.title)}. ${a("/Santusht_Kotai_Resume.pdf", "Download the resume (PDF)")}.</p>
 <h2>Experience</h2>
 ${experienceHtml(2)}
@@ -256,8 +283,8 @@ ${skillsHtml()}
 <h2>Education</h2>
 ${educationHtml()}`),
 
-  "/contact/": () =>
-    shell(`<h1>${esc(PAGES["/contact/"].h1)}</h1>
+  "/contact": () =>
+    shell(`<h1>${esc(PAGES["/contact"].h1)}</h1>
 <p>Have a project, role, or collaboration in mind? Reach out for backend engineering roles, distributed systems consulting, or open-source collaboration.</p>
 <ul>
   <li>Email: ${a(`mailto:${profileData.email}`, profileData.email)}</li>
@@ -361,11 +388,12 @@ const renderPage = ({ canonicalPath, title, description, shellHtml, graph, ogTyp
 };
 
 const writeRoute = (canonicalPath, html, fileOverride) => {
+  const clean = canonicalPath === "/" ? "" : canonicalPath.replace(/^\//, "");
   const target =
     fileOverride ||
-    (canonicalPath === "/"
+    (clean === ""
       ? templatePath
-      : path.join(distDir, canonicalPath, "index.html"));
+      : path.join(distDir, clean, "index.html"));
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.writeFileSync(target, html, "utf-8");
   console.log(`✓ ${canonicalPath.padEnd(48)} -> ${path.relative(distDir, target)}`);
@@ -390,7 +418,7 @@ for (const key of Object.keys(PAGES)) {
       canonicalPath: key,
       title: meta.title,
       description: meta.description,
-      shellHtml: buildShell[key](),
+      shellHtml: buildShell[key] ? buildShell[key]() : buildShell["/work"](),
       graph: buildGraph(key),
     })
   );
@@ -414,11 +442,11 @@ for (const post of blogs) {
   );
 }
 
-/* 404 (served by nginx `error_page 404 /404.html`; noindex, no schema) */
+/* 404 (served by Vercel/nginx 404.html; noindex, no schema) */
 writeRoute(
-  "/404/",
+  "/404",
   renderPage({
-    canonicalPath: "/404/",
+    canonicalPath: "/404",
     title: `Page not found | ${SITE_NAME}`,
     description: "The page you are looking for does not exist.",
     shellHtml: buildNotFoundShell(),
@@ -429,20 +457,23 @@ writeRoute(
 );
 
 /* -------------------------------------------------------------------------- */
-/* sitemap.xml — only canonical, indexable, 200-OK URLs                       */
+/* sitemap.xml — only canonical, indexable, 200-OK URLs (Sitelinks optimized) */
 /* -------------------------------------------------------------------------- */
 
 const latestPostDate = maxDate(...blogs.map((b) => toIsoDate(b.date)));
 const dataFile = "frontend/src/data/portfolioData.js";
 
 const sitemapEntries = [
-  { path: "/", lastmod: gitDate(dataFile, "frontend/src/pages/HomeView.jsx") },
-  { path: "/work/", lastmod: gitDate(dataFile, "frontend/src/pages/WorkView.jsx") },
-  { path: "/blog/", lastmod: maxDate(latestPostDate, gitDate("frontend/src/pages/BlogView.jsx")) },
-  { path: "/resume/", lastmod: gitDate("frontend/public/Santusht_Kotai_Resume.pdf", "frontend/src/pages/ResumeView.jsx") },
-  { path: "/contact/", lastmod: gitDate("frontend/src/pages/ContactView.jsx") },
+  { path: "/", changefreq: "weekly", priority: "1.0", lastmod: gitDate(dataFile, "frontend/src/pages/HomeView.jsx") },
+  { path: "/work", changefreq: "monthly", priority: "0.9", lastmod: gitDate(dataFile, "frontend/src/pages/WorkView.jsx") },
+  { path: "/projects", changefreq: "monthly", priority: "0.8", lastmod: gitDate(dataFile, "frontend/src/pages/WorkView.jsx") },
+  { path: "/blog", changefreq: "weekly", priority: "0.9", lastmod: maxDate(latestPostDate, gitDate("frontend/src/pages/BlogView.jsx")) },
+  { path: "/resume", changefreq: "monthly", priority: "0.9", lastmod: gitDate("frontend/public/Santusht_Kotai_Resume.pdf", "frontend/src/pages/ResumeView.jsx") },
+  { path: "/contact", changefreq: "monthly", priority: "0.8", lastmod: gitDate("frontend/src/pages/ContactView.jsx") },
   ...blogs.map((b) => ({
     path: toCanonicalPath(`/blog/${b.id}`),
+    changefreq: "monthly",
+    priority: "0.8",
     lastmod: toIsoDate(b.date),
   })),
 ];
@@ -452,8 +483,10 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 ${sitemapEntries
   .map(
     (e) => `  <url>
-    <loc>${SITE_URL}${e.path}</loc>
+    <loc>${SITE_URL}${e.path === "/" ? "/" : e.path}</loc>
     <lastmod>${e.lastmod}</lastmod>
+    <changefreq>${e.changefreq || "monthly"}</changefreq>
+    <priority>${e.priority || "0.8"}</priority>
   </url>`
   )
   .join("\n")}
@@ -472,10 +505,10 @@ const llms = `# ${profileData.name}
 
 ## Key pages
 - [Home](${absoluteUrl("/")}): ${PAGES["/"].description}
-- [Work & projects](${absoluteUrl("/work/")}): ${PAGES["/work/"].description}
-- [Engineering blog](${absoluteUrl("/blog/")}): ${PAGES["/blog/"].description}
-- [Resume](${absoluteUrl("/resume/")}): ${PAGES["/resume/"].description}
-- [Contact](${absoluteUrl("/contact/")}): ${PAGES["/contact/"].description}
+- [Projects & Systems Architecture](${absoluteUrl("/work")}): ${PAGES["/work"].description}
+- [Engineering blog](${absoluteUrl("/blog")}): ${PAGES["/blog"].description}
+- [Resume](${absoluteUrl("/resume")}): ${PAGES["/resume"].description}
+- [Contact](${absoluteUrl("/contact")}): ${PAGES["/contact"].description}
 
 ## Engineering articles
 ${blogs.map((b) => `- [${b.title}](${absoluteUrl(`/blog/${b.id}`)}): ${b.subtitle}`).join("\n")}

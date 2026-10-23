@@ -45,6 +45,7 @@ const App = () => {
               <Route path="/" element={<PortfolioLayout />}>
                 <Route index element={<HomeView />} />
                 <Route path="work" element={<WorkView />} />
+                <Route path="projects" element={<WorkView />} />
                 <Route path="blog" element={<BlogView />} />
                 <Route path="blog/:slug" element={<BlogPostView />} />
                 <Route path="resume" element={<ResumeView />} />

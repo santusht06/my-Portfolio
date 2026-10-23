@@ -33,15 +33,20 @@ export const FAQ_ID = `${SITE_URL}/#faqpage`;
 
 /**
  * Canonical form used everywhere (sitemap, <link rel=canonical>, og:url,
- * JSON-LD): leading slash + trailing slash, no query/hash.
+ * JSON-LD): leading slash, NO trailing slash for subpaths to match Vercel cleanUrls
+ * and prevent 308 redirect loops.
  */
 export const toCanonicalPath = (input = "/") => {
   const clean = String(input).split("#")[0].split("?")[0] || "/";
   const withLeading = clean.startsWith("/") ? clean : `/${clean}`;
-  return withLeading.endsWith("/") ? withLeading : `${withLeading}/`;
+  if (withLeading === "/" || withLeading === "") return "/";
+  return withLeading.replace(/\/+$/, "");
 };
 
-export const absoluteUrl = (path = "/") => `${SITE_URL}${toCanonicalPath(path)}`;
+export const absoluteUrl = (path = "/") => {
+  const p = toCanonicalPath(path);
+  return `${SITE_URL}${p === "/" ? "/" : p}`;
+};
 
 /* -------------------------------------------------------------------------- */
 /* Formatting helpers                                                         */
@@ -91,28 +96,35 @@ export const PAGES = {
     h1: "Santusht Kotai — Software Engineer & Systems Architect",
     breadcrumb: "Home",
   },
-  "/work/": {
+  "/work": {
     title: "Projects & Systems Architecture — Santusht Kotai",
     description:
       "Production backend engineering and systems projects by Santusht Kotai: 25+ FastAPI APIs, AWS microservices, Sharexpress Mail, and Supabase GSoC 2026.",
     h1: "Projects & Systems Architecture",
     breadcrumb: "Projects",
   },
-  "/blog/": {
+  "/projects": {
+    title: "Projects & Systems Architecture — Santusht Kotai",
+    description:
+      "Production backend engineering and systems projects by Santusht Kotai: 25+ FastAPI APIs, AWS microservices, Sharexpress Mail, and Supabase GSoC 2026.",
+    h1: "Projects & Systems Architecture",
+    breadcrumb: "Projects",
+  },
+  "/blog": {
     title: "Engineering Blog: Incidents, ADRs & Deep Dives — Santusht Kotai",
     description:
       "In-depth post-mortems, architecture decision records, Redis engines, Docker sandboxes, and distributed systems deep dives from production.",
     h1: "Engineering Blog & Field Notes",
     breadcrumb: "Blog",
   },
-  "/resume/": {
+  "/resume": {
     title: "Resume — Santusht Kotai | Software Engineer",
     description:
       "Technical resume of Santusht Kotai: Backend engineering, distributed systems, FastAPI, PostgreSQL, Redis, AWS, Kubernetes, and Supabase GSoC 2026.",
     h1: "Resume",
     breadcrumb: "Resume",
   },
-  "/contact/": {
+  "/contact": {
     title: "Contact & Collaboration — Santusht Kotai",
     description:
       "Get in touch with Santusht Kotai for backend engineering roles, distributed systems consulting, API development, or open-source collaboration.",
@@ -136,7 +148,7 @@ export const getPageMeta = (path) => {
   if (PAGES[canonical]) {
     return { ...PAGES[canonical], title: brandTitle(PAGES[canonical].title) };
   }
-  const match = /^\/blog\/([^/]+)\/$/.exec(canonical);
+  const match = /^\/blog\/([^/]+)$/.exec(canonical);
   if (match) {
     const post = getPostBySlug(match[1]);
     if (post) return getPostMeta(post);
@@ -247,34 +259,34 @@ export const buildWebSite = () => ({
     "@type": "SearchAction",
     target: {
       "@type": "EntryPoint",
-      urlTemplate: `${SITE_URL}/blog/?search={search_term_string}`,
+      urlTemplate: `${SITE_URL}/blog?search={search_term_string}`,
     },
     "query-input": "required name=search_term_string",
   },
   hasPart: [
     {
       "@type": "WebPage",
-      "@id": `${absoluteUrl("/work/")}#webpage`,
+      "@id": `${absoluteUrl("/work")}#webpage`,
       name: "Projects & Systems Architecture",
-      url: absoluteUrl("/work/"),
+      url: absoluteUrl("/work"),
     },
     {
       "@type": "WebPage",
-      "@id": `${absoluteUrl("/blog/")}#webpage`,
+      "@id": `${absoluteUrl("/blog")}#webpage`,
       name: "Engineering Blog",
-      url: absoluteUrl("/blog/"),
+      url: absoluteUrl("/blog"),
     },
     {
       "@type": "WebPage",
-      "@id": `${absoluteUrl("/resume/")}#webpage`,
+      "@id": `${absoluteUrl("/resume")}#webpage`,
       name: "Resume",
-      url: absoluteUrl("/resume/"),
+      url: absoluteUrl("/resume"),
     },
     {
       "@type": "WebPage",
-      "@id": `${absoluteUrl("/contact/")}#webpage`,
+      "@id": `${absoluteUrl("/contact")}#webpage`,
       name: "Contact",
-      url: absoluteUrl("/contact/"),
+      url: absoluteUrl("/contact"),
     },
   ],
 });
@@ -295,7 +307,7 @@ export const buildSiteNavigation = () => ({
       name: "Projects",
       description:
         "Production backend systems, distributed architectures, 25+ FastAPI APIs, and open-source contributions.",
-      url: absoluteUrl("/work/"),
+      url: absoluteUrl("/work"),
     },
     {
       "@type": "SiteNavigationElement",
@@ -303,7 +315,7 @@ export const buildSiteNavigation = () => ({
       name: "Engineering Blog",
       description:
         "In-depth engineering notes, incident post-mortems, and architectural decision records.",
-      url: absoluteUrl("/blog/"),
+      url: absoluteUrl("/blog"),
     },
     {
       "@type": "SiteNavigationElement",
@@ -311,7 +323,7 @@ export const buildSiteNavigation = () => ({
       name: "Resume",
       description:
         "Technical resume of Santusht Kotai: Backend engineering, distributed systems, and GSoC 2026.",
-      url: absoluteUrl("/resume/"),
+      url: absoluteUrl("/resume"),
     },
     {
       "@type": "SiteNavigationElement",
@@ -319,31 +331,31 @@ export const buildSiteNavigation = () => ({
       name: "Contact",
       description:
         "Get in touch for backend engineering roles, system design consulting, and collaboration.",
-      url: absoluteUrl("/contact/"),
+      url: absoluteUrl("/contact"),
     },
     {
       "@type": "SiteNavigationElement",
       position: 5,
-      name: "ADR-001: Why Kafka Was the Wrong Choice",
-      description:
-        "Why Kafka was rejected in favor of a native Redis engine for asynchronous worker queues.",
-      url: absoluteUrl("/blog/why-i-didnt-use-kafka/"),
-    },
-    {
-      "@type": "SiteNavigationElement",
-      position: 6,
-      name: "Building a Self-Hosted Mail Server",
-      description:
-        "Architecting a compliant self-hosted mail server supporting SMTP, IMAP4, and POP3 from scratch.",
-      url: absoluteUrl("/blog/self-hosted-mail-infrastructure/"),
-    },
-    {
-      "@type": "SiteNavigationElement",
-      position: 7,
       name: "The FAQ",
       description:
         "Frequently asked questions covering backend architecture, services, timeline, and collaboration.",
       url: `${SITE_URL}/#faq`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 6,
+      name: "Why Kafka Was the Wrong Choice",
+      description:
+        "ADR-001: Evaluating distributed append-only logs vs message brokers: Why I rejected Kafka in favor of Redis.",
+      url: absoluteUrl("/blog/why-i-didnt-use-kafka"),
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 7,
+      name: "Self-Hosted Mail Infrastructure",
+      description:
+        "Architecting a compliant self-hosted mail server supporting SMTP, IMAP4, and POP3 from scratch.",
+      url: absoluteUrl("/blog/self-hosted-mail-infrastructure"),
     },
   ],
 });
@@ -395,7 +407,7 @@ export const buildBlogPosting = (post) => {
     image: [OG_IMAGE],
     inLanguage: "en",
     isAccessibleForFree: true,
-    isPartOf: { "@id": `${absoluteUrl("/blog/")}#webpage` },
+    isPartOf: { "@id": `${absoluteUrl("/blog")}#webpage` },
     articleSection: post.categories?.[0],
     keywords: (post.categories || []).join(", "),
     wordCount: words,
@@ -409,11 +421,11 @@ export const buildBlogPosting = (post) => {
  */
 export const buildGraph = (path, { post } = {}) => {
   const canonical = toCanonicalPath(path);
-  const url = `${SITE_URL}${canonical}`;
+  const url = `${SITE_URL}${canonical === "/" ? "/" : canonical}`;
   const meta = getPageMeta(canonical);
   const graph = [buildPerson(), buildWebSite()];
 
-  const slugMatch = /^\/blog\/([^/]+)\/$/.exec(canonical);
+  const slugMatch = /^\/blog\/([^/]+)$/.exec(canonical);
   const article = post || (slugMatch ? getPostBySlug(slugMatch[1]) : null);
 
   if (article) {
@@ -421,7 +433,7 @@ export const buildGraph = (path, { post } = {}) => {
     graph.push(
       buildBreadcrumb([
         { name: "Home", url: `${SITE_URL}/` },
-        { name: "Blog", url: absoluteUrl("/blog/") },
+        { name: "Blog", url: absoluteUrl("/blog") },
         { name: article.title, url },
       ])
     );
@@ -456,7 +468,7 @@ export const buildGraph = (path, { post } = {}) => {
     graph.push(buildSiteNavigation());
     const faqPage = buildFAQPage();
     if (faqPage) graph.push(faqPage);
-  } else if (canonical === "/work/") {
+  } else if (canonical === "/work" || canonical === "/projects") {
     graph.push({
       "@type": "CollectionPage",
       ...base,
@@ -486,7 +498,7 @@ export const buildGraph = (path, { post } = {}) => {
         ],
       },
     });
-  } else if (canonical === "/blog/") {
+  } else if (canonical === "/blog") {
     graph.push({
       "@type": "CollectionPage",
       ...base,
@@ -501,7 +513,7 @@ export const buildGraph = (path, { post } = {}) => {
         })),
       },
     });
-  } else if (canonical === "/contact/") {
+  } else if (canonical === "/contact") {
     graph.push({ "@type": "ContactPage", ...base, about: { "@id": PERSON_ID } });
   } else {
     graph.push({ "@type": "WebPage", ...base, about: { "@id": PERSON_ID } });

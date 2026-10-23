@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { profileData } from "../data/portfolioData";
 import {
   FaXTwitter,
@@ -59,7 +60,34 @@ const Footer = () => {
   return (
     <footer className="w-full pt-16 pb-12 mt-12 border-t border-black/[0.06] dark:border-white/[0.06] text-[#909092]">
       <ScrollReveal delay={0.04} y={16}>
-        <div className="mb-10">
+        <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-8">
+          {/* Sitelinks Navigation */}
+          <div>
+            <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-[#909092] mb-4">
+              Navigation
+            </h4>
+            <nav aria-label="Footer Navigation" className="flex flex-col gap-2.5 text-xs font-mono">
+              <Link to="/" className="text-[#909092] hover:text-black dark:hover:text-white transition-colors w-fit">
+                Home
+              </Link>
+              <Link to="/work" className="text-[#909092] hover:text-black dark:hover:text-white transition-colors w-fit">
+                Projects & Systems
+              </Link>
+              <Link to="/blog" className="text-[#909092] hover:text-black dark:hover:text-white transition-colors w-fit">
+                Engineering Blog
+              </Link>
+              <Link to="/resume" className="text-[#909092] hover:text-black dark:hover:text-white transition-colors w-fit">
+                Resume (PDF)
+              </Link>
+              <Link to="/contact" className="text-[#909092] hover:text-black dark:hover:text-white transition-colors w-fit">
+                Contact & Collaboration
+              </Link>
+              <a href="/#faq" className="text-[#909092] hover:text-black dark:hover:text-white transition-colors w-fit">
+                The FAQ
+              </a>
+            </nav>
+          </div>
+
           {/* CONNECT */}
           <div>
             <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-[#909092] mb-4">
