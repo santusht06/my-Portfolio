@@ -167,7 +167,7 @@ const BlogView = () => {
   const blogList = useSelector(selectBlogs);
   const liveCategoryCounts = useSelector(selectCategoryCounts);
   const status = useSelector(selectBlogsStatus);
-  const isLoading = status === "loading" && blogList.length === 0;
+  const isLoading = (status === "loading" || status === "idle") && blogList.length === 0;
 
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
@@ -287,7 +287,9 @@ const BlogView = () => {
                 <BlogListSkeleton count={4} />
               ) : filteredBlogs.length === 0 ? (
                 <div className="py-12 text-center text-[#909092] font-mono text-sm">
-                  No posts found in this category.
+                  {selectedCategory !== "ALL" || searchQuery
+                    ? "No articles match the current filter."
+                    : "Articles are loading..."}
                 </div>
               ) : (
                 <div className="blog-list blog-list-container divide-y divide-black/[0.06] dark:divide-white/[0.06] relative">

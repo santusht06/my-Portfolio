@@ -329,7 +329,7 @@ ${s.solution ? `<h2>03. Architectural Redesign &amp; Fix</h2><p>${esc(s.solution
     body += `<h2>Key Engineering Takeaways</h2><ul>${takeaways.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`;
   }
 
-  return shell(`<nav aria-label="Breadcrumb">${internal("/", "Home")} / ${internal("/blog/", "Blog")} / ${esc(post.title)}</nav>
+  return shell(`<nav aria-label="Breadcrumb">${internal("/", "Home")} / ${internal("/blog", "Blog")} / ${esc(post.title)}</nav>
 <article>
 <h1>${esc(post.title)}</h1>
 <p>${esc(post.subtitle)}</p>
@@ -341,18 +341,18 @@ ${
     ? `<h2>Related engineering notes</h2>${articleListHtml(related)}`
     : ""
 }
-<p>Questions about this implementation? ${internal("/contact/", "Get in touch")} or see ${a("https://github.com/santusht06", "GitHub")}.</p>`);
+<p>Questions about this implementation? ${internal("/contact", "Get in touch")} or see ${a("https://github.com/santusht06", "GitHub")}.</p>`);
 };
 
 const buildNotFoundShell = () =>
   shell(`<h1>Page not found</h1>
-<p>The page you are looking for does not exist. Try the ${internal("/", "homepage")}, the ${internal("/blog/", "engineering blog")} or ${internal("/work/", "work and projects")}.</p>`);
+<p>The page you are looking for does not exist. Try the ${internal("/", "homepage")}, the ${internal("/blog", "engineering blog")} or ${internal("/work", "work and projects")}.</p>`);
 
 /* -------------------------------------------------------------------------- */
 /* Page assembly                                                              */
 /* -------------------------------------------------------------------------- */
 
-const renderPage = ({ canonicalPath, title, description, shellHtml, graph, ogType = "website", noindex = false }) => {
+const renderPage = ({ canonicalPath, title, description, shellHtml, graph, ogType = "website", noindex = false, extraHead = "" }) => {
   const url = `${SITE_URL}${canonicalPath}`;
   let html = template;
 
@@ -379,6 +379,15 @@ const renderPage = ({ canonicalPath, title, description, shellHtml, graph, ogTyp
       html,
       /<\/head>/i,
       `<script type="application/ld+json" id="dynamic-seo-schema">${json}</script>\n</head>`,
+      "</head>"
+    );
+  }
+
+  if (extraHead) {
+    html = setTag(
+      html,
+      /<\/head>/i,
+      `${extraHead}\n</head>`,
       "</head>"
     );
   }
@@ -412,6 +421,22 @@ const check = (p, title, description) => {
 for (const key of Object.keys(PAGES)) {
   const meta = getPageMeta(key);
   check(key, meta.title, meta.description);
+  const extraHead =
+    key === "/blog"
+      ? `<script>window.__INITIAL_BLOGS__ = ${JSON.stringify(
+          blogs.map((b) => ({
+            id: b.id,
+            slug: b.id,
+            title: b.title,
+            subtitle: b.subtitle,
+            date: b.date,
+            readTime: b.readTime || b.read_time,
+            categories: b.categories,
+            cover_image: b.cover_image,
+            is_published: true,
+          }))
+        ).replace(/</g, "\\u003c")};</script>`
+      : "";
   writeRoute(
     key,
     renderPage({
@@ -420,6 +445,7 @@ for (const key of Object.keys(PAGES)) {
       description: meta.description,
       shellHtml: buildShell[key] ? buildShell[key]() : buildShell["/work"](),
       graph: buildGraph(key),
+      extraHead,
     })
   );
 }
@@ -429,6 +455,10 @@ for (const post of blogs) {
   const key = toCanonicalPath(`/blog/${post.id}`);
   const meta = getPostMeta(post);
   check(key, meta.title, meta.description);
+  const extraHead = `<script>window.__INITIAL_POST__ = ${JSON.stringify({
+    ...post,
+    slug: post.id,
+  }).replace(/</g, "\\u003c")};</script>`;
   writeRoute(
     key,
     renderPage({
@@ -438,6 +468,7 @@ for (const post of blogs) {
       shellHtml: buildPostShell(post),
       graph: buildGraph(key, { post }),
       ogType: "article",
+      extraHead,
     })
   );
 }

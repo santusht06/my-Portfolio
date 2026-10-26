@@ -23,20 +23,28 @@ const BlogPostView = () => {
   const dispatch = useDispatch();
   const [copied, setCopied] = useState(false);
 
-  const post = useSelector(selectCurrentPost);
+  const currentPost = useSelector(selectCurrentPost);
   const postStatus = useSelector(selectPostStatus);
   const allBlogs = useSelector(selectBlogs);
 
-  const loading = postStatus === "loading" || (!post && postStatus !== "failed");
+  const post =
+    currentPost && (currentPost.id === slug || currentPost.slug === slug)
+      ? currentPost
+      : allBlogs.find((b) => b.id === slug || b.slug === slug) || null;
+
+  const loading =
+    (postStatus === "loading" || postStatus === "idle") && !post;
 
   useEffect(() => {
     if (slug) {
-      dispatch(fetchBlogBySlugAsync(slug));
+      if (!currentPost || (currentPost.id !== slug && currentPost.slug !== slug)) {
+        dispatch(fetchBlogBySlugAsync(slug));
+      }
       if (allBlogs.length === 0) {
         dispatch(fetchBlogs());
       }
     }
-  }, [dispatch, slug]);
+  }, [dispatch, slug, currentPost, allBlogs.length]);
 
   const related = useMemo(() => {
     if (!allBlogs.length || !slug) return [];
@@ -54,7 +62,7 @@ const BlogPostView = () => {
     return <BlogPostSkeleton />;
   }
 
-  if (!post) {
+  if (!post && postStatus === "failed") {
     return <Navigate to="/blog" replace />;
   }
 

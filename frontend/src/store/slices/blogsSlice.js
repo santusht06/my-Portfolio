@@ -49,14 +49,24 @@ export const likeBlogAsync = createAsyncThunk(
   }
 );
 
+const initialBlogs =
+  typeof window !== "undefined" && Array.isArray(window.__INITIAL_BLOGS__)
+    ? window.__INITIAL_BLOGS__
+    : [];
+
+const initialCurrentPost =
+  typeof window !== "undefined" && window.__INITIAL_POST__
+    ? window.__INITIAL_POST__
+    : null;
+
 const initialState = {
-  items: [],
+  items: initialBlogs,
   categoryCounts: null,
-  status: "idle", // "idle" | "loading" | "succeeded" | "failed"
+  status: initialBlogs.length > 0 ? "succeeded" : "idle", // "idle" | "loading" | "succeeded" | "failed"
   error: null,
 
-  currentPost: null,
-  postStatus: "idle", // "idle" | "loading" | "succeeded" | "failed"
+  currentPost: initialCurrentPost,
+  postStatus: initialCurrentPost ? "succeeded" : "idle", // "idle" | "loading" | "succeeded" | "failed"
   postError: null,
 };
 

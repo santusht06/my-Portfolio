@@ -8,16 +8,17 @@ User-agent: *
 # Public pages
 Allow: /
 
-# Static assets
+# Static assets & Public API
 Allow: /assets/
 Allow: /images/
 Allow: /fonts/
 Allow: /icons/
 Allow: /css/
 Allow: /js/
+Allow: /api/v1/blogs
+Allow: /api/v1/blogs/*
 
 # System paths
-Disallow: /api/
 Disallow: /admin/
 Disallow: /auth/
 Disallow: /login/
@@ -53,7 +54,8 @@ Disallow: /debug/
 
 User-agent: Googlebot
 Allow: /
-Disallow: /api/
+Allow: /api/v1/blogs
+Allow: /api/v1/blogs/*
 Disallow: /admin/
 Disallow: /.env
 Disallow: /.git/
@@ -66,7 +68,6 @@ Allow: /*.png
 Allow: /*.webp
 Allow: /images/
 Allow: /assets/
-Disallow: /api/
 Disallow: /admin/
 Disallow: /.env
 Disallow: /.git/
